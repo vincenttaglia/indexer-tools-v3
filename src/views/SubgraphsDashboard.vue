@@ -2,43 +2,31 @@
   <v-data-table
     :headers="headers"
     :items="subgraphStore.getSubgraphs"
-    item-key="currentVersion.subgraphDeployment.ipfsHash"
-    class="elevation-1"
-    :footer-props="{
-      'items-per-page-options': [10, 15, 20, 25, 30, 40, 50]
-    }"
-    loading-text="Loading... Please wait"
-    mobile-breakpoint="0"
+    
   >
-  <template v-slot:item.image="{ item }">
-    <v-avatar size="30">
-      <v-img :src="item.image" />
-    </v-avatar>
-  </template>
-  <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
-    <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ item.currentVersion.subgraphDeployment.createdAt | moment("MMM D, YYYY HH:mm") }}</span>
-  </template>
-  <template v-slot:item.currentSignalledTokens="{ item }">
-    {{ numeral(item.currentSignalledTokens.toString()).format('0,0') }} GRT
-  </template>
-  <template v-slot:item.currentVersion.subgraphDeployment.indexingRewardAmount="{ item }">
-    {{ numeral(item.currentVersion.subgraphDeployment.indexingRewardAmount.toString()).format('0,0') }} GRT
-  </template>
-  <template v-slot:item.currentVersion.subgraphDeployment.queryFeesAmount="{ item }">
-    {{ numeral(item.currentVersion.subgraphDeployment.queryFeesAmount.toString()).format('0,0') }} GRT
-  </template>
-  <template v-slot:item.currentVersion.subgraphDeployment.stakedTokens="{ item }">
-    {{ numeral(item.currentVersion.subgraphDeployment.stakedTokens.toString()).format('0,0') }} GRT
-  </template>
-  <template v-slot:item.currentVersion.subgraphDeployment.network.id="{ item }">
-    {{ item.currentVersion.subgraphDeployment.network ? item.currentVersion.subgraphDeployment.network.id : "null" }}
-  </template>
-  <template v-slot:item.proportion="{ item }">
-    {{ numeral(item.proportion*100).format('0,0.000') }}%
-  </template>
-  <template v-slot:body.append>
-
-  </template>
+    <template v-slot:item.image="{ item }">
+      <v-avatar size="30">
+        <v-img :src="item.image" />
+      </v-avatar>
+    </template>
+    <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
+      <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ item.currentVersion.subgraphDeployment.createdAt | moment("MMM D, YYYY HH:mm") }}</span>
+    </template>
+    <template v-slot:item.currentSignalledTokens="{ item }">
+      {{ numeral(web3.utils.fromWei(item.currentSignalledTokens.toString())).format('0,0') }} GRT
+    </template>
+    <template v-slot:item.currentVersion.subgraphDeployment.indexingRewardAmount="{ item }">
+      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.indexingRewardAmount.toString())).format('0,0') }} GRT
+    </template>
+    <template v-slot:item.currentVersion.subgraphDeployment.queryFeesAmount="{ item }">
+      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.queryFeesAmount.toString())).format('0,0') }} GRT
+    </template>
+    <template v-slot:item.currentVersion.subgraphDeployment.stakedTokens="{ item }">
+      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
+    </template>
+    <template v-slot:item.currentVersion.subgraphDeployment.network.id="{ item }">
+      {{ item.currentVersion.subgraphDeployment.network ? item.currentVersion.subgraphDeployment.network.id : "null" }}
+    </template> 
   </v-data-table>
 </template>
 
@@ -46,11 +34,14 @@
   import { ref } from 'vue';
   import { useSubgraphsStore } from '@/store/subgraphs';
   import numeral from 'numeral';
+  import web3 from 'web3';
+  import moment from 'moment';
 
   const subgraphStore = useSubgraphsStore();
   subgraphStore.fetchData();
 
   const headers = ref([
+    { text: 'Img', value: 'image' },
     { text: 'Name', value: 'displayName' },
     { text: 'Network', value: 'currentVersion.subgraphDeployment.network.id'},
     { text: 'Created', value: 'currentVersion.subgraphDeployment.createdAt' },
@@ -71,7 +62,7 @@
         return true;
       },
     },
-    { text: 'Current Proportion', value: 'proportion'},
+    //{ text: 'Current Proportion', value: 'proportion'},
     { text: 'Current Allocations', value: 'currentVersion.subgraphDeployment.stakedTokens'},
     { text: 'Total Query Fees', value: 'currentVersion.subgraphDeployment.queryFeesAmount'},
     { text: 'Total Indexing Rewards', value: 'currentVersion.subgraphDeployment.indexingRewardAmount'},
