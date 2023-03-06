@@ -10,7 +10,7 @@ export const useSubgraphsStore = defineStore({
     subgraphs: [],
   }),
   getters: {
-
+    getSubgraphs: (state) => state.subgraphs,
   },
   actions: {
     async fetch(skip){
@@ -38,7 +38,6 @@ export const useSubgraphsStore = defineStore({
             }
           }
         }`,
-        // Static parameters
         variables: {
           skip: skip
         },
@@ -47,16 +46,14 @@ export const useSubgraphsStore = defineStore({
         if(networkStatus == 7 && data.subgraphs.length == 100){
           return this.fetch(skip + data.subgraphs.length)
           .then((data1) => {
-            if(typeof data.subgraphs == "object" && typeof data1.subgraphs == "object"){
-              console.log(data);
-              console.log(data1);
+            if(typeof data.subgraphs == "object" && typeof data1.subgraphs == "object")
               data.subgraphs = data.subgraphs.concat(data1.subgraphs);
-            }
+            
             return data;
           })
-        }else{
-          return data;
         }
+        
+        return data;
       });
     },
     async fetchData(){
