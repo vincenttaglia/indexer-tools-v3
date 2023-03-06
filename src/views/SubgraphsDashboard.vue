@@ -2,30 +2,37 @@
   <v-data-table
     :headers="headers"
     :items="subgraphStore.getSubgraphs"
-    
+    item-key="currentVersion.subgraphDeployment.ipfsHash"
+    class="elevation-1"
+    :footer-props="{
+      'items-per-page-options': [10, 15, 20, 25, 30, 40, 50]
+    }"
+    loading-text="Loading... Please wait"
+    mobile-breakpoint="0"
   >
+    
     <template v-slot:item.image="{ item }">
       <v-avatar size="30">
-        <v-img :src="item.image" />
+        <v-img :src="item.raw.image" />
       </v-avatar>
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
-      <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ item.currentVersion.subgraphDeployment.createdAt | moment("MMM D, YYYY HH:mm") }}</span>
+      <span :timestamp="item.raw.currentVersion.subgraphDeployment.createdAt">{{ item.raw.currentVersion.subgraphDeployment.createdAt | moment("MMM D, YYYY HH:mm") }}</span>
     </template>
     <template v-slot:item.currentSignalledTokens="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentSignalledTokens.toString())).format('0,0') }} GRT
+      {{ numeral(web3.utils.fromWei(item.raw.currentSignalledTokens.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.indexingRewardAmount="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.indexingRewardAmount.toString())).format('0,0') }} GRT
+      {{ numeral(web3.utils.fromWei(item.raw.currentVersion.subgraphDeployment.indexingRewardAmount.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.queryFeesAmount="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.queryFeesAmount.toString())).format('0,0') }} GRT
+      {{ numeral(web3.utils.fromWei(item.raw.currentVersion.subgraphDeployment.queryFeesAmount.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.stakedTokens="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
+      {{ numeral(web3.utils.fromWei(item.raw.currentVersion.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.network.id="{ item }">
-      {{ item.currentVersion.subgraphDeployment.network ? item.currentVersion.subgraphDeployment.network.id : "null" }}
+      {{ item.raw.currentVersion.subgraphDeployment.network ? item.raw.currentVersion.subgraphDeployment.network.id : "null" }}
     </template> 
   </v-data-table>
 </template>
@@ -41,32 +48,32 @@
   subgraphStore.fetchData();
 
   const headers = ref([
-    { text: 'Img', value: 'image' },
-    { text: 'Name', value: 'displayName' },
-    { text: 'Network', value: 'currentVersion.subgraphDeployment.network.id'},
-    { text: 'Created', value: 'currentVersion.subgraphDeployment.createdAt' },
-    //{ text: 'Current APR', value: 'apr'},
-    //{ text: 'New APR', value: 'newapr'},
-    //{ text: 'Max Allocation', value: 'max_allo'},
-    //{ text: 'Est Daily Rewards (Before Cut)', value: 'dailyrewards'},
-    //{ text: 'Est Daily Rewards (After Cut)', value: 'dailyrewards_cut'},
+    { title: 'Img', key: 'image' },
+    { title: 'Name', key: 'displayName' },
+    { title: 'Network', key: 'currentVersion.subgraphDeployment.network.id'},
+    { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
+    //{ title: 'Current APR', key: 'apr'},
+    //{ title: 'New APR', key: 'newapr'},
+    //{ title: 'Max Allocation', key: 'max_allo'},
+    //{ title: 'Est Daily Rewards (Before Cut)', key: 'dailyrewards'},
+    //{ title: 'Est Daily Rewards (After Cut)', key: 'dailyrewards_cut'},
     {
-      text: 'Current Signal',
-      value: 'currentSignalledTokens',
-      filter: value => {
+      title: 'Current Signal',
+      key: 'currentSignalledTokens',
+      /*filter: key => {
         let BigNumber = this.$store.state.bigNumber;
-        if(parseInt(this.max_signal) && BigNumber(value).isGreaterThan(new BigNumber(this.$store.state.web3.utils.toWei(this.max_signal))))
+        if(parseInt(this.max_signal) && BigNumber(key).isGreaterThan(new BigNumber(this.$store.state.web3.utils.toWei(this.max_signal))))
           return false;
-        if(parseInt(this.min_signal) && BigNumber(value).isLessThan(new BigNumber(this.$store.state.web3.utils.toWei(this.min_signal))))
+        if(parseInt(this.min_signal) && BigNumber(key).isLessThan(new BigNumber(this.$store.state.web3.utils.toWei(this.min_signal))))
           return false;
         return true;
-      },
+      },*/
     },
-    //{ text: 'Current Proportion', value: 'proportion'},
-    { text: 'Current Allocations', value: 'currentVersion.subgraphDeployment.stakedTokens'},
-    { text: 'Total Query Fees', value: 'currentVersion.subgraphDeployment.queryFeesAmount'},
-    { text: 'Total Indexing Rewards', value: 'currentVersion.subgraphDeployment.indexingRewardAmount'},
-    { text: 'Deployment ID', value: 'currentVersion.subgraphDeployment.ipfsHash', sortable: false },
+    //{ title: 'Current Proportion', key: 'proportion'},
+    { title: 'Current Allocations', key: 'currentVersion.subgraphDeployment.stakedTokens'},
+    { title: 'Total Query Fees', key: 'currentVersion.subgraphDeployment.queryFeesAmount'},
+    { title: 'Total Indexing Rewards', key: 'currentVersion.subgraphDeployment.indexingRewardAmount'},
+    { title: 'Deployment ID', key: 'currentVersion.subgraphDeployment.ipfsHash', sortable: false },
   ]);
 
 
