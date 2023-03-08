@@ -17,7 +17,7 @@
       </v-avatar>
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
-      <span :timestamp="item.raw.currentVersion.subgraphDeployment.createdAt">{{ item.raw.currentVersion.subgraphDeployment.createdAt | moment("MMM D, YYYY HH:mm") }}</span>
+      <span :timestamp="item.raw.currentVersion.subgraphDeployment.createdAt">{{ moment(item.raw.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
     <template v-slot:item.currentSignalledTokens="{ item }">
       {{ numeral(web3.utils.fromWei(item.raw.currentSignalledTokens.toString())).format('0,0') }} GRT
