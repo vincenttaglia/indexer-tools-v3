@@ -80,9 +80,6 @@
       <template v-slot:item.apr="{ item }">
         {{ numeral(item.raw.apr).format('0,0.00') }}%
       </template>
-      <template v-slot:item.newApr="{ item }">
-        {{ numeral(item.raw.newApr).format('0,0.00') }}%
-      </template>
       <template v-slot:item.dailyRewards="{ item }">
         {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.raw.dailyRewards))).format('0,0') }} GRT
       </template>

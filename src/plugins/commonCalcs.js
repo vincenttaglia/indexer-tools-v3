@@ -1,6 +1,8 @@
 import BigNumber from "bignumber.js";
 import Web3 from "web3";
 
+BigNumber.config({ POW_PRECISION: 1000 });
+
 function maxAllo(target_apr_dec, signalledTokens, networkStore, stakedTokens){
   let target_apr = new BigNumber(target_apr_dec).dividedBy(100);
 

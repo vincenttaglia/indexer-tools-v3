@@ -11,7 +11,6 @@ const subgraphSettingStore = useSubgraphSettingStore();
 import BigNumber from "bignumber.js";
 import { calculateNewApr, calculateDailyRewards, maxAllo } from '@/plugins/commonCalcs';
 
-BigNumber.config({ POW_PRECISION: 1000 });
 
 export const useSubgraphsStore = defineStore({
   id: 'subgraphs',
