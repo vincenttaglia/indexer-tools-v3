@@ -19,6 +19,12 @@
     <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
       <span :timestamp="item.raw.currentVersion.subgraphDeployment.createdAt">{{ moment(item.raw.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
+    <template v-slot:item.proportion="{ item }">
+      {{ numeral(item.raw.proportion*100).format('0,0.000') }}%
+    </template>
+    <template v-slot:item.apr="{ item }">
+      {{ numeral(item.raw.apr).format('0,0.00') }}%
+    </template>
     <template v-slot:item.currentSignalledTokens="{ item }">
       {{ numeral(web3.utils.fromWei(item.raw.currentSignalledTokens.toString())).format('0,0') }} GRT
     </template>
@@ -69,7 +75,7 @@
         return true;
       },*/
     },
-    //{ title: 'Current Proportion', key: 'proportion'},
+    { title: 'Current Proportion', key: 'proportion'},
     { title: 'Current Allocations', key: 'currentVersion.subgraphDeployment.stakedTokens'},
     { title: 'Total Query Fees', key: 'currentVersion.subgraphDeployment.queryFeesAmount'},
     { title: 'Total Indexing Rewards', key: 'currentVersion.subgraphDeployment.indexingRewardAmount'},

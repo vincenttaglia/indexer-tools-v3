@@ -1,8 +1,26 @@
 import { defineStore } from 'pinia'
 
 import graphNetworkClient from "../plugins/graphNetworkSubgraphClient";
-
 import gql from 'graphql-tag';
+import web3 from 'web3';
+const BN = web3.utils.BN;
+import { useNetworkStore } from './network';
+const networkStore = useNetworkStore();
+import BigNumber from "bignumber.js";
+
+function calculateNewApr(currentSignalledTokens, stakedTokens, newAllocation){
+  try{
+    return new BigNumber(currentSignalledTokens)
+          .dividedBy(networkStore.getTotalTokensSignalled)
+          .multipliedBy(networkStore.getIssuancePerYear)
+          .dividedBy(
+              new BigNumber(stakedTokens).plus(web3.utils.toWei(newAllocation))
+          ).multipliedBy(100);
+  }
+  catch(e){
+    return new BigNumber(0);
+  }
+}
 
 export const useSubgraphsStore = defineStore({
   id: 'subgraphs',
@@ -10,7 +28,39 @@ export const useSubgraphsStore = defineStore({
     subgraphs: [],
   }),
   getters: {
-    getSubgraphs: (state) => state.subgraphs,
+    getSubgraphs: (state) => {
+      let subgraphs = [];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        subgraphs[i] = {
+          ...state.subgraphs[i],
+          ...state.getProportions[i],
+        };
+      }
+      return subgraphs;
+    },
+    getProportions: (state) => {
+      let proportions = [];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        let subgraph = state.subgraphs[i];
+        if(subgraph.currentVersion.subgraphDeployment.stakedTokens > 0)
+            proportions[i] = { proportion: subgraph.currentSignalledTokens / subgraph.currentVersion.subgraphDeployment.stakedTokens };
+          else
+            proportions[i] = { proportion: 0 };
+      }
+      return proportions;
+    },
+    /*getAprs: (state) => {
+      let aprs = [];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        let subgraph = state.subgraphs[i];
+        if(subgraph.currentSignalledTokens > 0) {
+          aprs[i] = { apr: calculateNewApr(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, "0") }
+        }else{
+          aprs[i] = { apr: 0 }
+        }
+      }
+      return aprs;
+    },*/
   },
   actions: {
     async fetch(skip){
@@ -57,10 +107,13 @@ export const useSubgraphsStore = defineStore({
       });
     },
     async fetchData(){
-      this.fetch(0)
-      .then((data) => {
-        this.subgraphs = data.subgraphs;
-      })
+      networkStore.init().then(() => {
+        this.fetch(0)
+        .then((data) => {
+          this.subgraphs = data.subgraphs;
+        })
+      });
+      
       
     }
   }
