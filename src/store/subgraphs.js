@@ -96,6 +96,18 @@ export const useSubgraphsStore = defineStore({
         });
       }
 
+      if(parseInt(subgraphSettingStore.maxSignal)){
+        subgraphs = subgraphs.filter((i) => {
+          return BigNumber(i.currentSignalledTokens).isLessThanOrEqualTo(new BigNumber(Web3.utils.toWei(subgraphSettingStore.maxSignal)));
+        });
+      }
+
+      if(parseInt(subgraphSettingStore.minSignal)){
+        subgraphs = subgraphs.filter((i) => {
+          return BigNumber(i.currentSignalledTokens).isGreaterThanOrEqualTo(new BigNumber(Web3.utils.toWei(subgraphSettingStore.minSignal)));
+        });
+      }
+
       return subgraphs;
     },
     getSubgraphs: (state) => {
