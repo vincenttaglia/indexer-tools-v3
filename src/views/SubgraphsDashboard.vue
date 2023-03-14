@@ -10,7 +10,88 @@
     loading-text="Loading... Please wait"
     mobile-breakpoint="0"
   >
-    
+    <template v-slot:top>
+      <tr>
+        <td  class="mx-4">
+          <v-text-field
+              v-model="subgraphSettingStore.search"
+              label="Search"
+              class="mx-4"
+          ></v-text-field>
+        </td>
+        <td class="mx-4">
+          <v-text-field
+              v-model="subgraphSettingStore.minSignal"
+              type="number"
+              label="Min Signal"
+              class="mx-4"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-text-field
+              v-model="subgraphSettingStore.maxSignal"
+              type="number"
+              label="Max Signal"
+              class="mx-4"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-text-field
+              v-model="subgraphSettingStore.newAllocation"
+              type="number"
+              label="New Allocation"
+              @change="updateEstApr"
+              class="mx-4"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-text-field
+              v-model="subgraphSettingStore.targetApr"
+              type="number"
+              label="Target APR"
+              @change="updateTargetApr"
+              class="mx-4"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-select
+              v-model="subgraphSettingStore.noRewardsFilter"
+              :items="[{text: 'Exclude Denied', action: 0}, {text:'Include Denied', action: 1}, {text: 'Only Denied', action: 2}]"
+              item-text="text"
+              item-value="action"
+              label="Subgraphs w/ Denied Rewards"
+              style="width: 200px;"
+              class="mx-4"
+          ></v-select>
+        </td>
+        <td>
+          <v-select
+              v-if="false"
+              v-model="subgraphSettingStore.networkFilter"
+              :items="networks"
+              label="Subgraph Networks"
+              multiple
+              chips
+              class="mx-4"
+              style="top: -5px"
+          ></v-select>
+        </td>
+        <td>
+          <v-checkbox
+            v-model="subgraphSettingStore.activateBlacklist"
+            label="Blacklist"
+            class="mr-3"
+          ></v-checkbox>
+        </td>
+        <td>
+          <v-checkbox
+            v-model="subgraphSettingStore.activateSynclist"
+            label="Synclist"
+          ></v-checkbox>
+        </td>
+        <td colspan="4"></td>
+      </tr>
+    </template>
     <template v-slot:item.image="{ item }">
       <v-avatar size="30">
         <v-img :src="item.raw.image" />
@@ -24,6 +105,9 @@
     </template>
     <template v-slot:item.apr="{ item }">
       {{ numeral(item.raw.apr).format('0,0.00') }}%
+    </template>
+    <template v-slot:item.dailyRewards="{ item }">
+      {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.raw.dailyRewards))).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentSignalledTokens="{ item }">
       {{ numeral(web3.utils.fromWei(item.raw.currentSignalledTokens.toString())).format('0,0') }} GRT
@@ -46,11 +130,13 @@
 <script setup>
   import { ref } from 'vue';
   import { useSubgraphsStore } from '@/store/subgraphs';
+  import { useSubgraphSettingStore } from '@/store/subgraphSettings';
   import numeral from 'numeral';
   import web3 from 'web3';
   import moment from 'moment';
 
   const subgraphStore = useSubgraphsStore();
+  const subgraphSettingStore = useSubgraphSettingStore();
   subgraphStore.fetchData();
 
   const headers = ref([
@@ -61,7 +147,7 @@
     { title: 'Current APR', key: 'apr'},
     //{ title: 'New APR', key: 'newapr'},
     //{ title: 'Max Allocation', key: 'max_allo'},
-    //{ title: 'Est Daily Rewards (Before Cut)', key: 'dailyrewards'},
+    { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
     //{ title: 'Est Daily Rewards (After Cut)', key: 'dailyrewards_cut'},
     {
       title: 'Current Signal',

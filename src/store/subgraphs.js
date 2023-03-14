@@ -2,22 +2,41 @@ import { defineStore } from 'pinia'
 
 import graphNetworkClient from "../plugins/graphNetworkSubgraphClient";
 import gql from 'graphql-tag';
-import web3 from 'web3';
-const BN = web3.utils.BN;
+import Web3 from 'web3';
+const BN = Web3.utils.BN;
 import { useNetworkStore } from './network';
+import { useSubgraphSettingStore } from './subgraphSettings';
 const networkStore = useNetworkStore();
+const subgraphSettingStore = useSubgraphSettingStore();
 import BigNumber from "bignumber.js";
 
 BigNumber.config({ POW_PRECISION: 1000 });
 
 function calculateNewApr(currentSignalledTokens, stakedTokens, newAllocation){
   try{
+    // signalledTokens / totalTokensSignalled * issuancePerYear / (stakedTokens + newAllocation)
     return new BigNumber(currentSignalledTokens)
           .dividedBy(networkStore.getTotalTokensSignalled)
           .multipliedBy(networkStore.getIssuancePerYear)
           .dividedBy(
-              new BigNumber(stakedTokens).plus(web3.utils.toWei(newAllocation))
+              new BigNumber(stakedTokens).plus(Web3.utils.toWei(newAllocation))
           ).multipliedBy(100);
+  }
+  catch(e){
+    return new BigNumber(0);
+  }
+}
+
+function calculateDailyRewards(currentSignalledTokens, stakedTokens, newAllocation){
+  try{
+    // currentSignalledTokens / totalTokensSignalled * issuancePerBlock * blocks per day * (new_allocation / (stakedTokens + newAllocation))
+    return new BigNumber(currentSignalledTokens)
+          .dividedBy(networkStore.getTotalTokensSignalled)
+          .multipliedBy(networkStore.getIssuancePerBlock)
+          .multipliedBy(6450)
+          .multipliedBy(
+              new BigNumber(Web3.utils.toWei(newAllocation)).dividedBy(new BigNumber(stakedTokens).plus(Web3.utils.toWei(newAllocation)))
+          ).dp(0);
   }
   catch(e){
     return new BigNumber(0);
@@ -37,6 +56,7 @@ export const useSubgraphsStore = defineStore({
           ...state.subgraphs[i],
           ...state.getProportions[i],
           ...state.getAprs[i],
+          ...state.getDailyRewards[i]
         };
       }
       return subgraphs;
@@ -55,7 +75,6 @@ export const useSubgraphsStore = defineStore({
     getAprs: (state) => {
       let aprs = [];
       for(let i = 0; i < state.subgraphs.length; i++){
-        console.log(i);
         let subgraph = state.subgraphs[i];
         if(subgraph.currentSignalledTokens > 0) {
           aprs[i] = { apr: calculateNewApr(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, "0") }
@@ -64,6 +83,18 @@ export const useSubgraphsStore = defineStore({
         }
       }
       return aprs;
+    },
+    getDailyRewards: (state) => {
+      let dailyRewards = [];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        let subgraph = state.subgraphs[i];
+        if(subgraph.currentSignalledTokens > 0) {
+          dailyRewards[i] = { dailyRewards: calculateDailyRewards(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, subgraphSettingStore.newAllocation) }
+        }else{
+          dailyRewards[i] = { dailyRewards: 0 }
+        }
+      }
+      return dailyRewards;
     },
   },
   actions: {
