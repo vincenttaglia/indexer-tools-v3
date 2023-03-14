@@ -65,6 +65,39 @@ export const useSubgraphsStore = defineStore({
     subgraphs: [],
   }),
   getters: {
+    getFilteredSubgraphs: (state) => {
+      let subgraphs = state.getSubgraphs;
+      
+      if(subgraphSettingStore.noRewardsFilter === 0){
+        subgraphs = subgraphs.filter((i) => {
+          return !i.currentVersion.subgraphDeployment.deniedAt;
+        });
+      } else if(subgraphSettingStore.noRewardsFilter === 2){
+        subgraphs = subgraphs.filter((i) => {
+          return i.currentVersion.subgraphDeployment.deniedAt;
+        });
+      }
+
+      if(subgraphSettingStore.networkFilter.length) {
+        subgraphs = subgraphs.filter((i) => {
+          return i.currentVersion.subgraphDeployment.network && subgraphSettingStore.networkFilter.includes(i.currentVersion.subgraphDeployment.network.id);
+        });
+      }
+
+      if(subgraphSettingStore.activateBlacklist) {
+        subgraphs = subgraphs.filter((i) => {
+          return !subgraphSettingStore.subgraphBlacklist.includes(i.currentVersion.subgraphDeployment.ipfsHash);
+        });
+      }
+
+      if(subgraphSettingStore.activateSynclist) {
+        subgraphs = subgraphs.filter((i) => {
+          return subgraphSettingStore.subgraphSynclist.includes(i.currentVersion.subgraphDeployment.ipfsHash);
+        });
+      }
+
+      return subgraphs;
+    },
     getSubgraphs: (state) => {
       let subgraphs = [];
       for(let i = 0; i < state.subgraphs.length; i++){

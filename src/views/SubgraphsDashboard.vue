@@ -1,15 +1,16 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="subgraphStore.getSubgraphs"
+    :items="subgraphStore.getFilteredSubgraphs"
     item-key="currentVersion.subgraphDeployment.ipfsHash"
     class="elevation-1"
+    :search="subgraphSettingStore.search"
+    :custom-sort="customSort"
     :footer-props="{
       'items-per-page-options': [10, 15, 20, 25, 30, 40, 50]
     }"
     loading-text="Loading... Please wait"
     mobile-breakpoint="0"
-    :custom-sort="customSort"
   >
     <template v-slot:top>
       <tr>
@@ -41,7 +42,6 @@
               v-model="subgraphSettingStore.newAllocation"
               type="number"
               label="New Allocation"
-              @change="updateEstApr"
               class="mx-4"
           ></v-text-field>
         </td>
@@ -50,7 +50,6 @@
               v-model="subgraphSettingStore.targetApr"
               type="number"
               label="Target APR"
-              @change="updateTargetApr"
               class="mx-4"
           ></v-text-field>
         </td>
@@ -58,7 +57,7 @@
           <v-select
               v-model="subgraphSettingStore.noRewardsFilter"
               :items="[{text: 'Exclude Denied', action: 0}, {text:'Include Denied', action: 1}, {text: 'Only Denied', action: 2}]"
-              item-text="text"
+              item-title="text"
               item-value="action"
               label="Subgraphs w/ Denied Rewards"
               style="width: 200px;"
@@ -69,7 +68,7 @@
           <v-select
               v-if="false"
               v-model="subgraphSettingStore.networkFilter"
-              :items="networks"
+              :items="subgraphSettingStore.networks"
               label="Subgraph Networks"
               multiple
               chips
