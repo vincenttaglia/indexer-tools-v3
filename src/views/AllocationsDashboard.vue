@@ -1,7 +1,7 @@
 <template>
   <v-data-table
       :headers="headers"
-      :items="allocationStore.allocations"
+      :items="allocationStore.getAllocations"
       item-key="subgraphDeployment.ipfsHash"
       class="elevation-1"
       :search="search"
@@ -183,7 +183,7 @@ const headers = ref([
     { title: 'Created', key: 'createdAt' },
     { title: 'Allocation Duration', key: 'activeDuration'},
     { title: 'Current APR', key: 'apr'},
-    //{ title: 'Est Daily Rewards', key: 'dailyRewards'},
+    { title: 'Est Daily Rewards', key: 'dailyRewards'},
     //{ title: 'Est Daily Rewards (After Cut)', key: 'dailyrewardsCut'},
     //{ title: 'Pending Rewards', key: 'pendingRewards'},
     //{ title: 'Pending Rewards (After Cut)', key: 'pendingRewardsCut'},
