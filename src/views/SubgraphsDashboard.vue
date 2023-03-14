@@ -181,17 +181,7 @@ function customSort(items, index, isDesc) {
     { title: 'Max Allocation', key: 'maxAllo'},
     { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
     //{ title: 'Est Daily Rewards (After Cut)', key: 'dailyrewards_cut'},
-    {
-      title: 'Current Signal',
-      key: 'currentSignalledTokens',
-      filter: key => {
-        if(parseInt(subgraphSettingStore.maxSignal) && BigNumber(key).isGreaterThan(new BigNumber(web3.utils.toWei(subgraphSettingStore.maxSignal))))
-          return false;
-        if(parseInt(subgraphSettingStore.minSignal) && BigNumber(key).isLessThan(new BigNumber(web3.utils.toWei(subgraphSettingStore.minSignal))))
-          return false;
-        return true;
-      },
-    },
+    { title: 'Current Signal', key: 'currentSignalledTokens'},
     { title: 'Current Proportion', key: 'proportion'},
     { title: 'Current Allocations', key: 'currentVersion.subgraphDeployment.stakedTokens'},
     { title: 'Total Query Fees', key: 'currentVersion.subgraphDeployment.queryFeesAmount'},
