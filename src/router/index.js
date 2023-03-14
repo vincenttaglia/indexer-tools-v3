@@ -14,6 +14,11 @@ const routes = [
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "home" */ '@/views/SubgraphsDashboard.vue'),
       },
+      {
+        path: 'allocations',
+        name: 'Allocations Dashboard',
+        component: () => import('@/views/AllocationsDashboard.vue'),
+      },
     ],
   },
 ]
