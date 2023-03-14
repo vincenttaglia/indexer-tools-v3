@@ -106,8 +106,17 @@
     <template v-slot:item.apr="{ item }">
       {{ numeral(item.raw.apr).format('0,0.00') }}%
     </template>
+    <template v-slot:item.newApr="{ item }">
+        {{ numeral(item.raw.newApr).format('0,0.00') }}%
+      </template>
+    <template v-slot:item.maxAllo="{ item }">
+      {{ numeral(item.raw.maxAllo).format('0,0') }} GRT
+    </template>
     <template v-slot:item.dailyRewards="{ item }">
       {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.raw.dailyRewards))).format('0,0') }} GRT
+    </template>
+    <template v-slot:item.dailyRewardsCut="{ item }">
+      {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.raw.dailyRewardsCut))).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentSignalledTokens="{ item }">
       {{ numeral(web3.utils.fromWei(item.raw.currentSignalledTokens.toString())).format('0,0') }} GRT
@@ -145,7 +154,7 @@
     { title: 'Network', key: 'currentVersion.subgraphDeployment.network.id'},
     { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
     { title: 'Current APR', key: 'apr'},
-    //{ title: 'New APR', key: 'newapr'},
+    { title: 'New APR', key: 'newApr'},
     //{ title: 'Max Allocation', key: 'max_allo'},
     { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
     //{ title: 'Est Daily Rewards (After Cut)', key: 'dailyrewards_cut'},

@@ -56,7 +56,8 @@ export const useSubgraphsStore = defineStore({
           ...state.subgraphs[i],
           ...state.getProportions[i],
           ...state.getAprs[i],
-          ...state.getDailyRewards[i]
+          ...state.getDailyRewards[i],
+          ...state.getNewAprs[i]
         };
       }
       return subgraphs;
@@ -83,6 +84,18 @@ export const useSubgraphsStore = defineStore({
         }
       }
       return aprs;
+    },
+    getNewAprs: (state) => {
+      let newAprs = [];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        let subgraph = state.subgraphs[i];
+        if(subgraph.currentSignalledTokens > 0) {
+          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, subgraphSettingStore.newAllocation)};
+        }else{
+          newAprs[i] = { newApr: 0 };
+        }
+      }
+      return newAprs;
     },
     getDailyRewards: (state) => {
       let dailyRewards = [];
