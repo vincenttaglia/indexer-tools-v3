@@ -8,6 +8,8 @@ import { useNetworkStore } from './network';
 const networkStore = useNetworkStore();
 import BigNumber from "bignumber.js";
 
+BigNumber.config({ POW_PRECISION: 1000 });
+
 function calculateNewApr(currentSignalledTokens, stakedTokens, newAllocation){
   try{
     return new BigNumber(currentSignalledTokens)
@@ -34,6 +36,7 @@ export const useSubgraphsStore = defineStore({
         subgraphs[i] = {
           ...state.subgraphs[i],
           ...state.getProportions[i],
+          ...state.getAprs[i],
         };
       }
       return subgraphs;
@@ -49,9 +52,10 @@ export const useSubgraphsStore = defineStore({
       }
       return proportions;
     },
-    /*getAprs: (state) => {
+    getAprs: (state) => {
       let aprs = [];
       for(let i = 0; i < state.subgraphs.length; i++){
+        console.log(i);
         let subgraph = state.subgraphs[i];
         if(subgraph.currentSignalledTokens > 0) {
           aprs[i] = { apr: calculateNewApr(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, "0") }
@@ -60,7 +64,7 @@ export const useSubgraphsStore = defineStore({
         }
       }
       return aprs;
-    },*/
+    },
   },
   actions: {
     async fetch(skip){

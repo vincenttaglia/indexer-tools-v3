@@ -58,7 +58,7 @@
     { title: 'Name', key: 'displayName' },
     { title: 'Network', key: 'currentVersion.subgraphDeployment.network.id'},
     { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
-    //{ title: 'Current APR', key: 'apr'},
+    { title: 'Current APR', key: 'apr'},
     //{ title: 'New APR', key: 'newapr'},
     //{ title: 'Max Allocation', key: 'max_allo'},
     //{ title: 'Est Daily Rewards (Before Cut)', key: 'dailyrewards'},
