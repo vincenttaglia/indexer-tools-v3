@@ -12,6 +12,22 @@ import BigNumber from "bignumber.js";
 
 BigNumber.config({ POW_PRECISION: 1000 });
 
+function maxAllo(target_apr_dec, signalledTokens, stakedTokens){
+  let target_apr = new BigNumber(target_apr_dec).dividedBy(100);
+
+  // signalledTokens / totalTokensSignalled * issuancePerYear / apr - stakedTokens = maxAllocation
+  try{
+    return new BigNumber(signalledTokens)
+        .dividedBy(networkStore.getTotalTokensSignalled)
+        .multipliedBy(networkStore.getIssuancePerYear)
+        .dividedBy(target_apr)
+        .minus(stakedTokens)
+        .dividedBy(new BigNumber(10).pow(18));
+  }catch(e){
+    return 0;
+  }
+}
+
 function calculateNewApr(currentSignalledTokens, stakedTokens, newAllocation){
   try{
     // signalledTokens / totalTokensSignalled * issuancePerYear / (stakedTokens + newAllocation)
@@ -57,7 +73,8 @@ export const useSubgraphsStore = defineStore({
           ...state.getProportions[i],
           ...state.getAprs[i],
           ...state.getDailyRewards[i],
-          ...state.getNewAprs[i]
+          ...state.getNewAprs[i],
+          ...state.getMaxAllos[i],
         };
       }
       return subgraphs;
@@ -109,6 +126,18 @@ export const useSubgraphsStore = defineStore({
       }
       return dailyRewards;
     },
+    getMaxAllos: (state) => {
+      let maxAllos = [];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        let subgraph = state.subgraphs[i];
+        if(subgraph.currentSignalledTokens > 0) {
+          maxAllos[i] = { maxAllo: maxAllo(subgraphSettingStore.targetApr, subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens) }
+        }else{
+          maxAllos[i] = { maxAllo: 0 }
+        }
+      }
+      return maxAllos;
+    }
   },
   actions: {
     async fetch(skip){

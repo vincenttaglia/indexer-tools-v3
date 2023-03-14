@@ -155,7 +155,7 @@
     { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
     { title: 'Current APR', key: 'apr'},
     { title: 'New APR', key: 'newApr'},
-    //{ title: 'Max Allocation', key: 'max_allo'},
+    { title: 'Max Allocation', key: 'maxAllo'},
     { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
     //{ title: 'Est Daily Rewards (After Cut)', key: 'dailyrewards_cut'},
     {

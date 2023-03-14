@@ -7,7 +7,7 @@ export const useSubgraphSettingStore = defineStore('subgraphSetting', {
     minSignal: '',
     maxSignal: '',
     newAllocation: '100000',
-    targetApr: '',
+    targetApr: '10',
     noRewardsFilter: 0,
     networkFilter: [],
     activateBlacklist: false,
