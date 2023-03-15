@@ -45,7 +45,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       let readableDurations = [];
       for(let i = 0; i < state.allocations.length; i++){
 
-        readableDurations[i] = { readableDuration: calculateReadableDuration(state.getActiveDurations[i]) }
+        readableDurations[i] = { readableDuration: calculateReadableDuration(state.getActiveDurations[i].activeDuration) }
       }
       return readableDurations;
     },
