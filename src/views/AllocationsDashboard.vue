@@ -158,13 +158,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import moment from "moment";
 import numeral from "numeral";
 import Web3 from "web3";
 import { useAllocationStore } from "@/store/allocations";
+import { useAccountStore } from "@/store/accounts";
+import { storeToRefs } from "pinia";
 
 const allocationStore = useAllocationStore();
+const accountStore = useAccountStore();
+const { getActiveAccount } = storeToRefs(accountStore);
 
 const headers = ref([
     {
@@ -191,4 +195,11 @@ const headers = ref([
   ]);
 
   allocationStore.fetchData();
+
+  watch(getActiveAccount,  async (newAccount, oldAccount) => {
+    console.log(newAccount);
+    console.log(oldAccount);
+    if(newAccount.address != oldAccount.address)
+      allocationStore.fetchData();
+  });
 </script>
