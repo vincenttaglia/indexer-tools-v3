@@ -77,9 +77,32 @@
       ></v-checkbox>
     </template>
     <template v-slot:item.image="{ item }">
-      <v-avatar size="30">
-        <v-img :src="item.raw.image" />
-      </v-avatar>
+      <v-badge
+            :model-value="item.raw.currentVersion.subgraphDeployment.deniedAt"
+            bordered
+            color="error"
+            icon="mdi-currency-usd-off"
+            overlap
+            avatar
+            v-if="(item.raw.currentVersion.subgraphDeployment.deniedAt && item.raw.currentlyAllocated) || (!item.raw.currentVersion.subgraphDeployment.deniedAt && !item.raw.currentlyAllocated) || (item.raw.currentVersion.subgraphDeployment.deniedAt && !item.raw.currentlyAllocated)"
+        >
+        <v-avatar size="30">
+          <v-img :src="item.raw.image" />
+        </v-avatar>
+      </v-badge>
+      <v-badge
+          :model-value="item.raw.currentlyAllocated"
+          bordered
+          color="warning"
+          icon="mdi-exclamation-thick"
+          overlap
+          avatar
+          v-if="!item.raw.currentVersion.subgraphDeployment.deniedAt && item.raw.currentlyAllocated"
+      >
+        <v-avatar size="30">
+          <v-img :src="item.raw.image" />
+        </v-avatar>
+      </v-badge>
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
       <span :timestamp="item.raw.currentVersion.subgraphDeployment.createdAt">{{ moment(item.raw.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
