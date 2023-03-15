@@ -180,7 +180,7 @@ function customSort(items, index, isDesc) {
     { title: 'New APR', key: 'newApr'},
     { title: 'Max Allocation', key: 'maxAllo'},
     { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
-    //{ title: 'Est Daily Rewards (After Cut)', key: 'dailyrewards_cut'},
+    { title: 'Est Daily Rewards (After Cut)', key: 'dailyRewardsCut'},
     { title: 'Current Signal', key: 'currentSignalledTokens'},
     { title: 'Current Proportion', key: 'proportion'},
     { title: 'Current Allocations', key: 'currentVersion.subgraphDeployment.stakedTokens'},

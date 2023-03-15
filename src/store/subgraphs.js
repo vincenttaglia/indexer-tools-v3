@@ -5,11 +5,14 @@ import gql from 'graphql-tag';
 import Web3 from 'web3';
 const BN = Web3.utils.BN;
 import { useNetworkStore } from './network';
+import { useAccountStore } from './accounts';
 import { useSubgraphSettingStore } from './subgraphSettings';
 const networkStore = useNetworkStore();
+const accountStore = useAccountStore();
+accountStore.fetchData();
 const subgraphSettingStore = useSubgraphSettingStore();
 import BigNumber from "bignumber.js";
-import { calculateNewApr, calculateDailyRewards, maxAllo } from '@/plugins/commonCalcs';
+import { calculateNewApr, calculateSubgraphDailyRewards, maxAllo, indexerCut } from '@/plugins/commonCalcs';
 
 
 export const useSubgraphsStore = defineStore({
@@ -71,6 +74,7 @@ export const useSubgraphsStore = defineStore({
           ...state.getProportions[i],
           ...state.getAprs[i],
           ...state.getDailyRewards[i],
+          ...state.getDailyRewardsCuts[i],
           ...state.getNewAprs[i],
           ...state.getMaxAllos[i],
         };
@@ -117,12 +121,24 @@ export const useSubgraphsStore = defineStore({
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
         if(subgraph.currentSignalledTokens > 0) {
-          dailyRewards[i] = { dailyRewards: calculateDailyRewards(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, subgraphSettingStore.newAllocation) }
+          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, subgraphSettingStore.newAllocation) }
         }else{
           dailyRewards[i] = { dailyRewards: 0 }
         }
       }
       return dailyRewards;
+    },
+    getDailyRewardsCuts() {
+      let dailyRewardsCuts = [];
+      for(let i = 0; i < this.subgraphs.length; i++){
+        let subgraph = this.subgraphs[i];
+        if (subgraph.currentVersion.subgraphDeployment.stakedTokens > 0 && !accountStore.loading){
+          dailyRewardsCuts[i] = { dailyRewardsCut: indexerCut(this.getDailyRewards[i].dailyRewards, accountStore.cut) };
+        }else{
+          dailyRewardsCuts[i] = { dailyRewardsCut: 0 };
+        }
+      }
+      return dailyRewardsCuts;
     },
     getMaxAllos: (state) => {
       let maxAllos = [];

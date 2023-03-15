@@ -38,7 +38,7 @@ function calculateNewApr(currentSignalledTokens, stakedTokens, networkStore, new
   }
 }
 
-function calculateDailyRewards(signalledTokens, stakedTokens, allocatedTokens, networkStore){
+function calculateAllocationDailyRewards(signalledTokens, stakedTokens, allocatedTokens, networkStore){
   try{
     // signalledTokens / totalTokensSignalled * issuancePerBlock * blocks per day * (allocatedTokens / stakedTokens))
       return new BigNumber(signalledTokens)
@@ -52,6 +52,22 @@ function calculateDailyRewards(signalledTokens, stakedTokens, allocatedTokens, n
   catch(e){
     return new BigNumber(0);
   }
+}
+
+function calculateSubgraphDailyRewards(currentSignalledTokens, stakedTokens, networkStore, newAllocation){
+  try{
+    return new BigNumber(currentSignalledTokens)
+        .dividedBy(networkStore.getTotalTokensSignalled)
+        .multipliedBy(networkStore.getIssuancePerBlock)
+        .multipliedBy(6450)
+        .multipliedBy(
+            new BigNumber(Web3.utils.toWei(newAllocation)).dividedBy(new BigNumber(stakedTokens).plus(Web3.utils.toWei(newAllocation)))
+        ).dp(0);
+  }
+  catch(e){
+    return new BigNumber(0);
+  }
+  
 }
 
 function calculateReadableDuration(seconds) {
@@ -72,4 +88,4 @@ function indexerCut(rewards, rewardCut){
   return afterCut;
 }
 
-export { maxAllo, calculateApr, calculateNewApr, calculateDailyRewards, calculateReadableDuration, indexerCut };
+export { maxAllo, calculateApr, calculateNewApr, calculateAllocationDailyRewards, calculateSubgraphDailyRewards, calculateReadableDuration, indexerCut };

@@ -4,7 +4,7 @@ import { useNetworkStore } from '@/store/network';
 import { useAccountStore } from '@/store/accounts';
 import gql from 'graphql-tag';
 import moment from 'moment';
-import { calculateApr, calculateReadableDuration, calculateDailyRewards, indexerCut } from '@/plugins/commonCalcs';
+import { calculateApr, calculateReadableDuration, calculateAllocationDailyRewards, indexerCut } from '@/plugins/commonCalcs';
 
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
@@ -84,7 +84,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       for(let i = 0; i < state.allocations.length; i++){
         let allocation = state.allocations[i];
         if (allocation.subgraphDeployment.stakedTokens > 0){
-          dailyRewards[i] = { dailyRewards: calculateDailyRewards(allocation.subgraphDeployment.signalledTokens, allocation.subgraphDeployment.stakedTokens, allocation.allocatedTokens, networkStore)}
+          dailyRewards[i] = { dailyRewards: calculateAllocationDailyRewards(allocation.subgraphDeployment.signalledTokens, allocation.subgraphDeployment.stakedTokens, allocation.allocatedTokens, networkStore)}
         }else{
           dailyRewards[i] = { dailyRewards: 0 };
         }
