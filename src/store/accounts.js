@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 export const useAccountStore = defineStore('accountStore', {
   state: () => ({
-    accounts: [ { address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: true } ],
+    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : [ { address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: true } ],
     loading: true,
     cut: '0',
     availableStake: '0',
@@ -52,6 +52,7 @@ export const useAccountStore = defineStore('accountStore', {
         this.availableStake = '0';
         this.loading = true;
         this.fetchData();
+        localStorage.accounts = JSON.stringify(this.accounts);
       }
     },
     removeAccount(address){
@@ -70,6 +71,7 @@ export const useAccountStore = defineStore('accountStore', {
           }
         }
         this.accounts = this.accounts.filter((e) => { return e.address != indexer.address; });
+        localStorage.accounts = JSON.stringify(this.accounts);
       }
     }
   },
