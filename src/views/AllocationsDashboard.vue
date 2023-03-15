@@ -181,7 +181,7 @@ const headers = ref([
     { title: 'Allocation Duration', key: 'activeDuration'},
     { title: 'Current APR', key: 'apr'},
     { title: 'Est Daily Rewards', key: 'dailyRewards'},
-    //{ title: 'Est Daily Rewards (After Cut)', key: 'dailyrewardsCut'},
+    { title: 'Est Daily Rewards (After Cut)', key: 'dailyRewardsCut'},
     //{ title: 'Pending Rewards', key: 'pendingRewards'},
     //{ title: 'Pending Rewards (After Cut)', key: 'pendingRewardsCut'},
     { title: 'Current Signal', key: 'subgraphDeployment.signalledTokens'},

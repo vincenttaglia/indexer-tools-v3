@@ -38,16 +38,16 @@ function calculateNewApr(currentSignalledTokens, stakedTokens, networkStore, new
   }
 }
 
-function calculateDailyRewards(currentSignalledTokens, stakedTokens, networkStore, newAllocation){
+function calculateDailyRewards(signalledTokens, stakedTokens, allocatedTokens, networkStore){
   try{
-    // currentSignalledTokens / totalTokensSignalled * issuancePerBlock * blocks per day * (new_allocation / (stakedTokens + newAllocation))
-    return new BigNumber(currentSignalledTokens)
+    // signalledTokens / totalTokensSignalled * issuancePerBlock * blocks per day * (allocatedTokens / stakedTokens))
+      return new BigNumber(signalledTokens)
           .dividedBy(networkStore.getTotalTokensSignalled)
           .multipliedBy(networkStore.getIssuancePerBlock)
           .multipliedBy(6450)
-          .multipliedBy(
-              new BigNumber(Web3.utils.toWei(newAllocation)).dividedBy(new BigNumber(stakedTokens).plus(Web3.utils.toWei(newAllocation)))
-          ).dp(0);
+          .multipliedBy(allocatedTokens)
+          .dividedBy(stakedTokens)
+          .dp(0);
   }
   catch(e){
     return new BigNumber(0);
@@ -62,4 +62,14 @@ function calculateReadableDuration(seconds) {
   return `${d}d ${h}h ${m}m`;
 }
 
-export { maxAllo, calculateApr, calculateNewApr, calculateDailyRewards, calculateReadableDuration };
+function indexerCut(rewards, rewardCut){
+  console.log(rewards);
+  console.log(rewardCut);
+  let afterCut = Number(rewardCut) == 1000000 ? new BigNumber(rewards) : new BigNumber(rewards).multipliedBy(rewardCut).dividedBy(1000000).dp(0,1);
+  console.log(afterCut);
+  console.log(afterCut.toString());
+  console.log();
+  return afterCut;
+}
+
+export { maxAllo, calculateApr, calculateNewApr, calculateDailyRewards, calculateReadableDuration, indexerCut };

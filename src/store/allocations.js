@@ -1,14 +1,15 @@
 import { defineStore } from 'pinia'
 import graphNetworkClient from "@/plugins/graphNetworkSubgraphClient";
-import { useIndexerStore } from '@/store/indexer';
 import { useNetworkStore } from '@/store/network';
+import { useAccountStore } from '@/store/accounts';
 import gql from 'graphql-tag';
 import moment from 'moment';
-import { calculateApr, calculateReadableDuration, calculateDailyRewards } from '@/plugins/commonCalcs';
+import { calculateApr, calculateReadableDuration, calculateDailyRewards, indexerCut } from '@/plugins/commonCalcs';
 
-const indexerStore = useIndexerStore();
 const networkStore = useNetworkStore();
+const accountStore = useAccountStore();
 networkStore.init();
+accountStore.fetchData();
 
 
 export const useAllocationStore = defineStore('allocationStore', {
@@ -27,6 +28,7 @@ export const useAllocationStore = defineStore('allocationStore', {
           ...state.getProportions[i],
           ...state.getAprs[i],
           ...state.getDailyRewards[i],
+          ...state.getDailyRewardsCuts[i],
         };
       }
       return allocations;
@@ -82,21 +84,21 @@ export const useAllocationStore = defineStore('allocationStore', {
       for(let i = 0; i < state.allocations.length; i++){
         let allocation = state.allocations[i];
         if (allocation.subgraphDeployment.stakedTokens > 0){
-          dailyRewards[i] = { dailyRewards: calculateDailyRewards(allocation.subgraphDeployment.signalledTokens, allocation.allocatedTokens, networkStore, allocation.subgraphDeployment.stakedTokens)}
+          dailyRewards[i] = { dailyRewards: calculateDailyRewards(allocation.subgraphDeployment.signalledTokens, allocation.subgraphDeployment.stakedTokens, allocation.allocatedTokens, networkStore)}
         }else{
           dailyRewards[i] = { dailyRewards: 0 };
         }
       }
       return dailyRewards;
     },
-    getDailyRewardsCuts: (state) => {
+    getDailyRewardsCuts() {
       let dailyRewardsCuts = [];
-      for(let i = 0; i < state.allocations.length; i++){
-        let allocation = state.allocations[i];
-        if (allocation.subgraphDeployment.stakedTokens > 0){
-
+      for(let i = 0; i < this.allocations.length; i++){
+        let allocation = this.allocations[i];
+        if (allocation.subgraphDeployment.stakedTokens > 0 && !accountStore.loading){
+          dailyRewardsCuts[i] = { dailyRewardsCut: indexerCut(this.getDailyRewards[i].dailyRewards, accountStore.cut) };
         }else{
-
+          dailyRewardsCuts[i] = { dailyRewardsCut: 0 };
         }
       }
       return dailyRewardsCuts;
@@ -140,7 +142,7 @@ export const useAllocationStore = defineStore('allocationStore', {
   
         }`,
         variables: {
-          indexer: indexerStore.address
+          indexer: accountStore.getActiveAccount.address
         },
       })
       .then(({ data }) => {
