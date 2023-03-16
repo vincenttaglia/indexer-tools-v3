@@ -81,7 +81,7 @@ function calculateReadableDuration(seconds) {
 function indexerCut(rewards, rewardCut){
   console.log(rewards);
   console.log(rewardCut);
-  let afterCut = Number(rewardCut) == 1000000 ? new BigNumber(rewards) : new BigNumber(rewards).multipliedBy(rewardCut).dividedBy(1000000).dp(0,1);
+  let afterCut = new BigNumber(rewards).multipliedBy(rewardCut).dividedBy(1000000).dp(0,1);
   console.log(afterCut);
   console.log(afterCut.toString());
   console.log();

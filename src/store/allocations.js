@@ -4,10 +4,15 @@ import { useNetworkStore } from '@/store/network';
 import { useAccountStore } from '@/store/accounts';
 import gql from 'graphql-tag';
 import moment from 'moment';
+import BigNumber from 'bignumber.js';
+import Web3 from 'web3';
+import RewardsContractABI from '@/abis/rewardsContractABI.json';
 import { calculateApr, calculateReadableDuration, calculateAllocationDailyRewards, indexerCut } from '@/plugins/commonCalcs';
+
 
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
+const ProxyContract = new (new Web3("https://mainnet.infura.io/v3/659344f230804542a4e653f875172105")).eth.Contract(RewardsContractABI, "0x9Ac758AB77733b4150A901ebd659cbF8cB93ED66");
 networkStore.init();
 accountStore.fetchData();
 
@@ -15,6 +20,7 @@ accountStore.fetchData();
 export const useAllocationStore = defineStore('allocationStore', {
   state: () => ({
     allocations: [],
+    pendingRewards: [],
   }),
   getters: {
     getAllocations: (state) => {
@@ -29,6 +35,8 @@ export const useAllocationStore = defineStore('allocationStore', {
           ...state.getAprs[i],
           ...state.getDailyRewards[i],
           ...state.getDailyRewardsCuts[i],
+          ...state.getPendingRewards[i],
+          ...state.getPendingRewardsCuts[i],
         };
       }
       return allocations;
@@ -103,8 +111,50 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
       return dailyRewardsCuts;
     },
+    getPendingRewards: (state) => {
+      let pendingRewards = [];
+      for(let i = 0; i < state.pendingRewards.length; i++){
+        pendingRewards[i] = { pendingRewards: state.pendingRewards[i] }
+      }
+      return pendingRewards;
+    },
+    getPendingRewardsCuts() {
+      let pendingRewardsCuts = [];
+      for(let i = 0; i < this.pendingRewards.length; i++){
+        let pendingReward = this.pendingRewards[i];
+        if(pendingReward.value > 0 && !accountStore.loading){
+          pendingRewardsCuts[i] = { pendingRewardsCut: indexerCut(this.getPendingRewards[i].pendingRewards.value, accountStore.cut) };
+        }else{
+          pendingRewardsCuts[i] = { pendingRewardsCut: BigNumber(0) };
+        }
+      }
+      return pendingRewardsCuts;
+    },
   },
   actions: {
+    async fetchAllPendingRewards(){
+      for(let i = 0; i < this.allocations.length; i++){
+        this.fetchPendingRewards(this.getAllocations[i].id);
+      }
+    },
+    fetchPendingRewards(allocationId){
+      let allocation = this.getAllocations.find(e => e.id == allocationId);
+
+      if(!allocation.pendingRewards.loading && !allocation.pendingRewards.loaded){
+
+        allocation.pendingRewards.loading = true;
+
+        ProxyContract.methods.getRewards(allocation.id).call(function(error, value){
+          if(value === undefined)
+            allocation.pendingRewards.error = true;
+          else
+            allocation.pendingRewards.value = BigNumber(value);
+          
+          allocation.pendingRewards.loaded = true;
+          allocation.pendingRewards.loading = false;
+        })
+      }
+    },
     async fetchData(){
       graphNetworkClient.query({
         query: gql`query allocations($indexer: String!){
@@ -148,6 +198,10 @@ export const useAllocationStore = defineStore('allocationStore', {
       .then(({ data }) => {
         console.log(data);
         this.allocations = data.allocations;
+        this.pendingRewards = Array(data.allocations.length).fill();
+        for(let i = 0; i < this.pendingRewards.length; i++){
+          this.pendingRewards[i] = { value: BigNumber(0), loading: false, loaded: false };
+        }
       });
     }
   }

@@ -86,24 +86,24 @@
     </template>
     <template v-slot:item.pendingRewards="{ item }">
       <span
-        v-if="item.raw.pendingRewards === null && !automaticIndexingRewards"
+        v-if="!item.raw.pendingRewards.loading && !item.raw.pendingRewards.loaded"
         >
-        <v-icon left @click="getPendingAllocationRewards();">
+        <v-icon left @click="allocationStore.fetchPendingRewards(item.raw.id);">
           mdi-download
         </v-icon>
       </span>
       <v-progress-circular
           indeterminate
           color="purple"
-          v-if="item.raw.pendingRewards === -1 || (automaticIndexingRewards && item.raw.pendingRewards === null)"
+          v-if="item.raw.pendingRewards.loading && !item.raw.pendingRewards.loaded"
       ></v-progress-circular>
       <span
-        v-if="item.raw.pendingRewards !== null && item.raw.pendingRewards >= 0"
+        v-if="!item.raw.pendingRewards.loading && item.raw.pendingRewards.loaded"
         >
-        {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.raw.pendingRewards))).format('0,0') }} GRT
+        {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.raw.pendingRewards.value))).format('0,0') }} GRT
       </span>
       <span
-        v-if="item.raw.pendingRewards === -2"
+        v-if="item.raw.pendingRewards.error"
         >
         error
       </span>
@@ -111,24 +111,24 @@
     </template>
     <template v-slot:item.pendingRewardsCut="{ item }">
       <span
-        v-if="item.raw.pendingRewards === null && !automaticIndexingRewards"
+        v-if="!item.raw.pendingRewards.loading && !item.raw.pendingRewards.loaded"
         >
-        <v-icon left @click="getPendingAllocationRewards();">
-          mdi-download
+        <v-icon left @click="allocationStore.fetchAllPendingRewards();">
+          mdi-download-multiple
         </v-icon>
       </span>
       <v-progress-circular
           indeterminate
           color="purple"
-          v-if="item.raw.pendingRewardsCut === -1 || (automaticIndexingRewards && item.raw.pending_rewards === null)"
+          v-if="item.raw.pendingRewards.loading && !item.raw.pendingRewards.loaded"
       ></v-progress-circular>
       <span
-          v-if="item.raw.pendingRewardsCut !== null && item.raw.pendingRewardsCut >= 0 && item.raw.pendingRewards !== -2"
+          v-if="!item.raw.pendingRewards.loading && item.raw.pendingRewards.loaded"
       >
         {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.raw.pendingRewardsCut))).format('0,0') }} GRT
       </span>
       <span
-        v-if="item.raw.pending_rewards === -2"
+        v-if="item.raw.pendingRewards.error"
         >
         error
       </span>
@@ -184,8 +184,8 @@ const headers = ref([
     { title: 'Current APR', key: 'apr'},
     { title: 'Est Daily Rewards', key: 'dailyRewards'},
     { title: 'Est Daily Rewards (After Cut)', key: 'dailyRewardsCut'},
-    //{ title: 'Pending Rewards', key: 'pendingRewards'},
-    //{ title: 'Pending Rewards (After Cut)', key: 'pendingRewardsCut'},
+    { title: 'Pending Rewards', key: 'pendingRewards'},
+    { title: 'Pending Rewards (After Cut)', key: 'pendingRewardsCut'},
     { title: 'Current Signal', key: 'subgraphDeployment.signalledTokens'},
     { title: 'Current Proportion', key: 'proportion'},
     { title: 'Current Allocations', key: 'subgraphDeployment.stakedTokens'},
