@@ -5,6 +5,20 @@
 
       Indexer Tools v3
     </v-app-bar-title>
+    <v-btn
+        variant="text"
+        to="/"
+        class="ml-5 mr-2"
+    >
+      Subgraphs Dashboard
+    </v-btn>
+    <v-btn
+        variant="text"
+        to="/allocations"
+        class="ml-2 mr-2"
+    >
+      Allocations Dashboard
+    </v-btn>
     <accounts-dropdown></accounts-dropdown>
   </v-app-bar>
 </template>
