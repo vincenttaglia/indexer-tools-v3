@@ -9,6 +9,7 @@
         variant="text"
         to="/"
         class="ml-5 mr-2"
+        exact
     >
       Subgraphs Dashboard
     </v-btn>
@@ -18,6 +19,13 @@
         class="ml-2 mr-2"
     >
       Allocations Dashboard
+    </v-btn>
+    <v-btn
+        variant="text"
+        to="/wizard"
+        class="ml-2 mr-2"
+    >
+      Allocation Wizard
     </v-btn>
     <accounts-dropdown></accounts-dropdown>
   </v-app-bar>

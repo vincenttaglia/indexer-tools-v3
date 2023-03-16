@@ -19,6 +19,11 @@ const routes = [
         name: 'Allocations Dashboard',
         component: () => import('@/views/AllocationsDashboard.vue'),
       },
+      {
+        path: 'wizard',
+        name: 'Allocation Wizard',
+        component: () => import('@/views/AllocationWizard.vue'),
+      },
     ],
   },
 ]
