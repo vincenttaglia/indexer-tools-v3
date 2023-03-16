@@ -11,6 +11,7 @@
       }"
       loading-text="Loading... Please wait"
       mobile-breakpoint="0"
+      :show-select="selectable"
   >
     <template v-slot:item.subgraphDeployment.versions[0].subgraph.image="{ item }">
       <v-badge
@@ -170,6 +171,13 @@ const allocationStore = useAllocationStore();
 const accountStore = useAccountStore();
 const { getActiveAccount } = storeToRefs(accountStore);
 
+defineProps({
+  selectable: {
+    type: Boolean,
+    default: false,
+  },
+})
+
 const headers = ref([
     {
       title: 'Img',
@@ -194,7 +202,7 @@ const headers = ref([
     { title: 'Deployment ID', key: 'subgraphDeployment.ipfsHash', sortable: false },
   ]);
 
-  allocationStore.fetchData();
+  allocationStore.init();
 
   watch(getActiveAccount,  async (newAccount, oldAccount) => {
     console.log(newAccount);

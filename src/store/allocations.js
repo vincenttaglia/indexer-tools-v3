@@ -21,6 +21,7 @@ export const useAllocationStore = defineStore('allocationStore', {
   state: () => ({
     allocations: [],
     pendingRewards: [],
+    loaded: false,
   }),
   getters: {
     getAllocations: (state) => {
@@ -155,6 +156,10 @@ export const useAllocationStore = defineStore('allocationStore', {
         })
       }
     },
+    async init(){
+      if(!this.loaded)
+        return this.fetchData();
+    },
     async fetchData(){
       graphNetworkClient.query({
         query: gql`query allocations($indexer: String!){
@@ -197,6 +202,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       })
       .then(({ data }) => {
         console.log(data);
+        this.loaded = true;
         this.allocations = data.allocations;
         this.pendingRewards = Array(data.allocations.length).fill();
         for(let i = 0; i < this.pendingRewards.length; i++){

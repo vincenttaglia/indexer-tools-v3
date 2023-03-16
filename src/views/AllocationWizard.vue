@@ -2,7 +2,7 @@
   <div>
     <Steppy v-model:step="currentStep" v-model:tabs="tabs">
       <template #1>
-        <AllocationsDashboard />
+        <AllocationsDashboard selectable />
         <div class="mt-12 mb-10 ml-5">
           <v-btn
               color="primary"
@@ -120,10 +120,15 @@ import moment from "moment";
 import numeral from "numeral";
 import Web3 from "web3";
 import { Steppy } from 'vue3-steppy';
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import AllocationsDashboard from "./AllocationsDashboard.vue";
 import SubgraphsDashboard from "./SubgraphsDashboard.vue";
 import AllocationSetter from "@/components/AllocationSetter.vue";
+import { useAllocationStore } from "@/store/allocations";
+import { useNetworkStore } from "@/store/network";
+
+const allocationStore = useAllocationStore();
+const networkStore = useNetworkStore();
 
 const currentStep = ref(1);
 
@@ -141,6 +146,11 @@ const tabs = ref([
     title: 'Execute Actions',
   }
 ])
+
+const avgAPR = computed(() => {
+  return new BigNumber(networkStore.totalRewardsPerYear).dividedBy(this.totalAllocatedStake.plus(this.availableStake)).multipliedBy(100).dp(2);
+})
+
 
 </script>
 
