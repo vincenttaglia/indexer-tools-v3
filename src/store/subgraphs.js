@@ -82,6 +82,19 @@ export const useSubgraphsStore = defineStore({
       }
       return subgraphs;
     },
+    getSelectedSubgraphs: (state) => {
+      let selectedSubgraphs = [];
+      for(let i = 0; i < state.selected.length; i++){
+        let subgraphIndex = state.subgraphs.findIndex((e) => e.id == state.selected[i])
+        selectedSubgraphs[i] = {
+          ...state.subgraphs[subgraphIndex],
+          ...state.getProportions[subgraphIndex],
+          ...state.getAprs[subgraphIndex],
+          ...state.getMaxAllos[subgraphIndex],
+        };
+      }
+      return selectedSubgraphs;
+    },
     getProportions: (state) => {
       let proportions = [];
       for(let i = 0; i < state.subgraphs.length; i++){

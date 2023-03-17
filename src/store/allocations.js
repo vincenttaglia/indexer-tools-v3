@@ -132,6 +132,38 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
       return pendingRewardsCuts;
     },
+    getTotalAllocatedStake: (state) => {
+      let totalAllocatedStake = new BigNumber(0);
+      if(state.selected.length > 0){
+        for(const i in state.selected){
+          totalAllocatedStake = totalAllocatedStake.plus(state.allocations.find((e) => e.id == state.selected[i]).allocatedTokens);
+        }
+      }
+      return totalAllocatedStake;
+    },
+    getTotalRewardsPerYear: (state) => {
+      let totalRewardsPerYear = new BigNumber(0);
+      if(state.allocations.length > 0){
+        for(const i in state.allocations){
+
+          totalRewardsPerYear = totalRewardsPerYear.plus(
+              new BigNumber(state.allocations[i].subgraphDeployment.signalledTokens)
+                  .dividedBy(networkStore.totalTokensSignalled)
+                  .multipliedBy(networkStore.issuancePerYear)
+                  .multipliedBy(
+                      new BigNumber(state.allocations[i].allocatedTokens).dividedBy(state.allocations[i].subgraphDeployment.stakedTokens)
+                  )
+          );
+        }
+      }
+      return totalRewardsPerYear;
+    },
+    avgAPR: (state) => {
+      let apr = state.getTotalRewardsPerYear.dividedBy(state.getTotalAllocatedStake.plus(accountStore.availableStake)).dp(0);
+      console.log("APR");
+      console.log(apr);
+      return apr;
+    },
   },
   actions: {
     async fetchAllPendingRewards(){

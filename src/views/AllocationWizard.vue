@@ -79,7 +79,7 @@
           <v-card>
             <v-card-text>
               Before Overall APR:
-              <h1 class="pt-2">{{ numeral(0).format("0,0.00") }}%</h1>
+              <h1 class="pt-2">{{ numeral(allocationStore.avgAPR).format("0,0.00%") }}</h1>
             </v-card-text>
           </v-card>
           <v-card>
@@ -126,9 +126,11 @@ import SubgraphsDashboard from "./SubgraphsDashboard.vue";
 import AllocationSetter from "@/components/AllocationSetter.vue";
 import { useAllocationStore } from "@/store/allocations";
 import { useNetworkStore } from "@/store/network";
+import { useNewAllocationSetterStore } from "@/store/newAllocationSetter";
 
 const allocationStore = useAllocationStore();
 const networkStore = useNetworkStore();
+const newAllocationSetterStore = useNewAllocationSetterStore();
 
 const currentStep = ref(1);
 
@@ -146,10 +148,6 @@ const tabs = ref([
     title: 'Execute Actions',
   }
 ])
-
-const avgAPR = computed(() => {
-  return new BigNumber(networkStore.totalRewardsPerYear).dividedBy(this.totalAllocatedStake.plus(this.availableStake)).multipliedBy(100).dp(2);
-})
 
 
 </script>
