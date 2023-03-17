@@ -11,6 +11,8 @@
     }"
     loading-text="Loading... Please wait"
     mobile-breakpoint="0"
+    :show-select="selectable"
+    v-model="selected"
   >
     <template v-slot:top>
       <v-text-field
@@ -151,10 +153,20 @@
   import web3 from 'web3';
   import moment from 'moment';
   import BigNumber from 'bignumber.js';
+  import { storeToRefs } from 'pinia';
 
   const subgraphStore = useSubgraphsStore();
   const subgraphSettingStore = useSubgraphSettingStore();
   subgraphStore.fetchData();
+
+  const { selected } = storeToRefs(subgraphStore);
+
+  defineProps({
+    selectable: {
+      type: Boolean,
+      default: false,
+    },
+  })
 
 function customSort(items, index, isDesc) {
   items.sort((a, b) => {

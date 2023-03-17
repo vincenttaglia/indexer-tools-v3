@@ -19,6 +19,7 @@ export const useSubgraphsStore = defineStore({
   id: 'subgraphs',
   state: () => ({
     subgraphs: [],
+    selected: [],
   }),
   getters: {
     getFilteredSubgraphs: (state) => {
