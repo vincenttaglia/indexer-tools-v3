@@ -12,6 +12,7 @@
       loading-text="Loading... Please wait"
       mobile-breakpoint="0"
       :show-select="selectable"
+      v-model="selected"
   >
     <template v-slot:item.subgraphDeployment.versions[0].subgraph.image="{ item }">
       <v-badge
@@ -170,6 +171,8 @@ import { storeToRefs } from "pinia";
 const allocationStore = useAllocationStore();
 const accountStore = useAccountStore();
 const { getActiveAccount } = storeToRefs(accountStore);
+
+const { selected } = storeToRefs(allocationStore);
 
 defineProps({
   selectable: {
