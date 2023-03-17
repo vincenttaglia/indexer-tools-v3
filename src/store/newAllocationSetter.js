@@ -18,11 +18,12 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
   }),
   getters: {
     getSelected: () => subgraphStore.selected,
+    getSelectedS: () => subgraphStore.getSelectedSubgraphs,
     getSelectedSubgraphs: (state) => {
       let selectedSubgraphs = [];
       for(let i = 0; i < subgraphStore.getSelectedSubgraphs.length; i++){
         selectedSubgraphs[i] = {
-          ...subgraphStore.getSelectedSubgraphs[i],
+          ...state.getSelectedS[i],
           ...state.getNewAprs[i],
           ...state.getDailyRewards[i],
           ...state.getDailyRewardsCuts[i],
@@ -32,10 +33,10 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     },
     getNewAprs: (state) => {
       let newAprs = [];
-      for(let i = 0; i < subgraphStore.getSelectedSubgraphs.length; i++){
-        let subgraph = subgraphStore.getSelectedSubgraphs[i];
-        if(subgraph.currentSignalledTokens > 0) {
-          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, state.newAllocations[subgraph.id])};
+      for(let i = 0; i < state.getSelectedS.length; i++){
+        let subgraph = state.getSelectedS[i];
+        if(subgraph.currentSignalledTokens != "0") {
+          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, state.newAllocations[subgraph.id].toString())};
         }else{
           newAprs[i] = { newApr: 0 };
         }
@@ -44,10 +45,10 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     },
     getDailyRewards: (state) => {
       let dailyRewards = [];
-      for(let i = 0; i < subgraphStore.getSelectedSubgraphs.length; i++){
-        let subgraph = subgraphStore.getSelectedSubgraphs[i];
-        if(subgraph.currentVersion.subgraphDeployment.stakedTokens > 0 && !accountStore.loading) {
-          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, state.newAllocations[subgraph.id]) }
+      for(let i = 0; i < state.getSelectedS.length; i++){
+        let subgraph = state.getSelectedS[i];
+        if(subgraph.currentVersion.subgraphDeployment.stakedTokens != "0" && !accountStore.loading) {
+          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, state.newAllocations[subgraph.id].toString()) }
         }else{
           dailyRewards[i] = { dailyRewards: 0 }
         }
@@ -56,8 +57,8 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     },
     getDailyRewardsCuts: (state) => {
       let dailyRewardsCuts = [];
-      for(let i = 0; i < subgraphStore.getSelectedSubgraphs.length; i++){
-        let subgraph = subgraphStore.getSelectedSubgraphs[i];
+      for(let i = 0; i < state.getSelectedS.length; i++){
+        let subgraph = state.getSelectedS[i];
         if (subgraph.currentVersion.subgraphDeployment.stakedTokens > 0 && !accountStore.loading){
           dailyRewardsCuts[i] = { dailyRewardsCut: indexerCut(state.getDailyRewards[i].dailyRewards, accountStore.cut) };
         }else{
@@ -94,8 +95,8 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
   },
   actions: {
     async update(){
-      for(let i = 0; i < subgraphStore.selected.length; i++){
-        this.newAllocations[subgraphStore.selected[i]] ||= 0;
+      for(let i = 0; i < this.getSelected.length; i++){
+        this.newAllocations[this.getSelected[i]] ||= 0;
       }
     }
   },
