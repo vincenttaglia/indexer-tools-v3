@@ -17,17 +17,6 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     newAllocations: {},
   }),
   getters: {
-    getNewAllocations: (state) => {
-      let newAllocations = {};
-      for(let i = 0; i < state.getSelected.length; i++){
-        if(state.newAllocations[state.getSelected[i]]){
-          newAllocations[state.getSelected[i]] = state.newAllocations[state.getSelected[i]];
-        }else{
-          newAllocations[state.getSelected[i]] = 0;
-        }
-      }
-      return newAllocations;
-    },
     getSelected: () => subgraphStore.selected,
     getSelectedSubgraphs: (state) => {
       let selectedSubgraphs = [];
@@ -80,21 +69,27 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     totalClosing: (state) => {
       return state.getSelectedSubgraphs.reduce((sum, cur) => sum.plus(cur.allocatedTokens), BigNumber(0))
     },
+    totalOpening: (state) => {
+      let total = 0;
+      for(let i in state.getSelected){
+        if(state.newAllocations[state.getSelected[i]])
+          total += parseInt(state.newAllocations[state.getSelected[i]]);
+        console.log(total);
+      }
+      return total;
+    },
     avgAPR: (state) => {
-      return allocationStore.getTotalRewardsPerYear.dividedBy(allocationStore.getTotalAllocatedStake.plus(state.availableStake));
+      return allocationStore.totalRewardsPerYear.dividedBy(allocationStore.totalAllocatedStake.plus(state.availableStake));
     },
     availableStake: () => {
       return accountStore.availableStake;
     },
     calculatedAvailableStake: (state) => {
-      return BigNumber(state.availableStake).plus(state.totalClosing).minus(Web3.utils.toWei(state.totalOpening.toString()));
-    },
-    totalOpening: (state) => {
-      let totalOpening = 0;
-      for(const i in state.newAllocations){
-        totalOpening += parseInt(state.newAllocations[i]);
-      }
-      return totalOpening;
+      let calc = BigNumber(state.availableStake).plus(allocationStore.closingTotalAllocatedStake).minus(Web3.utils.toWei(state.totalOpening.toString()));
+      if(calc.toString() != "NaN")
+        return calc
+      else
+        return BigNumber(0);
     },
   },
   actions: {
