@@ -132,24 +132,24 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
       return pendingRewardsCuts;
     },
-    getTotalAllocatedStake: (state) => {
+    totalAllocatedStake: (state) => {
       let totalAllocatedStake = new BigNumber(0);
-      if(state.selected.length > 0){
-        for(const i in state.selected){
-          totalAllocatedStake = totalAllocatedStake.plus(state.allocations.find((e) => e.id == state.selected[i]).allocatedTokens);
+      if(state.allocations.length > 0){
+        for(const i in state.allocations){
+          totalAllocatedStake = totalAllocatedStake.plus(state.allocations[i].allocatedTokens);
         }
       }
       return totalAllocatedStake;
     },
-    getTotalRewardsPerYear: (state) => {
+    totalRewardsPerYear: (state) => {
       let totalRewardsPerYear = new BigNumber(0);
       if(state.allocations.length > 0){
         for(const i in state.allocations){
 
           totalRewardsPerYear = totalRewardsPerYear.plus(
               new BigNumber(state.allocations[i].subgraphDeployment.signalledTokens)
-                  .dividedBy(networkStore.totalTokensSignalled)
-                  .multipliedBy(networkStore.issuancePerYear)
+                  .dividedBy(networkStore.getTotalTokensSignalled)
+                  .multipliedBy(networkStore.getIssuancePerYear)
                   .multipliedBy(
                       new BigNumber(state.allocations[i].allocatedTokens).dividedBy(state.allocations[i].subgraphDeployment.stakedTokens)
                   )
@@ -159,10 +159,36 @@ export const useAllocationStore = defineStore('allocationStore', {
       return totalRewardsPerYear;
     },
     avgAPR: (state) => {
-      let apr = state.getTotalRewardsPerYear.dividedBy(state.getTotalAllocatedStake.plus(accountStore.availableStake)).dp(0);
-      console.log("APR");
-      console.log(apr);
-      return apr;
+      return state.totalRewardsPerYear.dividedBy(state.totalAllocatedStake.plus(accountStore.availableStake));
+    },
+    closingTotalRewardsPerYear: (state) => {
+      let totalRewardsPerYear = new BigNumber(0);
+      if(state.selected.length > 0){
+        for(const i in state.selected){
+          let allocation = state.allocations.find((e) => e.id == state.selected[i]);
+          totalRewardsPerYear = totalRewardsPerYear.plus(
+              new BigNumber(allocation.subgraphDeployment.signalledTokens)
+                  .dividedBy(networkStore.getTotalTokensSignalled)
+                  .multipliedBy(networkStore.getIssuancePerYear)
+                  .multipliedBy(
+                      new BigNumber(allocation.allocatedTokens).dividedBy(allocation.subgraphDeployment.stakedTokens)
+                  )
+          );
+        }
+      }
+      return totalRewardsPerYear;
+    },
+    closingTotalAllocatedStake: (state) => {
+      let totalAllocatedStake = new BigNumber(0);
+      if(state.selected.length > 0){
+        for(const i in state.selected){
+          totalAllocatedStake = totalAllocatedStake.plus(state.allocations.find((e) => e.id == state.selected[i]).allocatedTokens);
+        }
+      }
+      return totalAllocatedStake;
+    },
+    closingAvgAPR: (state) => {
+      return state.closingTotalRewardsPerYear.dividedBy(state.closingTotalAllocatedStake);
     },
   },
   actions: {

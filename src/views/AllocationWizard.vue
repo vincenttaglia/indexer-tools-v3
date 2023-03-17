@@ -85,7 +85,7 @@
           <v-card>
             <v-card-text>
               Closing Allocations APR:
-              <h1 class="pt-2">{{ numeral(0).format("0,0.00") }}%</h1>
+              <h1 class="pt-2">{{ numeral(allocationStore.closingAvgAPR).format("0,0.00%") }}</h1>
             </v-card-text>
           </v-card>
           <v-card>
