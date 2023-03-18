@@ -43,6 +43,16 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
       return allocations;
     },
+    getSelectedAllocations: (state) => {
+      let allocations = [];
+      for(let i = 0; i < state.selected.length; i++){
+        let allocation = state.allocations.find((e) => e.id == state.selected[i]);
+        allocations[i] = {
+          ...allocation,
+        }
+      }
+      return allocations;
+    },
     getActiveDurations: (state) => {
       let activeDurations = [];
       for(let i = 0; i < state.allocations.length; i++){
@@ -161,7 +171,7 @@ export const useAllocationStore = defineStore('allocationStore', {
     avgAPR: (state) => {
       return state.totalRewardsPerYear.dividedBy(state.totalAllocatedStake.plus(accountStore.availableStake));
     },
-    closingTotalRewardsPerYear: (state) => {
+    calculatedClosingRewardsPerYear: (state) => {
       let totalRewardsPerYear = new BigNumber(0);
       if(state.selected.length > 0){
         for(const i in state.selected){
@@ -188,7 +198,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       return totalAllocatedStake;
     },
     closingAvgAPR: (state) => {
-      return state.closingTotalRewardsPerYear.dividedBy(state.closingTotalAllocatedStake);
+      return state.calculatedClosingRewardsPerYear.dividedBy(state.closingTotalAllocatedStake);
     },
   },
   actions: {

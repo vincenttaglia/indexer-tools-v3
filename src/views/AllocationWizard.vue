@@ -49,9 +49,9 @@
       <template #4>
         <div class="mt-12 mb-10 ml-5">
           <h3>Action Queue Commands <small>(>=v0.20.0)</small></h3>
-          <v-textarea readonly ></v-textarea>
+          <v-textarea readonly :value="newAllocationSetterStore.actionsQueueBuildCommands" ></v-textarea>
           <h3>Indexing Rule Commands</h3>
-          <v-textarea readonly ></v-textarea>
+          <v-textarea readonly :value="newAllocationSetterStore.buildCommands" ></v-textarea>
           
           <v-btn
               text
@@ -98,14 +98,14 @@
           <v-card>
             <v-card-text>
               Opening Allocations APR:
-              <h1 class="pt-2">{{ numeral(0).format("0,0.00") }}%</h1>
+              <h1 class="pt-2">{{ numeral(newAllocationSetterStore.calculatedOpeningAPR).format("0,0.00%") }}</h1>
             </v-card-text>
           </v-card>
 
           <v-card>
             <v-card-text>
               After Overall APR:
-              <h1 class="pt-2">{{ numeral(0).format("0,0.00") }}%</h1>
+              <h1 class="pt-2">{{ numeral(newAllocationSetterStore.calculatedAfterOpeningAPR).format("0,0.00%") }}</h1>
             </v-card-text>
           </v-card>
 
