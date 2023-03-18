@@ -27,16 +27,30 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
           ...state.getNewAprs[i],
           ...state.getDailyRewards[i],
           ...state.getDailyRewardsCuts[i],
+          ...state.getFutureStakedTokens[i],
         };
       }
       return selectedSubgraphs;
+    },
+    getFutureStakedTokens: (state) => {
+      let futureStakedTokens = [];
+      for(let i = 0; i < state.getSelectedS.length; i++){
+        let subgraph = state.getSelectedS[i];
+        let associatedAllocation = allocationStore.getSelectedAllocations.find((e) => e.subgraphDeployment.ipfsHash == subgraph.currentVersion.subgraphDeployment.ipfsHash);
+        if(associatedAllocation){
+          futureStakedTokens[i] = { futureStakedTokens: new BigNumber(subgraph.currentVersion.subgraphDeployment.stakedTokens).minus(associatedAllocation.allocatedTokens) };
+        }else{
+          futureStakedTokens[i] = { futureStakedTokens: new BigNumber(subgraph.currentVersion.subgraphDeployment.stakedTokens) };
+        }
+      }
+      return futureStakedTokens;
     },
     getNewAprs: (state) => {
       let newAprs = [];
       for(let i = 0; i < state.getSelectedS.length; i++){
         let subgraph = state.getSelectedS[i];
         if(subgraph.currentSignalledTokens != "0") {
-          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, (state.newAllocations[subgraph.id] ? state.newAllocations[subgraph.id].toString() : "0"))};
+          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, (state.newAllocations[subgraph.id] ? state.newAllocations[subgraph.id].toString() : "0"))};
         }else{
           newAprs[i] = { newApr: 0 };
         }
@@ -48,7 +62,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       for(let i = 0; i < state.getSelectedS.length; i++){
         let subgraph = state.getSelectedS[i];
         if(subgraph.currentVersion.subgraphDeployment.stakedTokens != "0" && !accountStore.loading) {
-          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, (state.newAllocations[subgraph.id] ? state.newAllocations[subgraph.id].toString() : "0")) }
+          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, (state.newAllocations[subgraph.id] ? state.newAllocations[subgraph.id].toString() : "0")) }
         }else{
           dailyRewards[i] = { dailyRewards: 0 }
         }

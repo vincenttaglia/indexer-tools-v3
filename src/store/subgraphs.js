@@ -7,8 +7,10 @@ const BN = Web3.utils.BN;
 import { useNetworkStore } from './network';
 import { useAccountStore } from './accounts';
 import { useSubgraphSettingStore } from './subgraphSettings';
+import { useAllocationStore } from './allocations';
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
+const allocationStore = useAllocationStore();
 accountStore.fetchData();
 const subgraphSettingStore = useSubgraphSettingStore();
 import BigNumber from "bignumber.js";
@@ -118,12 +120,25 @@ export const useSubgraphsStore = defineStore({
       }
       return aprs;
     },
+    getFutureStakedTokens: (state) => {
+      let futureStakedTokens = [];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        let subgraph = state.subgraphs[i];
+        let associatedAllocation = allocationStore.getSelectedAllocations.find((e) => e.subgraphDeployment.ipfsHash == subgraph.currentVersion.subgraphDeployment.ipfsHash);
+        if(associatedAllocation){
+          futureStakedTokens[i] = { futureStakedTokens: new BigNumber(subgraph.currentVersion.subgraphDeployment.stakedTokens).minus(associatedAllocation.allocatedTokens) };
+        }else{
+          futureStakedTokens[i] = { futureStakedTokens: new BigNumber(subgraph.currentVersion.subgraphDeployment.stakedTokens) };
+        }
+      }
+      return futureStakedTokens;
+    },
     getNewAprs: (state) => {
       let newAprs = [];
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
         if(subgraph.currentSignalledTokens > 0) {
-          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, subgraphSettingStore.newAllocation)};
+          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.newAllocation)};
         }else{
           newAprs[i] = { newApr: 0 };
         }
@@ -135,7 +150,7 @@ export const useSubgraphsStore = defineStore({
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
         if(subgraph.currentSignalledTokens > 0) {
-          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, subgraphSettingStore.newAllocation) }
+          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.newAllocation) }
         }else{
           dailyRewards[i] = { dailyRewards: 0 }
         }
@@ -159,7 +174,7 @@ export const useSubgraphsStore = defineStore({
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
         if(subgraph.currentSignalledTokens > 0) {
-          maxAllos[i] = { maxAllo: maxAllo(subgraphSettingStore.targetApr, subgraph.currentSignalledTokens, networkStore, subgraph.currentVersion.subgraphDeployment.stakedTokens) }
+          maxAllos[i] = { maxAllo: maxAllo(subgraphSettingStore.targetApr, subgraph.currentSignalledTokens, networkStore, state.getFutureStakedTokens[i].futureStakedTokens) }
         }else{
           maxAllos[i] = { maxAllo: 0 }
         }
