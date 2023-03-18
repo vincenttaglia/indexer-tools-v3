@@ -14,7 +14,7 @@
   >
     <template v-slot:item.image="{ item }">
       <v-badge
-          :model-value="item.raw.currentVersion.subgraphDeployment && item.raw.currentVersion.subgraphDeployment.deniedAt"
+          :model-value="item.raw.currentVersion.subgraphDeployment && item.raw.currentVersion.subgraphDeployment.deniedAt != '0'"
           bordered
           color="error"
           icon="mdi-currency-usd-off"

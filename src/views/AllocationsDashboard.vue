@@ -4,7 +4,6 @@
       :items="allocationStore.getAllocations"
       item-key="subgraphDeployment.ipfsHash"
       class="elevation-1"
-      :search="search"
       :custom-sort="customSort"
       :footer-props="{
         'items-per-page-options': [5, 10, 15, 20, 25, 30, 40, 50, 100]
@@ -213,4 +212,42 @@ const headers = ref([
     if(newAccount.address != oldAccount.address)
       allocationStore.fetchData();
   });
+
+  function customSort(items, index, isDesc) {
+    items.sort((a, b) => {
+      if (index[0] == 'currentVersion.subgraphDeployment.createdAt'
+          || index[0] == 'currentSignalledTokens'
+          || index[0] == 'currentVersion.subgraphDeployment.stakedTokens'
+          || index[0] == 'currentVersion.subgraphDeployment.indexingRewardAmount'
+          || index[0] == 'currentVersion.subgraphDeployment.queryFeesAmount'
+          || index[0] == 'proportion'
+          || index[0] == 'apr'
+          || index[0] == 'newApr'
+          || index[0] == 'dailyRewards'
+          || index[0] == 'dailyRewardsCut'
+          || index[0] == 'maxAllo'
+      ) {
+        if (!isDesc[0]) {
+          return t(a, index[0]).safeObject - t(b, index[0]).safeObject;
+        } else {
+          return t(b, index[0]).safeObject - t(a, index[0]).safeObject;
+        }
+      } else {
+        if(typeof t(a, index[0]) !== 'undefined'){
+          let objA = t(a, index[0]).safeObject;
+          let objB = t(b, index[0]).safeObject;
+          if(objA == null || objB == null)
+            return objA != null && !isDesc[0];
+
+          if (!isDesc[0]) {
+            return objA.toString().toLowerCase().localeCompare(objB.toString().toLowerCase());
+          } else {
+            return objB.toString().toLowerCase().localeCompare(objA.toString().toLowerCase());
+          }
+        }
+      }
+
+    });
+    return items;
+  }
 </script>
