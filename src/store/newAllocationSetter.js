@@ -86,7 +86,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       return accountStore.availableStake;
     },
     calculatedAvailableStake: (state) => {
-      let calc = BigNumber(state.availableStake).plus(allocationStore.closingTotalAllocatedStake).minus(Web3.utils.toWei(state.calculatedOpeningStake.toString()));
+      let calc = BigNumber(state.availableStake).plus(allocationStore.calculatedClosingStake).minus(Web3.utils.toWei(state.calculatedOpeningStake.toString()));
       if(calc.toString() != "NaN")
         return calc
       else
@@ -97,7 +97,8 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
 
       if(state.getSelectedSubgraphs.length > 0) {
         for (const i in state.getSelectedSubgraphs) {
-          let newAllocationSize = state.newAllocations[state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash];
+          let newAllocationSize = state.newAllocations[state.getSelectedSubgraphs[i].id] ? state.newAllocations[state.getSelectedSubgraphs[i].id] : 0;
+
           if (newAllocationSize) {
             let closingAllocation = allocationStore.getSelectedAllocations.find(e => {
               return e.subgraphDeployment.ipfsHash === state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash;
@@ -125,8 +126,6 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
           }
         }
       }
-      console.log("REWARDSPER");
-      console.log(totalRewardsPerYear);
       return totalRewardsPerYear;
     },
     calculatedOpeningAPR: (state) => {

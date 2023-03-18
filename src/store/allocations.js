@@ -188,7 +188,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
       return totalRewardsPerYear;
     },
-    closingTotalAllocatedStake: (state) => {
+    calculatedClosingStake: (state) => {
       let totalAllocatedStake = new BigNumber(0);
       if(state.selected.length > 0){
         for(const i in state.selected){
@@ -198,7 +198,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       return totalAllocatedStake;
     },
     closingAvgAPR: (state) => {
-      return state.calculatedClosingRewardsPerYear.dividedBy(state.closingTotalAllocatedStake);
+      return state.calculatedClosingRewardsPerYear.dividedBy(state.calculatedClosingStake);
     },
   },
   actions: {
