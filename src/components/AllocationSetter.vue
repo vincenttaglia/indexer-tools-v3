@@ -94,12 +94,9 @@ import Web3 from 'web3';
 import numeral from 'numeral';
 import { ref } from 'vue';
 import { useSubgraphsStore } from '@/store/subgraphs';
-import { useSubgraphSettingStore } from '@/store/subgraphSettings';
 import { useNewAllocationSetterStore } from '@/store/newAllocationSetter';
-import { useAllocationStore } from '@/store/allocations';
 import { storeToRefs } from 'pinia';
 const subgraphStore = useSubgraphsStore();
-const subgraphSettingStore = useSubgraphSettingStore();
 const newAllocationSetterStore = useNewAllocationSetterStore();
 newAllocationSetterStore.update();
 

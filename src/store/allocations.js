@@ -41,6 +41,8 @@ export const useAllocationStore = defineStore('allocationStore', {
           ...state.getPendingRewardsCuts[i],
         };
       }
+      console.log(state.allocations);
+      console.log(allocations);
       return allocations;
     },
     getSelectedAllocations: (state) => {
