@@ -7,12 +7,12 @@
     </v-app-bar-title>
     <v-select
       label="Chain"
-      class="ml-5 mr-2"
-      style="width:10px"
+      class="ml-5 mr-2 chain"
       :items="chainStore.getChains.map(chain => chain.id)"
       :value="chainStore.getActiveChain.id"
       @update:model-value="updateChain"
     ></v-select>
+    
     <v-btn
         variant="text"
         to="/"
@@ -58,8 +58,10 @@
   }
 
 </script>
+
 <style>
-.v-input{
-  flex: 0.2 0.5 0%;
+.chain{
+  max-width:200px;
+  max-height:50px;
 }
 </style>
