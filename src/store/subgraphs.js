@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 
-import graphNetworkClient from "../plugins/graphNetworkSubgraphClient";
 import gql from 'graphql-tag';
 import Web3 from 'web3';
 const BN = Web3.utils.BN;
@@ -8,14 +7,15 @@ import { useNetworkStore } from './network';
 import { useAccountStore } from './accounts';
 import { useSubgraphSettingStore } from './subgraphSettings';
 import { useAllocationStore } from './allocations';
+import { useChainStore } from './chains';
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
 const allocationStore = useAllocationStore();
+const chainStore = useChainStore();
 accountStore.fetchData();
 const subgraphSettingStore = useSubgraphSettingStore();
 import BigNumber from "bignumber.js";
 import { calculateNewApr, calculateSubgraphDailyRewards, maxAllo, indexerCut } from '@/plugins/commonCalcs';
-
 
 export const useSubgraphsStore = defineStore({
   id: 'subgraphs',
@@ -185,7 +185,7 @@ export const useSubgraphsStore = defineStore({
   actions: {
     async fetch(skip){
       console.log("Fetch " + skip);
-      return graphNetworkClient.query({
+      return chainStore.getActiveChain.networkSubgraphClient.query({
         query: gql`query subgraphs($skip: Int!){
           subgraphs (skip: $skip){
             id

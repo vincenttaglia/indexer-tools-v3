@@ -1,9 +1,11 @@
 // Utilities
 import { defineStore } from 'pinia'
-import graphNetworkClient from "../plugins/graphNetworkSubgraphClient";
+import { useChainStore } from './chains';
 import gql from 'graphql-tag';
 import web3 from 'web3';
 import BigNumber from 'bignumber.js';
+
+const chainStore = useChainStore();
 
 export const useNetworkStore = defineStore('network', {
   state: () => ({
@@ -32,7 +34,7 @@ export const useNetworkStore = defineStore('network', {
   },
   actions: {
     async init(){
-      return graphNetworkClient.query({
+      return chainStore.getActiveChain.networkSubgraphClient.query({
         query: gql`query{
           graphNetwork(id: 1){
             totalTokensSignalled

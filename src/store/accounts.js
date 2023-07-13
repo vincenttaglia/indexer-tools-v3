@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
-import graphNetworkClient from "@/plugins/graphNetworkSubgraphClient";
+import { useChainStore } from './chains';
 import gql from 'graphql-tag';
+
+const chainStore = useChainStore();
 
 export const useAccountStore = defineStore('accountStore', {
   state: () => ({
@@ -16,7 +18,7 @@ export const useAccountStore = defineStore('accountStore', {
   },
   actions: {
     async fetchData(){
-      return graphNetworkClient.query({
+      return chainStore.getActiveChain.networkSubgraphClient.query({
         query: gql`query indexercut($indexer: String!){
           indexer(id: $indexer){
             indexingRewardCut

@@ -1,18 +1,22 @@
 import { defineStore } from 'pinia'
-import graphNetworkClient from "@/plugins/graphNetworkSubgraphClient";
 import { useNetworkStore } from '@/store/network';
 import { useAccountStore } from '@/store/accounts';
+import { useChainStore } from '@/store/chains';
 import gql from 'graphql-tag';
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import RewardsContractABI from '@/abis/rewardsContractABI.json';
 import { calculateApr, calculateReadableDuration, calculateAllocationDailyRewards, indexerCut } from '@/plugins/commonCalcs';
+import { storeToRefs } from 'pinia';
 
 
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
-const ProxyContract = new (new Web3("https://mainnet.infura.io/v3/659344f230804542a4e653f875172105")).eth.Contract(RewardsContractABI, "0x9Ac758AB77733b4150A901ebd659cbF8cB93ED66");
+const chainStore = useChainStore();
+const { getRewardsContract, getRPC } = storeToRefs(chainStore);
+
+const ProxyContract = new (new Web3(getRPC.value)).eth.Contract(RewardsContractABI, getRewardsContract.value);
 networkStore.init();
 accountStore.fetchData();
 
@@ -233,7 +237,7 @@ export const useAllocationStore = defineStore('allocationStore', {
     },
     async fetchData(){
       this.selected = [];
-      graphNetworkClient.query({
+      chainStore.getActiveChain.networkSubgraphClient.query({
         query: gql`query allocations($indexer: String!){
           allocations(where: {indexer: $indexer, status: Active}, orderBy:createdAtBlockNumber, orderDirection:desc){
             id
