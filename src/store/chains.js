@@ -1,8 +1,13 @@
 // Utilities
 import { defineStore } from 'pinia'
-
 import { apolloClient, arbitrumApolloClient, goerliApolloClient } from "@/plugins/graphNetworkSubgraphClient";
+import Web3 from 'web3';
+import RewardsContractABI from '@/abis/rewardsContractABI.json';
 
+
+const web3 = new Web3("https://mainnet.infura.io/v3/659344f230804542a4e653f875172105");
+const arbitrumWeb3 = new Web3("https://arb-mainnet.g.alchemy.com/v2/er8LBcXpoFwlV8xJee-WXFbFG_M8L4JK");
+const goerliWeb3 = new Web3("https://goerli.infura.io/v3/659344f230804542a4e653f875172105");
 
 export const useChainStore = defineStore('chainStore', {
   state: () => ({
@@ -10,23 +15,26 @@ export const useChainStore = defineStore('chainStore', {
       {
       id: "mainnet",
       rpc: "https://mainnet.infura.io/v3/659344f230804542a4e653f875172105",
-      rewardsContract: "0x9Ac758AB77733b4150A901ebd659cbF8cB93ED66",
-      stakingContract: "0xF55041E37E12cD407ad00CE2910B8269B01263b9",
+      web3: new Web3("https://mainnet.infura.io/v3/659344f230804542a4e653f875172105"),
+      rewardsContractAddress: "0x9Ac758AB77733b4150A901ebd659cbF8cB93ED66",
+      stakingContractAddress: "0xF55041E37E12cD407ad00CE2910B8269B01263b9",
       networkSubgraphClient: apolloClient,
       active: true,
       },
       {
       id: "arbitrum",
       rpc: "https://arb-mainnet.g.alchemy.com/v2/er8LBcXpoFwlV8xJee-WXFbFG_M8L4JK",
-      rewardsContract: "0x971B9d3d0Ae3ECa029CAB5eA1fB0F72c85e6a525",
-      stakingContract: "0x00669A4CF01450B64E8A2A20E9b1FCB71E61eF03",
+      web3: new Web3("https://arb-mainnet.g.alchemy.com/v2/er8LBcXpoFwlV8xJee-WXFbFG_M8L4JK"),
+      rewardsContractAddress: "0x971B9d3d0Ae3ECa029CAB5eA1fB0F72c85e6a525",
+      stakingContractAddress: "0x00669A4CF01450B64E8A2A20E9b1FCB71E61eF03",
       networkSubgraphClient: arbitrumApolloClient,
       },
       {
       id: "goerli",
       rpc: "https://goerli.infura.io/v3/659344f230804542a4e653f875172105",
-      rewardsContract: "0x1246D7c4c903fDd6147d581010BD194102aD4ee2",
-      stakingContract: "0x35e3Cb6B317690d662160d5d02A5b364578F62c9",
+      web3: new Web3("https://goerli.infura.io/v3/659344f230804542a4e653f875172105"),
+      rewardsContractAddress: "0x1246D7c4c903fDd6147d581010BD194102aD4ee2",
+      stakingContractAddress: "0x35e3Cb6B317690d662160d5d02A5b364578F62c9",
       networkSubgraphClient: goerliApolloClient,
       },
     ],
@@ -36,9 +44,10 @@ export const useChainStore = defineStore('chainStore', {
     getActiveChain: (state) => state.chains.find(chain => chain.active),
     getChainID: (state) => state.getActiveChain.id,
     getRPC: (state) => state.getActiveChain.rpc,
-    getRewardsContract: (state) => state.getActiveChain.rewardsContract,
-    getStakingContract: (state) => state.getActiveChain.stakingContract,
+    getRewardsContractAddress: (state) => state.getActiveChain.rewardsContractAddress,
+    getStakingContractAddress: (state) => state.getActiveChain.stakingContractAddress,
     getNetworkSubgraph: (state) => state.getActiveChain.networkSubgraph,
+    getRewardsContract: (state) => new state.getActiveChain.web3.eth.Contract(RewardsContractABI, state.getRewardsContractAddress),
   },
   actions: {
     setChain(id){

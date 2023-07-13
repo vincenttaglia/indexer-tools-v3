@@ -5,18 +5,13 @@ import { useChainStore } from '@/store/chains';
 import gql from 'graphql-tag';
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
-import Web3 from 'web3';
-import RewardsContractABI from '@/abis/rewardsContractABI.json';
 import { calculateApr, calculateReadableDuration, calculateAllocationDailyRewards, indexerCut } from '@/plugins/commonCalcs';
-import { storeToRefs } from 'pinia';
 
 
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
 const chainStore = useChainStore();
-const { getRewardsContract, getRPC } = storeToRefs(chainStore);
 
-const ProxyContract = new (new Web3(getRPC.value)).eth.Contract(RewardsContractABI, getRewardsContract.value);
 networkStore.init();
 accountStore.fetchData();
 
@@ -220,7 +215,7 @@ export const useAllocationStore = defineStore('allocationStore', {
 
         allocation.pendingRewards.loading = true;
 
-        ProxyContract.methods.getRewards(allocation.id).call(function(error, value){
+        chainStore.getRewardsContract.methods.getRewards(allocation.id).call(function(error, value){
           if(value === undefined)
             allocation.pendingRewards.error = true;
           else
