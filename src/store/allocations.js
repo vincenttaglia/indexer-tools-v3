@@ -234,7 +234,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       this.selected = [];
       chainStore.getActiveChain.networkSubgraphClient.query({
         query: gql`query allocations($indexer: String!){
-          allocations(where: {indexer: $indexer, status: Active}, orderBy:createdAtBlockNumber, orderDirection:desc){
+          allocations(where: {activeForIndexer_contains_nocase: $indexer, status: Active}, orderBy:createdAtBlockNumber, orderDirection:desc){
             id
             activeForIndexer{
               id
