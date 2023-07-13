@@ -10,27 +10,17 @@ const chainStore = useChainStore();
 export const useNetworkStore = defineStore('network', {
   state: () => ({
     totalTokensSignalled: "0",
-    networkGRTIssuance: "0",
+    issuancePerBlock: "0",
+    issuancePerYear: "0",
     totalSupply: "0",
     currentEpoch: "0",
   }),
   getters: {
     getTotalTokensSignalled: (state) => state.totalTokensSignalled,
-    getNetworkGRTIssuance: (state) => state.networkGRTIssuance,
     getTotalSupply: (state) => state.totalSupply,
     getCurrentEpoch: (state) => state.currentEpoch,
-    getPctIssuancePerBlock: (state) => {
-      return state.getNetworkGRTIssuance == "0" ? new BigNumber("0") : new BigNumber(web3.utils.fromWei(state.getNetworkGRTIssuance).toString()).minus(1);
-    },
-    getPctIssuancePerYear: (state) => {
-      return new BigNumber(state.getPctIssuancePerBlock).plus(1).pow(2354250).minus(1);
-    },
-    getIssuancePerBlock: (state) => {
-      return new BigNumber(state.getPctIssuancePerBlock).multipliedBy(state.getTotalSupply);
-    },
-    getIssuancePerYear: (state) => {
-      return new BigNumber(state.getPctIssuancePerYear).multipliedBy(state.getTotalSupply);
-    }
+    getIssuancePerBlock: (state) => state.issuancePerBlock,
+    getIssuancePerYear: (state) => state.issuancePerYear,
   },
   actions: {
     async init(){
@@ -38,7 +28,7 @@ export const useNetworkStore = defineStore('network', {
         query: gql`query{
           graphNetwork(id: 1){
             totalTokensSignalled
-            networkGRTIssuance
+            networkGRTIssuancePerBlock
             totalSupply
             currentEpoch
           }
@@ -46,9 +36,10 @@ export const useNetworkStore = defineStore('network', {
       }).then((data) => {
         console.log(data);
         this.totalTokensSignalled = data.data.graphNetwork.totalTokensSignalled;
-        this.networkGRTIssuance = data.data.graphNetwork.networkGRTIssuance;
+        this.issuancePerBlock = data.data.graphNetwork.networkGRTIssuancePerBlock;
         this.totalSupply = data.data.graphNetwork.totalSupply;
         this.currentEpoch = data.data.graphNetwork.currentEpoch;
+        this.issuancePerYear = data.data.graphNetwork.networkGRTIssuancePerBlock * chainStore.getBlocksPerYear;
       });
     }
   }
