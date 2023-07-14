@@ -1,18 +1,39 @@
 <template>
-  <v-app-bar flat class="appbar">
-    <v-app-bar-title>
-      <v-icon icon="mdi-tools" />
-
-      Indexer Tools v3
-    </v-app-bar-title>
-    <v-select
-      label="Chain"
-      class="ml-5 mr-2 chain"
-      :items="chainStore.getChains.map(chain => chain.id)"
-      :value="chainStore.getActiveChain.id"
-      @update:model-value="updateChain"
-    ></v-select>
+  <v-app-bar 
+  flat 
+  class="appbar"
+  color="#5a3c57"
+  height=75
+  >
     
+    <div 
+    style="
+      display:flex;
+      flex: 1 1;
+      align-content: center;
+      align-items: center;
+      margin-inline-start: 16px;
+      font-size: 1.25rem;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1.75rem;
+      text-transform: none;
+      ">
+      <div>
+        <v-icon icon="mdi-tools" />
+
+        Indexer Tools v3
+      </div>
+      <v-select
+        label="Chain"
+        class="ml-5 mr-2 flex-left chain"
+        :items="chainStore.getChains.map(chain => chain.id)"
+        :value="chainStore.getActiveChain.id"
+        @update:model-value="updateChain"
+        active="true"
+        
+      ></v-select>
+    </div>
     <v-btn
         variant="text"
         to="/"
@@ -61,7 +82,7 @@
 
 <style scoped>
 .chain{
-  max-width:200px;
+  max-width:150px;
   max-height:50px;
 }
 .appbar{
