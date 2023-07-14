@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar flat>
+  <v-app-bar flat class="appbar">
     <v-app-bar-title>
       <v-icon icon="mdi-tools" />
 
@@ -59,9 +59,12 @@
 
 </script>
 
-<style>
+<style scoped>
 .chain{
   max-width:200px;
   max-height:50px;
+}
+.appbar{
+  min-height:75px;
 }
 </style>
