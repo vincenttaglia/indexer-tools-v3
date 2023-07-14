@@ -74,7 +74,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       let epochDurations = [];
       for(let i = 0; i < state.allocations.length; i++){
         let allocation = state.allocations[i];
-        epochDurations[i] = { epochDuration:networkStore.currentEpoch - allocation.createdAtEpoch };
+        epochDurations[i] = { epochDuration:networkStore.getCurrentEpoch - allocation.createdAtEpoch };
       }
       return epochDurations;
     },
