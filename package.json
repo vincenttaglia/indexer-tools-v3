@@ -1,12 +1,16 @@
 {
   "name": "indexer-tools-v3",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "engines": {
+    "node": "16.x"
+  },
   "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore"
+    "lint": "eslint . --fix --ignore-path .gitignore",
+    "start": "node server.js"
   },
   "dependencies": {
     "@apollo/client": "^3.7.9",
