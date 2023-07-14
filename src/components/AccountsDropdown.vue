@@ -58,6 +58,13 @@
                     label="Indexer Address"
                     class="mx-6"
                 ></v-text-field>
+                <v-select
+                  v-model="newIndexerChain"
+                  label="Chain"
+                  class="ml-5 mr-2"
+                  :items="chainStore.getChains.map(chain => chain.id)"
+                  :value="chainStore.getActiveChain.id"
+                ></v-select>
               </v-card-text>
 
               <v-divider></v-divider>
@@ -67,7 +74,7 @@
                 <v-btn
                     color="primary"
                     text
-                    @click="accountStore.addAccount(newIndexerAddress, newIndexerName);"
+                    @click="accountStore.addAccount(newIndexerAddress, newIndexerName, newIndexerChain);"
 
                 >
                   Add
@@ -100,9 +107,11 @@
 import { ref } from 'vue';
 import { useAccountStore } from '@/store/accounts';
 import AccountsEdit from './AccountsEdit.vue';
+import { useChainStore } from '@/store/chains';
 const accountStore = useAccountStore();
 const editDialog = ref(false);
 const addDialog = ref(false);
 const newIndexerName = ref("");
 const newIndexerAddress = ref("");
+const chainStore = useChainStore();
 </script>

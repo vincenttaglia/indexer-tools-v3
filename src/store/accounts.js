@@ -6,7 +6,7 @@ const chainStore = useChainStore();
 
 export const useAccountStore = defineStore('accountStore', {
   state: () => ({
-    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : [ { address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: true } ],
+    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : [ { address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: true, chain: "mainnet" } ],
     loading: true,
     cut: '0',
     availableStake: '0',
@@ -35,11 +35,11 @@ export const useAccountStore = defineStore('accountStore', {
         this.loading = false;
       });
     },
-    addAccount(address, name){
+    addAccount(address, name, chain){
       let alreadyAdded = this.accounts.find(e => e.address == address.toLowerCase());
   
       if(!alreadyAdded){
-        this.accounts.push({ address: address.toLowerCase(), name: name, active: false});
+        this.accounts.push({ address: address.toLowerCase(), name: name, active: false, chain: chain});
         this.switchAccount(address);
       }
     },
@@ -48,6 +48,9 @@ export const useAccountStore = defineStore('accountStore', {
       let oldAccount = this.getActiveAccount;
   
       if(newAccount){
+        if(chainStore.getChainID != newAccount.chain && chainStore.getChains.find((c) => c.id == newAccount.chain)){
+          chainStore.setChain(newAccount.chain);
+        }
         oldAccount.active = false;
         newAccount.active = true;
         this.cut = '0';
