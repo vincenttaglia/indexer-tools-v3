@@ -4,11 +4,18 @@ import { apolloClient, arbitrumApolloClient, goerliApolloClient } from "@/plugin
 import Web3 from 'web3';
 import RewardsContractABI from '@/abis/rewardsContractABI.json';
 
+let startChain;
 
-const web3 = new Web3("https://mainnet.infura.io/v3/659344f230804542a4e653f875172105");
-const arbitrumWeb3 = new Web3("https://arb-mainnet.g.alchemy.com/v2/er8LBcXpoFwlV8xJee-WXFbFG_M8L4JK");
-const goerliWeb3 = new Web3("https://goerli.infura.io/v3/659344f230804542a4e653f875172105");
-
+if(localStorage.accounts){
+  const chain = JSON.parse(localStorage.accounts).find((a) => a.active).chain;
+  if(["mainnet", "arbitrum", "goerli"].includes(chain)){
+    startChain = chain;
+  }else{
+    startChain = "mainnet";
+  }
+}else{
+  startChain = "mainnet"
+}
 export const useChainStore = defineStore('chainStore', {
   state: () => ({
     chains: [
@@ -20,7 +27,7 @@ export const useChainStore = defineStore('chainStore', {
       stakingContractAddress: "0xF55041E37E12cD407ad00CE2910B8269B01263b9",
       networkSubgraphClient: apolloClient,
       blocksPerDay: 7200,
-      active: true,
+      active: startChain == "mainnet",
       },
       {
       id: "arbitrum",
@@ -30,6 +37,7 @@ export const useChainStore = defineStore('chainStore', {
       stakingContractAddress: "0x00669A4CF01450B64E8A2A20E9b1FCB71E61eF03",
       networkSubgraphClient: arbitrumApolloClient,
       blocksPerDay: 5760,
+      active: startChain == "arbitrum",
       },
       {
       id: "goerli",
@@ -39,6 +47,7 @@ export const useChainStore = defineStore('chainStore', {
       stakingContractAddress: "0x35e3Cb6B317690d662160d5d02A5b364578F62c9",
       networkSubgraphClient: goerliApolloClient,
       blocksPerDay: 43200,
+      active: startChain == "goerli",
       },
     ],
   }),
