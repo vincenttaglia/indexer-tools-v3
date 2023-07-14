@@ -62,7 +62,7 @@ export const useNetworkStore = defineStore('network', {
           this.networks[chain.id].issuancePerYear = data.data.graphNetwork.networkGRTIssuancePerBlock * chainStore.getBlocksPerYear;
         }));
       }
-      return new Promise(queries);
+      return queries;
     }
   }
 })
