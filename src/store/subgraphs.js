@@ -185,7 +185,7 @@ export const useSubgraphsStore = defineStore({
   actions: {
     async fetch(skip){
       console.log("Fetch " + skip);
-      return chainStore.getActiveChain.networkSubgraphClient.query({
+      return chainStore.getNetworkSubgraphClient.query({
         query: gql`query subgraphs($skip: Int!){
           subgraphs (skip: $skip){
             id

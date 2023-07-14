@@ -28,7 +28,7 @@
         label="Chain"
         class="ml-5 mr-2 flex-left chain"
         :items="chainStore.getChains.map(chain => chain.id)"
-        :value="chainStore.getActiveChain.id"
+        :value="chainStore.getChainID"
         @update:model-value="updateChain"
         active="true"
         

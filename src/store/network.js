@@ -24,7 +24,7 @@ export const useNetworkStore = defineStore('network', {
   },
   actions: {
     async init(){
-      return chainStore.getActiveChain.networkSubgraphClient.query({
+      return chainStore.getNetworkSubgraphClient.query({
         query: gql`query{
           graphNetwork(id: 1){
             totalTokensSignalled

@@ -18,7 +18,7 @@ export const useAccountStore = defineStore('accountStore', {
   },
   actions: {
     async fetchData(){
-      return chainStore.getActiveChain.networkSubgraphClient.query({
+      return chainStore.getNetworkSubgraphClient.query({
         query: gql`query indexercut($indexer: String!){
           indexer(id: $indexer){
             indexingRewardCut

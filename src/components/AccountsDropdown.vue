@@ -63,7 +63,7 @@
                   label="Chain"
                   class="ml-5 mr-2"
                   :items="chainStore.getChains.map(chain => chain.id)"
-                  :value="chainStore.getActiveChain.id"
+                  :value="chainStore.getChainID"
                 ></v-select>
               </v-card-text>
 
