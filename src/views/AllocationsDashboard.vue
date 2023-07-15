@@ -30,6 +30,9 @@
         <v-img :src="item.raw.subgraphDeployment.versions[0].subgraph.image" />
       </v-avatar>
     </template>
+    <template v-slot:item.id="{ item }" style="width:100;max-width:100px;min-width:100px;overflow-x: scroll;">
+      <p style="width:100;max-width:100px;min-width:100px;overflow-x: scroll;">{{ item.raw.id }}</p>
+    </template>
     <template v-slot:item.allocatedTokens="{ item }">
       {{ numeral(Web3.utils.fromWei(item.raw.allocatedTokens.toString())).format('0,0') }} GRT
     </template>
@@ -206,6 +209,7 @@ const headers = ref([
     { title: 'Total Query Fees', key: 'subgraphDeployment.queryFeesAmount'},
     { title: 'Total Indexing Rewards', key: 'subgraphDeployment.indexingRewardAmount'},
     { title: 'Deployment ID', key: 'subgraphDeployment.ipfsHash', sortable: false },
+    { title: 'Allocation ID', key: 'id', sortable: false, width: "100px" },
   ]);
 
   watch(loaded, (loaded) => {
