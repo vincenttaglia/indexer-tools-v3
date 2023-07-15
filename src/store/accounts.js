@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 
 const chainStore = useChainStore();
 
+
 export const useAccountStore = defineStore('accountStore', {
   state: () => ({
     accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : [ { address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: true, chain: "mainnet" } ],
@@ -58,7 +59,9 @@ export const useAccountStore = defineStore('accountStore', {
         this.loading = true;
         this.fetchData();
         localStorage.accounts = JSON.stringify(this.accounts);
+        return newAccount;
       }
+      return null;
     },
     removeAccount(address){
       let indexer = this.accounts.find(e => e.address == address.toLowerCase());
@@ -66,7 +69,7 @@ export const useAccountStore = defineStore('accountStore', {
       if(indexer){
         if(indexer.active){
           if(this.accounts.length == 1){
-            this.accounts.push({ address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: false });
+            this.accounts.push({ address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: false, chain: "mainnet" });
           }
           for(let i = 0; i < this.accounts.length; i++){
             if(this.accounts[i].address != indexer.address){

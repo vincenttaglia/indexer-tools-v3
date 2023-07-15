@@ -90,7 +90,7 @@
           <v-list-item
               v-for="(indexerAccount) in accountStore.accounts"
               :key="indexerAccount.address"
-              @click="accountStore.switchAccount(indexerAccount.address);"
+              @click="switchAccount(indexerAccount.address);"
           >
             <v-list-item-content>
               <v-list-item-title v-text="indexerAccount.name"></v-list-item-title>
@@ -108,10 +108,27 @@ import { ref } from 'vue';
 import { useAccountStore } from '@/store/accounts';
 import AccountsEdit from './AccountsEdit.vue';
 import { useChainStore } from '@/store/chains';
+import { useAllocationStore } from '@/store/allocations';
+import { useNetworkStore } from '@/store/network';
+import { useSubgraphsStore } from '@/store/subgraphs';
 const accountStore = useAccountStore();
 const editDialog = ref(false);
 const addDialog = ref(false);
 const newIndexerName = ref("");
 const newIndexerAddress = ref("");
 const chainStore = useChainStore();
+const subgraphStore = useSubgraphsStore();
+const allocationStore = useAllocationStore();
+const networkStore = useNetworkStore();
+function switchAccount(address){
+  const oldChain = chainStore.getChainID;
+  const newAccount = accountStore.switchAccount(address);
+  // If chain switch was triggered, reload data
+  if(newAccount && oldChain != chainStore.getChainID){
+    networkStore.init();
+    subgraphStore.fetchData();
+    allocationStore.fetchData();
+  }
+  
+}
 </script>
