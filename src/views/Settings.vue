@@ -54,7 +54,8 @@
                 class="mb-0"
                 ></v-switch>
                 <p class="mb-8">
-                    * Disable if there are issues with allocation wizard.
+                    * Only functions with custom RPCs<br>
+                    (Disable if there are issues with allocation wizard)
                 </p>
                 <h3>Subgraph Sync List (Manual)</h3>
                 <v-textarea rows="3" v-model="subgraphSettingsStore.settings.subgraphSynclist"></v-textarea>
@@ -92,8 +93,9 @@
             <v-card flat>
             <v-card-text>
                 <p>
-                Use your own RPCs if you'd like. Required for automatic indexing rewards feature.
+                Use your own RPCs if the default are rate limited or you'd like to use auto indexing rewards feature
                 </p>
+                <br>
                 <p>Mainnet</p>
                 <v-row>
                   <v-checkbox v-model="mainnet_rpc_c"></v-checkbox>
