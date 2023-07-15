@@ -166,12 +166,16 @@ import Web3 from "web3";
 import { useAllocationStore } from "@/store/allocations";
 import { useAccountStore } from "@/store/accounts";
 import { storeToRefs } from "pinia";
+import { useSubgraphSettingStore } from "@/store/subgraphSettings";
+import { useChainStore } from "@/store/chains";
 
 const allocationStore = useAllocationStore();
 const accountStore = useAccountStore();
+const subgraphSettingsStore = useSubgraphSettingStore();
+const chainStore = useChainStore();
 const { getActiveAccount } = storeToRefs(accountStore);
 
-const { selected } = storeToRefs(allocationStore);
+const { selected, loaded } = storeToRefs(allocationStore);
 
 defineProps({
   selectable: {
@@ -204,11 +208,17 @@ const headers = ref([
     { title: 'Deployment ID', key: 'subgraphDeployment.ipfsHash', sortable: false },
   ]);
 
+  watch(loaded, (loaded) => {
+    if(loaded == true && subgraphSettingsStore.settings.automaticIndexingRewards && subgraphSettingsStore.settings.rpc[chainStore.getChainID] != '')
+      allocationStore.fetchAllPendingRewards();
+  })
+
   allocationStore.init();
 
   watch(getActiveAccount,  async (newAccount, oldAccount) => {
     console.log(newAccount);
     console.log(oldAccount);
+    allocationStore.loaded = false;
     if(newAccount.address != oldAccount.address)
       allocationStore.fetchData();
   });

@@ -37,6 +37,12 @@
             </v-icon>
             Agent Connect
           </v-tab>
+          <v-tab value="custom-rpc">
+            <v-icon start>
+              mdi-wifi
+            </v-icon>
+            Custom RPCs
+          </v-tab>
         </v-tabs>
         <v-window v-model="tab">
           <v-window-item value="general">
@@ -82,6 +88,30 @@
             </v-card-text>
             </v-card>
           </v-window-item>
+          <v-window-item value="custom-rpc">
+            <v-card flat>
+            <v-card-text>
+                <p>
+                Use your own RPCs if you'd like. Required for automatic indexing rewards feature.
+                </p>
+                <p>Mainnet</p>
+                <v-row>
+                  <v-checkbox v-model="mainnet_rpc_c"></v-checkbox>
+                  <v-text-field v-if="mainnet_rpc_c" v-model="subgraphSettingsStore.settings.rpc.mainnet" @change="updateMainnetRPC"></v-text-field>
+                </v-row>
+                <p>Arbitrum</p>
+                <v-row>
+                  <v-checkbox v-model="arbitrum_rpc_c"></v-checkbox>
+                  <v-text-field v-if="arbitrum_rpc_c" v-model="subgraphSettingsStore.settings.rpc.arbitrum" @change="updateArbitrumRPC"></v-text-field>
+                </v-row>
+                <p>Goerli</p>
+                <v-row>
+                  <v-checkbox v-model="goerli_rpc_c"></v-checkbox>
+                  <v-text-field v-if="goerli_rpc_c" v-model="subgraphSettingsStore.settings.rpc.goerli" @change="updateGoerliRPC"></v-text-field>
+                </v-row>
+            </v-card-text>
+            </v-card>
+          </v-window-item>
         </v-window>
       </div>
     </v-card>
@@ -91,13 +121,37 @@
   <script setup>
   import AccountsEdit from '@/components/AccountsEdit.vue';
   import { useSubgraphSettingStore } from '@/store/subgraphSettings';
+  import { useChainStore } from '@/store/chains';
   import { ref } from 'vue';
   import { storeToRefs } from 'pinia';
-import store from '@/store';
+  import Web3 from 'web3';
   
   const subgraphSettingsStore = useSubgraphSettingStore();
   const subgraphSettings = storeToRefs(subgraphSettingsStore);
+  const chainStore = useChainStore();
   const tab = ref("general");
+  const mainnet_rpc_c = ref(subgraphSettingsStore.settings.rpc.mainnet != '');
+  const arbitrum_rpc_c = ref(subgraphSettingsStore.settings.rpc.arbitrum != '');
+  const goerli_rpc_c = ref(subgraphSettingsStore.settings.rpc.goerli != '');
+
+  function updateMainnetRPC(rpc){
+    if(rpc != '' && new Web3(rpc))
+      chainStore.chains[0].web3 = new Web3(rpc);
+    else
+      chainStore.chains[0].web3 = new Web3(chainStore.chains[0].default_rpc);
+  }
+  function updateArbitrumRPC(rpc){
+    if(rpc != '' && new Web3(rpc))
+      chainStore.chains[1].web3 = new Web3(rpc);
+    else
+      chainStore.chains[1].web3 = new Web3(chainStore.chains[1].default_rpc);
+  }
+  function updateGoerliRPC(rpc){
+    if(rpc != '' && new Web3(rpc))
+      chainStore.chains[2].web3 = new Web3(rpc);
+    else
+      chainStore.chains[2].web3 = new Web3(chainStore.chains[2].default_rpc);
+  }
   </script>
   
   <style scoped>
