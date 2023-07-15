@@ -14,6 +14,6 @@ export const useSubgraphSettingStore = defineStore('subgraphSetting', {
     activateSynclist: false,
     subgraphBlacklist: "",
     subgraphSynclist: "",
-    networks: ["mainnet", "gnosis", "arbitrum-one", "celo", "polygon", "avalanche", "goerli", "rinkeby"],
+    networks: ["mainnet", "gnosis", "arbitrum-one", "celo", "matic", "avalanche", "goerli", "rinkeby"],
   }),
 })
