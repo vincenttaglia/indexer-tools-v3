@@ -27,43 +27,43 @@ export const useSubgraphsStore = defineStore({
     getFilteredSubgraphs: (state) => {
       let subgraphs = state.getSubgraphs;
       
-      if(subgraphSettingStore.noRewardsFilter === 0){
+      if(subgraphSettingStore.settings.noRewardsFilter === 0){
         subgraphs = subgraphs.filter((i) => {
           return !i.currentVersion.subgraphDeployment.deniedAt;
         });
-      } else if(subgraphSettingStore.noRewardsFilter === 2){
+      } else if(subgraphSettingStore.settings.noRewardsFilter === 2){
         subgraphs = subgraphs.filter((i) => {
           return i.currentVersion.subgraphDeployment.deniedAt;
         });
       }
 
-      if(subgraphSettingStore.networkFilter.length) {
+      if(subgraphSettingStore.settings.networkFilter.length) {
         subgraphs = subgraphs.filter((i) => {
-          return i.currentVersion.subgraphDeployment.network && subgraphSettingStore.networkFilter.includes(i.currentVersion.subgraphDeployment.network.id);
+          return i.currentVersion.subgraphDeployment.network && subgraphSettingStore.settings.networkFilter.includes(i.currentVersion.subgraphDeployment.network.id);
         });
       }
 
-      if(subgraphSettingStore.activateBlacklist) {
+      if(subgraphSettingStore.settings.activateBlacklist) {
         subgraphs = subgraphs.filter((i) => {
-          return !subgraphSettingStore.subgraphBlacklist.includes(i.currentVersion.subgraphDeployment.ipfsHash);
+          return !subgraphSettingStore.settings.subgraphBlacklist.includes(i.currentVersion.subgraphDeployment.ipfsHash);
         });
       }
 
-      if(subgraphSettingStore.activateSynclist) {
+      if(subgraphSettingStore.settings.activateSynclist) {
         subgraphs = subgraphs.filter((i) => {
-          return subgraphSettingStore.subgraphSynclist.includes(i.currentVersion.subgraphDeployment.ipfsHash);
+          return subgraphSettingStore.settings.subgraphSynclist.includes(i.currentVersion.subgraphDeployment.ipfsHash);
         });
       }
 
-      if(parseInt(subgraphSettingStore.maxSignal)){
+      if(parseInt(subgraphSettingStore.settings.maxSignal)){
         subgraphs = subgraphs.filter((i) => {
-          return BigNumber(i.currentSignalledTokens).isLessThanOrEqualTo(new BigNumber(Web3.utils.toWei(subgraphSettingStore.maxSignal)));
+          return BigNumber(i.currentSignalledTokens).isLessThanOrEqualTo(new BigNumber(Web3.utils.toWei(subgraphSettingStore.settings.maxSignal)));
         });
       }
 
-      if(parseInt(subgraphSettingStore.minSignal)){
+      if(parseInt(subgraphSettingStore.settings.minSignal)){
         subgraphs = subgraphs.filter((i) => {
-          return BigNumber(i.currentSignalledTokens).isGreaterThanOrEqualTo(new BigNumber(Web3.utils.toWei(subgraphSettingStore.minSignal)));
+          return BigNumber(i.currentSignalledTokens).isGreaterThanOrEqualTo(new BigNumber(Web3.utils.toWei(subgraphSettingStore.settings.minSignal)));
         });
       }
 
@@ -138,7 +138,7 @@ export const useSubgraphsStore = defineStore({
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
         if(subgraph.currentSignalledTokens > 0) {
-          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.newAllocation)};
+          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.settings.newAllocation)};
         }else{
           newAprs[i] = { newApr: 0 };
         }
@@ -150,7 +150,7 @@ export const useSubgraphsStore = defineStore({
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
         if(subgraph.currentSignalledTokens > 0) {
-          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.newAllocation) }
+          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.settings.newAllocation) }
         }else{
           dailyRewards[i] = { dailyRewards: 0 }
         }
@@ -174,7 +174,7 @@ export const useSubgraphsStore = defineStore({
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
         if(subgraph.currentSignalledTokens > 0) {
-          maxAllos[i] = { maxAllo: maxAllo(subgraphSettingStore.targetApr, subgraph.currentSignalledTokens, networkStore, state.getFutureStakedTokens[i].futureStakedTokens) }
+          maxAllos[i] = { maxAllo: maxAllo(subgraphSettingStore.settings.targetApr, subgraph.currentSignalledTokens, networkStore, state.getFutureStakedTokens[i].futureStakedTokens) }
         }else{
           maxAllos[i] = { maxAllo: 0 }
         }

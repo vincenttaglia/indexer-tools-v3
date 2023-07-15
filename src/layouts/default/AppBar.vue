@@ -56,6 +56,13 @@
     >
       Allocation Wizard
     </v-btn>
+    <v-btn
+        variant="text"
+        to="/settings"
+        class="ml-2 mr-2"
+    >
+      Settings
+    </v-btn>
     <accounts-dropdown></accounts-dropdown>
   </v-app-bar>
 </template>

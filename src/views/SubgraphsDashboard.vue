@@ -16,41 +16,41 @@
   >
     <template v-slot:top>
       <v-text-field
-          v-model="subgraphSettingStore.search"
+          v-model="subgraphSettingStore.settings.search"
           label="Search"
           class="d-inline-block mx-4"
           style="width:13rem;max-width:15rem"
       ></v-text-field>
       <v-text-field
-          v-model="subgraphSettingStore.minSignal"
+          v-model="subgraphSettingStore.settings.minSignal"
           type="number"
           label="Min Signal"
           class="d-inline-block mx-4"
           style="max-width:15rem"
       ></v-text-field>
       <v-text-field
-          v-model="subgraphSettingStore.maxSignal"
+          v-model="subgraphSettingStore.settings.maxSignal"
           type="number"
           label="Max Signal"
           class="d-inline-block mx-4"
           style="max-width:15rem"
       ></v-text-field>
       <v-text-field
-          v-model="subgraphSettingStore.newAllocation"
+          v-model="subgraphSettingStore.settings.newAllocation"
           type="number"
           label="New Allocation"
           class="d-inline-block mx-4"
           style="max-width:15rem"
       ></v-text-field>
       <v-text-field
-          v-model="subgraphSettingStore.targetApr"
+          v-model="subgraphSettingStore.settings.targetApr"
           type="number"
           label="Target APR"
           class="d-inline-block mx-4"
           style="max-width:15rem"
       ></v-text-field>
       <v-select
-          v-model="subgraphSettingStore.noRewardsFilter"
+          v-model="subgraphSettingStore.settings.noRewardsFilter"
           :items="[{text: 'Exclude Denied', action: 0}, {text:'Include Denied', action: 1}, {text: 'Only Denied', action: 2}]"
           item-title="text"
           item-value="action"
@@ -59,8 +59,8 @@
           class="d-inline-block mx-4"
       ></v-select>
       <v-select
-          v-model="subgraphSettingStore.networkFilter"
-          :items="subgraphSettingStore.networks"
+          v-model="subgraphSettingStore.settings.networkFilter"
+          :items="subgraphSettingStore.settings.networks"
           label="Subgraph Networks"
           multiple
           chips
@@ -68,12 +68,12 @@
           style="min-width:13rem;max-width: 15rem;top: -5px"
       ></v-select>
       <v-checkbox
-        v-model="subgraphSettingStore.activateBlacklist"
+        v-model="subgraphSettingStore.settings.activateBlacklist"
         label="Blacklist"
         class="d-inline-block mr-3"
       ></v-checkbox>
       <v-checkbox
-        v-model="subgraphSettingStore.activateSynclist"
+        v-model="subgraphSettingStore.settings.activateSynclist"
         label="Synclist"
         class="d-inline-block"
       ></v-checkbox>

@@ -24,6 +24,11 @@ const routes = [
         name: 'Allocation Wizard',
         component: () => import('@/views/AllocationWizard.vue'),
       },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: () => import('@/views/Settings.vue'),
+      },
     ],
   },
 ]
