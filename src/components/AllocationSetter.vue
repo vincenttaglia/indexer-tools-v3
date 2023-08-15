@@ -66,7 +66,7 @@
 
           <v-slider
               min="0"
-              :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(newAllocationSetterStore.calculatedAvailableStake))) + newAllocationSetterStore.newAllocations[item.raw.id]"
+              :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(newAllocationSetterStore.calculatedAvailableStake))) + parseFloat(newAllocations[item.raw.id])"
               v-model="newAllocations[item.raw.id]"
               style="max-width: 500px; min-width:100px;"
               class="mt-4"
