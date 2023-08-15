@@ -263,9 +263,10 @@ export const useAllocationStore = defineStore('allocationStore', {
     },
     async fetch(skip){
       this.selected = [];
-      chainStore.getNetworkSubgraphClient.query({
-        query: gql`query allocations($indexer: String!){
-          allocations(where: {activeForIndexer_contains_nocase: $indexer, status: Active}, orderBy:createdAtBlockNumber, orderDirection:desc){
+      console.log("Fetch " + skip);
+      return chainStore.getNetworkSubgraphClient.query({
+        query: gql`query allocations($indexer: String!, $skip: Int!){
+          allocations(where: {activeForIndexer_contains_nocase: $indexer, status: Active}, orderBy:createdAtBlockNumber, orderDirection:desc, skip: $skip){
             id
             activeForIndexer{
               id
@@ -299,17 +300,23 @@ export const useAllocationStore = defineStore('allocationStore', {
   
         }`,
         variables: {
-          indexer: accountStore.getActiveAccount.address
+          indexer: accountStore.getActiveAccount.address,
+          skip: skip
         },
       })
-      .then(({ data }) => {
+      .then(({ data, networkStatus }) => {
         console.log(data);
-        this.loaded = true;
-        this.allocations = data.allocations;
-        this.pendingRewards = Array(data.allocations.length).fill();
-        for(let i = 0; i < this.pendingRewards.length; i++){
-          this.pendingRewards[i] = { value: BigNumber(0), loading: false, loaded: false };
+        if(networkStatus == 7 && data.allocations.length == 100){
+          return this.fetch(skip + data.allocations.length)
+          .then((data1) => {
+            console.log(data1);
+            if(typeof data.allocations == "object" && typeof data1.allocations == "object")
+              data.allocations = data.allocations.concat(data1.allocations);
+            
+            return data;
+          })
         }
+        return data;
       });
     }
   }
