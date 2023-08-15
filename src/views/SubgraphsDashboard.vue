@@ -4,7 +4,6 @@
     :items="subgraphStore.getFilteredSubgraphs"
     item-key="currentVersion.subgraphDeployment.ipfsHash"
     class="elevation-1"
-    :search="subgraphSettingStore.search"
     :custom-sort="customSort"
     loading-text="Loading... Please wait"
     mobile-breakpoint="0"
