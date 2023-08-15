@@ -81,6 +81,7 @@ export const useSubgraphsStore = defineStore({
           ...state.getDailyRewardsCuts[i],
           ...state.getNewAprs[i],
           ...state.getMaxAllos[i],
+          ...state.getCurrentlyAllocated[i],
         };
       }
       return subgraphs;
@@ -94,6 +95,7 @@ export const useSubgraphsStore = defineStore({
           ...state.getProportions[subgraphIndex],
           ...state.getAprs[subgraphIndex],
           ...state.getMaxAllos[subgraphIndex],
+          ...state.getCurrentlyAllocated[subgraphIndex],
         };
       }
       return selectedSubgraphs;
@@ -181,7 +183,25 @@ export const useSubgraphsStore = defineStore({
         }
       }
       return maxAllos;
-    }
+    },
+    getCurrentlyAllocated: (state) => {
+      let currentlyAllocated = [];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        let subgraph = state.subgraphs[i];
+        let allo = allocationStore.getAllocations.find(e => {
+          return e.subgraphDeployment.ipfsHash === subgraph.currentVersion.subgraphDeployment.ipfsHash;
+        });
+        let unallo = allocationStore.getSelectedAllocations.find(e => {
+          return e.subgraphDeployment.ipfsHash === subgraph.currentVersion.subgraphDeployment.ipfsHash;
+        });
+        if(allo && !unallo) {
+          currentlyAllocated[i] = { currentlyAllocated: true }
+        }else{
+          currentlyAllocated[i] = { currentlyAllocated: false }
+        }
+      }
+      return currentlyAllocated;
+    },
   },
   actions: {
     async fetch(skip){
