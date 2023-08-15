@@ -6,13 +6,13 @@
     class="elevation-1"
     :search="subgraphSettingStore.search"
     :custom-sort="customSort"
-    :footer-props="{
-      'items-per-page-options': [10, 15, 20, 25, 30, 40, 50]
-    }"
     loading-text="Loading... Please wait"
     mobile-breakpoint="0"
     :show-select="selectable"
     v-model="selected"
+    v-model:sort-by="tableSettingsStore.subgraphSettings.sortBy"
+    v-model:loading="this.loading"
+    v-model:items-per-page="tableSettingsStore.subgraphSettings.itemsPerPage"
   >
     <template v-slot:top>
       <v-text-field
@@ -154,9 +154,12 @@
   import moment from 'moment';
   import BigNumber from 'bignumber.js';
   import { storeToRefs } from 'pinia';
+  import { useTableSettingStore } from "@/store/tableSettings";
+
 
   const subgraphStore = useSubgraphsStore();
   const subgraphSettingStore = useSubgraphSettingStore();
+  const tableSettingsStore = useTableSettingStore();
   subgraphStore.fetchData();
 
   const { selected } = storeToRefs(subgraphStore);

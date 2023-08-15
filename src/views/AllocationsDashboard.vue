@@ -5,13 +5,13 @@
       item-key="subgraphDeployment.ipfsHash"
       class="elevation-1"
       :custom-sort="customSort"
-      :footer-props="{
-        'items-per-page-options': [5, 10, 15, 20, 25, 30, 40, 50, 100]
-      }"
       loading-text="Loading... Please wait"
       mobile-breakpoint="0"
       :show-select="selectable"
       v-model="selected"
+      v-model:sort-by="tableSettingsStore.allocationSettings.sortBy"
+      v-model:loading="this.loading"
+      v-model:items-per-page="tableSettingsStore.allocationSettings.itemsPerPage"
   >
     <template v-slot:item.subgraphDeployment.versions[0].subgraph.image="{ item }">
       <v-badge
@@ -171,10 +171,12 @@ import { useAccountStore } from "@/store/accounts";
 import { storeToRefs } from "pinia";
 import { useSubgraphSettingStore } from "@/store/subgraphSettings";
 import { useChainStore } from "@/store/chains";
+import { useTableSettingStore } from "@/store/tableSettings";
 
 const allocationStore = useAllocationStore();
 const accountStore = useAccountStore();
 const subgraphSettingsStore = useSubgraphSettingStore();
+const tableSettingsStore = useTableSettingStore();
 const chainStore = useChainStore();
 const { getActiveAccount } = storeToRefs(accountStore);
 

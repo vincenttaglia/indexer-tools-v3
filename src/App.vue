@@ -3,18 +3,20 @@
 </template>
 
 <script setup>
-  import { storeToRefs } from 'pinia'
-  import { watch } from 'vue'
   import { useSubgraphSettingStore } from './store/subgraphSettings';
+  import { useTableSettingStore } from './store/tableSettings';
   const subgraphSettingsStore = useSubgraphSettingStore();
-
-  const { settings } = storeToRefs(subgraphSettingsStore);
-
-  let { targetApr } = settings;
+  const tableSettingsStore = useTableSettingStore();
 
   subgraphSettingsStore.$subscribe(() => {
-    console.log('settings changed, saving!');
+    console.log('subgraph settings changed, saving!');
     localStorage.subgraphSettings = JSON.stringify(subgraphSettingsStore.settings);
+  })
+
+  tableSettingsStore.$subscribe(() => {
+    console.log('table settings changed, saving!');
+    localStorage.subgraphTableSettings = JSON.stringify(tableSettingsStore.subgraphSettings);
+    localStorage.allocationTableSettings = JSON.stringify(tableSettingsStore.allocationSettings);
   })
   
   
