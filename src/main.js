@@ -13,8 +13,12 @@ import { createApp } from 'vue'
 // Plugins
 import { registerPlugins } from '@/plugins'
 
+import JsonCSV from 'vue-json-csv';
+
 const app = createApp(App)
 
 registerPlugins(app)
+
+app.component('downloadCsv', JsonCSV);
 
 app.mount('#app')

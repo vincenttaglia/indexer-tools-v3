@@ -180,6 +180,11 @@
         <td></td>
       </tr>
     </div>
+    <download-csv
+        :data   = "allocationStore.getAllocations" 
+        :csv-title="'allocations'">
+        Download Data
+    </download-csv>
 </template>
 
 <script setup>
