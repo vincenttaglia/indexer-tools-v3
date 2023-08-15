@@ -22,6 +22,7 @@ export const useSubgraphsStore = defineStore({
   state: () => ({
     subgraphs: [],
     selected: [],
+    loading: false,
   }),
   getters: {
     getFilteredSubgraphs: (state) => {
@@ -228,9 +229,11 @@ export const useSubgraphsStore = defineStore({
     },
     async fetchData(){
       networkStore.init().then(() => {
+        this.loading = true;
         this.fetch(0)
         .then((data) => {
           this.subgraphs = data.subgraphs;
+          this.loading = false;
         })
       });
       

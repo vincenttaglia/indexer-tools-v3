@@ -10,7 +10,7 @@
       :show-select="selectable"
       v-model="selected"
       v-model:sort-by="tableSettingsStore.allocationSettings.sortBy"
-      v-model:loading="this.loading"
+      v-model:loading="allocationStore.loading"
       v-model:items-per-page="tableSettingsStore.allocationSettings.itemsPerPage"
   >
     <template v-slot:item.subgraphDeployment.versions[0].subgraph.image="{ item }">
@@ -246,6 +246,7 @@ const headers = ref([
     console.log(newAccount);
     console.log(oldAccount);
     allocationStore.loaded = false;
+    allocationStore.loading = false;
     if(newAccount.address != oldAccount.address)
       allocationStore.fetchData();
   });

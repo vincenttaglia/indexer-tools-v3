@@ -22,6 +22,7 @@ export const useAllocationStore = defineStore('allocationStore', {
     pendingRewards: [],
     selected: [],
     loaded: false,
+    loading: false,
   }),
   getters: {
     getAllocations: (state) => {
@@ -241,10 +242,26 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
     },
     async init(){
-      if(!this.loaded)
+      if(!this.loaded && !this.loading)
         return this.fetchData();
     },
     async fetchData(){
+      this.loading = true;
+      networkStore.init().then(() => {
+        this.fetch(0)
+        .then((data) => {
+          console.log(data);
+          this.allocations = data.allocations;
+          this.loaded = true;
+          this.loading = false;
+          this.pendingRewards = Array(data.allocations.length).fill();
+          for(let i = 0; i < this.pendingRewards.length; i++){
+            this.pendingRewards[i] = { value: BigNumber(0), loading: false, loaded: false };
+          }
+        })
+      });
+    },
+    async fetch(skip){
       this.selected = [];
       chainStore.getNetworkSubgraphClient.query({
         query: gql`query allocations($indexer: String!){

@@ -10,7 +10,7 @@
     :show-select="selectable"
     v-model="selected"
     v-model:sort-by="tableSettingsStore.subgraphSettings.sortBy"
-    v-model:loading="this.loading"
+    v-model:loading="subgraphStore.loading"
     v-model:items-per-page="tableSettingsStore.subgraphSettings.itemsPerPage"
   >
     <template v-slot:top>
