@@ -201,6 +201,20 @@ export const useAllocationStore = defineStore('allocationStore', {
     closingAvgAPR: (state) => {
       return state.calculatedClosingRewardsPerYear.dividedBy(state.calculatedClosingStake);
     },
+    pendingRewardsCutSum: (state) => {
+      return state.getPendingRewardsCuts.reduce((sum, cur) => cur.pendingRewardsCut ? sum.plus(cur.pendingRewardsCut): sum, new BigNumber(0));
+    },
+    pendingRewardsSum: (state) => {
+      console.log("PENDING REWARDS");
+      console.log(state.getPendingRewards);
+      return state.getPendingRewards.reduce((sum, cur) => cur.pendingRewards.loaded ? sum.plus(cur.pendingRewards.value) : sum, new BigNumber(0));
+    },
+    dailyRewardsCutSum: (state) => {
+      return state.getDailyRewardsCuts.reduce((sum, cur) => sum.plus(cur.dailyRewardsCut), new BigNumber(0));
+    },
+    dailyRewardsSum: (state) => {
+      return state.getDailyRewards.reduce((sum, cur) => sum.plus(cur.dailyRewards), new BigNumber(0));
+    }
   },
   actions: {
     async fetchAllPendingRewards(){
