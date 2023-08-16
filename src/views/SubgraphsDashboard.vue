@@ -12,10 +12,11 @@
     v-model:sort-by="tableSettingsStore.subgraphSettings.sortBy"
     v-model:loading="subgraphStore.loading"
     v-model:items-per-page="tableSettingsStore.subgraphSettings.itemsPerPage"
+    :search="search"
   >
     <template v-slot:top>
       <v-text-field
-          v-model="subgraphSettingStore.settings.search"
+          v-model="search"
           label="Search"
           class="d-inline-block mx-4"
           style="width:13rem;max-width:15rem"
@@ -159,6 +160,8 @@
   import BigNumber from 'bignumber.js';
   import { storeToRefs } from 'pinia';
   import { useTableSettingStore } from "@/store/tableSettings";
+
+  const search = ref('');
 
 
   const subgraphStore = useSubgraphsStore();
