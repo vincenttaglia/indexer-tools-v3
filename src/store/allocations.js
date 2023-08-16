@@ -224,7 +224,7 @@ export const useAllocationStore = defineStore('allocationStore', {
         this.fetchPendingRewards(this.getAllocations[i].id);
       }
     },
-    fetchPendingRewards(allocationId){
+    async fetchPendingRewards(allocationId){
       let allocation = this.getAllocations.find(e => e.id == allocationId);
 
       if(!allocation.pendingRewards.loading && !allocation.pendingRewards.loaded){
