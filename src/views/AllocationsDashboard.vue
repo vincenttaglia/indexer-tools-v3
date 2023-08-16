@@ -163,11 +163,11 @@
       <tr>
         <td style="font-size: 11px"><strong>Totals</strong></td>
         <td v-if="selectable"></td>
-        <td><strong>{{ allocationStore.getAllocations.length }} allocations</strong></td>
+        <td><strong>{{ allocationStore.getAllocations.length }} allocations</strong>&nbsp;&nbsp;</td>
         <td></td>
         <td></td>
         <td></td>
-        <td><strong>Avg APR: {{ numeral(allocationStore.avgAPR).format('0,0.00') }}%</strong>&nbsp;&nbsp;</td>
+        <td><strong>Avg APR: {{ numeral(allocationStore.avgAPR).format('0,0.00%') }}</strong>&nbsp;&nbsp;</td>
         <td><strong>Daily Rewards Sum: {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.dailyRewardsSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong></td>
         <td><strong>Daily Rewards Cut Sum: {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.dailyRewardsCutSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong></td>
         <td><strong>Pending Rewards Sum: {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.pendingRewardsSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong></td>

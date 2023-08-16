@@ -157,15 +157,16 @@ export const useAllocationStore = defineStore('allocationStore', {
       let totalRewardsPerYear = new BigNumber(0);
       if(state.allocations.length > 0){
         for(const i in state.allocations){
-
-          totalRewardsPerYear = totalRewardsPerYear.plus(
-              new BigNumber(state.allocations[i].subgraphDeployment.signalledTokens)
-                  .dividedBy(networkStore.getTotalTokensSignalled)
-                  .multipliedBy(networkStore.getIssuancePerYear)
-                  .multipliedBy(
-                      new BigNumber(state.allocations[i].allocatedTokens).dividedBy(state.allocations[i].subgraphDeployment.stakedTokens)
-                  )
-          );
+          if(!new BigNumber(state.allocations[i].allocatedTokens).isEqualTo(new BigNumber(0)) && !new BigNumber(state.allocations[i].subgraphDeployment.signalledTokens).isEqualTo(new BigNumber(0))){
+            totalRewardsPerYear = totalRewardsPerYear.plus(
+                new BigNumber(state.allocations[i].subgraphDeployment.signalledTokens)
+                    .dividedBy(networkStore.getTotalTokensSignalled)
+                    .multipliedBy(networkStore.getIssuancePerYear)
+                    .multipliedBy(
+                        new BigNumber(state.allocations[i].allocatedTokens).dividedBy(state.allocations[i].subgraphDeployment.stakedTokens)
+                    )
+            );
+          }
         }
       }
       return totalRewardsPerYear;
