@@ -238,7 +238,7 @@ export const useSubgraphsStore = defineStore({
           return this.fetch(skip + data.subgraphs.length)
           .then((data1) => {
             if(typeof data.subgraphs == "object" && typeof data1.subgraphs == "object")
-              data.subgraphs = data.subgraphs.concat(data1.subgraphs);
+              data.subgraphs = data.subgraphs.concat(data1.subgraphs).filter((s) => s.currentVersion);
             
             return data;
           })
