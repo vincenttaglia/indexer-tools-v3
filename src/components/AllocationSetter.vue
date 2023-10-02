@@ -14,7 +14,7 @@
   >
     <template v-slot:item.image="{ item }">
       <v-badge
-          :model-value="item.raw.currentVersion.subgraphDeployment && item.raw.currentVersion.subgraphDeployment.deniedAt != '0'"
+          :model-value="item.currentVersion.subgraphDeployment && item.currentVersion.subgraphDeployment.deniedAt != '0'"
           bordered
           color="error"
           icon="mdi-currency-usd-off"
@@ -22,39 +22,39 @@
           avatar
       >
         <v-avatar size="30">
-          <v-img :src="item.raw.image" />
+          <v-img :src="item.image" />
         </v-avatar>
       </v-badge>
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
-      <span :timestamp="item.raw.currentVersion.subgraphDeployment.createdAt">{{ moment(item.raw.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
+      <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ moment(item.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
     <template v-slot:item.currentSignalledTokens="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.raw.currentSignalledTokens)).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(item.currentSignalledTokens)).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.indexingRewardAmount="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.raw.currentVersion.subgraphDeployment.indexingRewardAmount)).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(item.currentVersion.subgraphDeployment.indexingRewardAmount)).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.queryFeesAmount="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.raw.currentVersion.subgraphDeployment.queryFeesAmount)).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(item.currentVersion.subgraphDeployment.queryFeesAmount)).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.stakedTokens="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.raw.currentVersion.subgraphDeployment.stakedTokens)).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(item.currentVersion.subgraphDeployment.stakedTokens)).format('0,0') }} GRT
     </template>
     <template v-slot:item.proportion="{ item }">
-      {{ numeral(item.raw.proportion).format('0,0.000%') }}
+      {{ numeral(item.proportion).format('0,0.000%') }}
     </template>
     <template v-slot:item.apr="{ item }">
-      {{ numeral(item.raw.apr).format('0,0.00') }}%
+      {{ numeral(item.apr).format('0,0.00') }}%
     </template>
     <template v-slot:item.newApr="{ item }">
-      {{ numeral(item.raw.newApr.toString()).format('0,0.00') }}%
+      {{ numeral(item.newApr.toString()).format('0,0.00') }}%
     </template>
     <template v-slot:item.dailyRewards="{ item }">
-      {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.raw.dailyRewards))).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.dailyRewards))).format('0,0') }} GRT
     </template>
     <template v-slot:item.dailyRewardsCut="{ item }">
-      {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.raw.dailyRewardsCut))).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.dailyRewardsCut))).format('0,0') }} GRT
     </template>
     <template v-slot:body.append>
 
@@ -66,8 +66,8 @@
 
           <v-slider
               min="0"
-              :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(newAllocationSetterStore.calculatedAvailableStake))) + parseFloat(newAllocations[item.raw.id])"
-              v-model="newAllocations[item.raw.id]"
+              :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(newAllocationSetterStore.calculatedAvailableStake))) + parseFloat(newAllocations[item.id])"
+              v-model="newAllocations[item.id]"
               style="max-width: 500px; min-width:100px;"
               class="mt-4"
               step="1"
@@ -77,7 +77,7 @@
                   class="mt-0 pt-0"
                   type="number"
                   style="width: 125px"
-                  v-model="newAllocations[item.raw.id]"
+                  v-model="newAllocations[item.id]"
               ></v-text-field>
             </template>
           </v-slider>

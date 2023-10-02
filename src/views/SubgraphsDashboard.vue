@@ -80,67 +80,67 @@
     </template>
     <template v-slot:item.image="{ item }">
       <v-badge
-            :model-value="item.raw.currentVersion.subgraphDeployment.deniedAt != '0'"
+            :model-value="item.currentVersion.subgraphDeployment.deniedAt != '0'"
             bordered
             color="error"
             icon="mdi-currency-usd-off"
             overlap
             avatar
-            v-if="(item.raw.currentVersion.subgraphDeployment.deniedAt && item.raw.currentlyAllocated) || (!item.raw.currentVersion.subgraphDeployment.deniedAt && !item.raw.currentlyAllocated) || (item.raw.currentVersion.subgraphDeployment.deniedAt && !item.raw.currentlyAllocated)"
+            v-if="(item.currentVersion.subgraphDeployment.deniedAt && item.currentlyAllocated) || (!item.currentVersion.subgraphDeployment.deniedAt && !item.currentlyAllocated) || (item.currentVersion.subgraphDeployment.deniedAt && !item.currentlyAllocated)"
         >
         <v-avatar size="30">
-          <v-img :src="item.raw.image" />
+          <v-img :src="item.image" />
         </v-avatar>
       </v-badge>
       <v-badge
-          :model-value="item.raw.currentlyAllocated"
+          :model-value="item.currentlyAllocated"
           bordered
           color="warning"
           icon="mdi-exclamation-thick"
           overlap
           avatar
-          v-if="!item.raw.currentVersion.subgraphDeployment.deniedAt && item.raw.currentlyAllocated"
+          v-if="!item.currentVersion.subgraphDeployment.deniedAt && item.currentlyAllocated"
       >
         <v-avatar size="30">
-          <v-img :src="item.raw.image" />
+          <v-img :src="item.image" />
         </v-avatar>
       </v-badge>
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
-      <span :timestamp="item.raw.currentVersion.subgraphDeployment.createdAt">{{ moment(item.raw.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
+      <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ moment(item.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
     <template v-slot:item.proportion="{ item }">
-      {{ numeral(item.raw.proportion*100).format('0,0.000') }}%
+      {{ numeral(item.proportion*100).format('0,0.000') }}%
     </template>
     <template v-slot:item.apr="{ item }">
-      {{ numeral(item.raw.apr).format('0,0.00') }}%
+      {{ numeral(item.apr).format('0,0.00') }}%
     </template>
     <template v-slot:item.newApr="{ item }">
-        {{ numeral(item.raw.newApr).format('0,0.00') }}%
+        {{ numeral(item.newApr).format('0,0.00') }}%
       </template>
     <template v-slot:item.maxAllo="{ item }">
-      {{ numeral(item.raw.maxAllo).format('0,0') }} GRT
+      {{ numeral(item.maxAllo).format('0,0') }} GRT
     </template>
     <template v-slot:item.dailyRewards="{ item }">
-      {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.raw.dailyRewards))).format('0,0') }} GRT
+      {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.dailyRewards))).format('0,0') }} GRT
     </template>
     <template v-slot:item.dailyRewardsCut="{ item }">
-      {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.raw.dailyRewardsCut))).format('0,0') }} GRT
+      {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.dailyRewardsCut))).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentSignalledTokens="{ item }">
-      {{ numeral(web3.utils.fromWei(item.raw.currentSignalledTokens.toString())).format('0,0') }} GRT
+      {{ numeral(web3.utils.fromWei(item.currentSignalledTokens.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.indexingRewardAmount="{ item }">
-      {{ numeral(web3.utils.fromWei(item.raw.currentVersion.subgraphDeployment.indexingRewardAmount.toString())).format('0,0') }} GRT
+      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.indexingRewardAmount.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.queryFeesAmount="{ item }">
-      {{ numeral(web3.utils.fromWei(item.raw.currentVersion.subgraphDeployment.queryFeesAmount.toString())).format('0,0') }} GRT
+      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.queryFeesAmount.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.stakedTokens="{ item }">
-      {{ numeral(web3.utils.fromWei(item.raw.currentVersion.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
+      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.network.id="{ item }">
-      {{ item.raw.currentVersion.subgraphDeployment.network ? item.raw.currentVersion.subgraphDeployment.network.id : "null" }}
+      {{ item.currentVersion.subgraphDeployment.network ? item.currentVersion.subgraphDeployment.network.id : "null" }}
     </template> 
   </v-data-table>
   <download-csv

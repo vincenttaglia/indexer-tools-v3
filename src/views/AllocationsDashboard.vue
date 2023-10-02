@@ -2,7 +2,7 @@
   <v-data-table
       :headers="headers"
       :items="allocationStore.getAllocations"
-      item-key="subgraphDeployment.ipfsHash"
+      item-selectable="subgraphDeployment.ipfsHash"
       class="elevation-1"
       :custom-sort="customSort"
       loading-text="Loading... Please wait"
@@ -15,7 +15,7 @@
   >
     <template v-slot:item.subgraphDeployment.versions[0].subgraph.image="{ item }">
       <v-badge
-          v-if="item.raw.subgraphDeployment.deniedAt"
+          v-if="item.subgraphDeployment.deniedAt"
           bordered
           color="error"
           icon="mdi-currency-usd-off"
@@ -23,91 +23,91 @@
           avatar
       >
         <v-avatar size="30">
-          <v-img :src="item.raw.subgraphDeployment.versions[0].subgraph.image" />
+          <v-img :src="item.subgraphDeployment.versions[0].subgraph.image" />
         </v-avatar>
       </v-badge>
-      <v-avatar size="30" v-if="!item.raw.subgraphDeployment.deniedAt">
-        <v-img :src="item.raw.subgraphDeployment.versions[0].subgraph.image" />
+      <v-avatar size="30" v-if="!item.subgraphDeployment.deniedAt">
+        <v-img :src="item.subgraphDeployment.versions[0].subgraph.image" />
       </v-avatar>
     </template>
     <template v-slot:item.id="{ item }" style="width:100;max-width:100px;min-width:100px;overflow-x: scroll;">
-      <p style="width:100;max-width:100px;min-width:100px;overflow-x: scroll;">{{ item.raw.id }}</p>
+      <p style="width:100;max-width:100px;min-width:100px;overflow-x: scroll;">{{ item.id }}</p>
     </template>
     <template v-slot:item.allocatedTokens="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.raw.allocatedTokens.toString())).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(item.allocatedTokens.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.createdAt="{ item }">
-      <span :timestamp="item.raw.createdAt">
+      <span :timestamp="item.createdAt">
         <v-tooltip theme="dark" location="top">
           <template v-slot:activator="{ props }">
             <span
               v-bind="props"
             >
-            Epoch {{ item.raw.createdAtEpoch }}
+            Epoch {{ item.createdAtEpoch }}
             </span>
           </template>
-          <span>{{ moment(item.raw.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
+          <span>{{ moment(item.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
         </v-tooltip>
       </span>
     </template>
     <template v-slot:item.activeDuration="{ item }">
-      <span :timestamp="item.raw.activeDuration">
+      <span :timestamp="item.activeDuration">
         <v-tooltip theme="dark" location="top">
           <template v-slot:activator="{ props }">
             <span
               v-bind="props"
             >
-            {{ item.raw.epochDuration }} epochs
+            {{ item.epochDuration }} epochs
             </span>
           </template>
-          <span>{{ item.raw.readableDuration }}</span>
+          <span>{{ item.readableDuration }}</span>
         </v-tooltip>
       </span>
     </template>
     <template v-slot:item.subgraphDeployment.signalledTokens="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.raw.subgraphDeployment.signalledTokens.toString())).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(item.subgraphDeployment.signalledTokens.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.subgraphDeployment.indexingRewardAmount="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.raw.subgraphDeployment.indexingRewardAmount.toString())).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(item.subgraphDeployment.indexingRewardAmount.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.subgraphDeployment.queryFeesAmount="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.raw.subgraphDeployment.queryFeesAmount.toString())).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(item.subgraphDeployment.queryFeesAmount.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.subgraphDeployment.stakedTokens="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.raw.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(item.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.proportion="{ item }">
-      {{ numeral(item.raw.proportion*100).format('0,0.000') }}%
+      {{ numeral(item.proportion*100).format('0,0.000') }}%
     </template>
     <template v-slot:item.apr="{ item }">
-      {{ numeral(item.raw.apr).format('0,0.00') }}%
+      {{ numeral(item.apr).format('0,0.00') }}%
     </template>
     <template v-slot:item.dailyRewards="{ item }">
-      {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.raw.dailyRewards))).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.dailyRewards))).format('0,0') }} GRT
     </template>
     <template v-slot:item.dailyRewardsCut="{ item }">
-      {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.raw.dailyRewardsCut))).format('0,0') }} GRT
+      {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.dailyRewardsCut))).format('0,0') }} GRT
     </template>
     <template v-slot:item.pendingRewards="{ item }">
       <span
-        v-if="!item.raw.pendingRewards.loading && !item.raw.pendingRewards.loaded"
+        v-if="!item.pendingRewards.loading && !item.pendingRewards.loaded"
         >
-        <v-icon left @click="allocationStore.fetchPendingRewards(item.raw.id);">
+        <v-icon left @click="allocationStore.fetchPendingRewards(item.id);">
           mdi-download
         </v-icon>
       </span>
       <v-progress-circular
           indeterminate
           color="purple"
-          v-if="item.raw.pendingRewards.loading && !item.raw.pendingRewards.loaded"
+          v-if="item.pendingRewards.loading && !item.pendingRewards.loaded"
       ></v-progress-circular>
       <span
-        v-if="!item.raw.pendingRewards.loading && item.raw.pendingRewards.loaded"
+        v-if="!item.pendingRewards.loading && item.pendingRewards.loaded"
         >
-        {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.raw.pendingRewards.value))).format('0,0') }} GRT
+        {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.pendingRewards.value))).format('0,0') }} GRT
       </span>
       <span
-        v-if="item.raw.pendingRewards.error"
+        v-if="item.pendingRewards.error"
         >
         error
       </span>
@@ -115,7 +115,7 @@
     </template>
     <template v-slot:item.pendingRewardsCut="{ item }">
       <span
-        v-if="!item.raw.pendingRewards.loading && !item.raw.pendingRewards.loaded"
+        v-if="!item.pendingRewards.loading && !item.pendingRewards.loaded"
         >
         <v-icon left @click="allocationStore.fetchAllPendingRewards();">
           mdi-download-multiple
@@ -124,42 +124,20 @@
       <v-progress-circular
           indeterminate
           color="purple"
-          v-if="item.raw.pendingRewards.loading && !item.raw.pendingRewards.loaded"
+          v-if="item.pendingRewards.loading && !item.pendingRewards.loaded"
       ></v-progress-circular>
       <span
-          v-if="!item.raw.pendingRewards.loading && item.raw.pendingRewards.loaded"
+          v-if="!item.pendingRewards.loading && item.pendingRewards.loaded"
       >
-        {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.raw.pendingRewardsCut))).format('0,0') }} GRT
+        {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.pendingRewardsCut))).format('0,0') }} GRT
       </span>
       <span
-        v-if="item.raw.pendingRewards.error"
+        v-if="item.pendingRewards.error"
         >
         error
       </span>
     </template>
-    <template v-slot:body.append>
-      <tr>
-        <td style="font-size: 11px"><strong>Totals</strong></td>
-        <td v-if="selectable"></td>
-        <td><strong>{{ allocations.length }} allocations</strong></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><strong>{{ numeral(allocationStore.avgAPR).format('0,0.00') }}%</strong></td>
-        <td><strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.dailyRewardsSum))).format('0,0') }} GRT</strong></td>
-        <td><strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.dailyRewardsCutSum))).format('0,0') }} GRT</strong></td>
-        <td><strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.pendingRewardsSum))).format('0,0') }} GRT</strong></td>
-        <td><strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.pendingRewardsCutSum))).format('0,0') }} GRT</strong></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </template>
-  </v-data-table>
-  <div>
+    <template v-slot:bottom>
       <tr>
         <td style="font-size: 11px"><strong>Totals</strong></td>
         <td v-if="selectable"></td>
@@ -179,12 +157,13 @@
         <td></td>
         <td></td>
       </tr>
-    </div>
-    <download-csv
-        :data   = "allocationStore.getAllocations" 
-        :csv-title="'allocations'">
-        Download Data
-    </download-csv>
+      <download-csv
+          :data   = "allocationStore.getAllocations" 
+          :csv-title="'allocations'">
+          Download Data
+      </download-csv>
+    </template>
+  </v-data-table>
 </template>
 
 <script setup>
