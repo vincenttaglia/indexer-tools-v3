@@ -137,7 +137,7 @@
         error
       </span>
     </template>
-    <template v-slot:bottom>
+    <template v-slot:body.append>
       <tr>
         <td style="font-size: 11px"><strong>Totals</strong></td>
         <td v-if="selectable"></td>
@@ -164,6 +164,32 @@
       </download-csv>
     </template>
   </v-data-table>
+  <div>
+    <tr>
+        <td style="font-size: 11px"><strong>Totals</strong></td>
+        <td v-if="selectable"></td>
+        <td><strong>{{ allocationStore.getAllocations.length }} allocations</strong>&nbsp;&nbsp;</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><strong>Avg APR: {{ numeral(allocationStore.avgAPR).format('0,0.00%') }}</strong>&nbsp;&nbsp;</td>
+        <td><strong>Daily Rewards Sum: {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.dailyRewardsSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong></td>
+        <td><strong>Daily Rewards Cut Sum: {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.dailyRewardsCutSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong></td>
+        <td><strong>Pending Rewards Sum: {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.pendingRewardsSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong></td>
+        <td><strong>Pending Rewards Cut Sum: {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.pendingRewardsCutSum))).format('0,0') }} GRT</strong></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <download-csv
+          :data   = "allocationStore.getAllocations" 
+          :csv-title="'allocations'">
+          Download Data
+      </download-csv>
+  </div>
 </template>
 
 <script setup>

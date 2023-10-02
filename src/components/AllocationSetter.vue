@@ -66,8 +66,8 @@
 
           <v-slider
               min="0"
-              :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(newAllocationSetterStore.calculatedAvailableStake))) + parseFloat(newAllocations[item.id])"
-              v-model="newAllocations[item.id]"
+              :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(newAllocationSetterStore.calculatedAvailableStake))) + parseFloat(newAllocations[item.currentVersion.subgraphDeployment.ipfsHash])"
+              v-model="newAllocations[item.currentVersion.subgraphDeployment.ipfsHash]"
               style="max-width: 500px; min-width:100px;"
               class="mt-4"
               step="1"
@@ -77,7 +77,7 @@
                   class="mt-0 pt-0"
                   type="number"
                   style="width: 125px"
-                  v-model="newAllocations[item.id]"
+                  v-model="newAllocations[item.currentVersion.subgraphDeployment.ipfsHash]"
               ></v-text-field>
             </template>
           </v-slider>
