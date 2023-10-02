@@ -30,6 +30,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
           ...state.getDailyRewards[i],
           ...state.getDailyRewardsCuts[i],
           ...state.getFutureStakedTokens[i],
+          ...state.getNewProportions[i],
         };
       }
       return selectedSubgraphs;
@@ -58,6 +59,21 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
         }
       }
       return newAprs;
+    },
+    getNewProportions: (state) => {
+      let proportions = [];
+      for(let i = 0; i < state.getSelectedS.length; i++){
+        let subgraph = state.getSelectedS[i];
+        console.log("FUTURE STAKED TOKENS");
+        console.log(state.getFutureStakedTokens[i].futureStakedTokens.toString());
+        const newAllocation = state.newAllocations[subgraph.currentVersion.subgraphDeployment.ipfsHash] ? state.newAllocations[subgraph.currentVersion.subgraphDeployment.ipfsHash] : 0;
+        console.log(newAllocation);
+        if(state.getFutureStakedTokens[i].futureStakedTokens.plus(new BigNumber(newAllocation*10**18)) > 0)
+            proportions[i] = { newProportion: subgraph.currentSignalledTokens / state.getFutureStakedTokens[i].futureStakedTokens.plus(new BigNumber(newAllocation*10**18)) };
+          else
+            proportions[i] = { newProportion: 0 };
+      }
+      return proportions;
     },
     getDailyRewards: (state) => {
       let dailyRewards = [];

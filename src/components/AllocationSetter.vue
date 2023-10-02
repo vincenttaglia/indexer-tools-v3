@@ -44,6 +44,9 @@
     <template v-slot:item.proportion="{ item }">
       {{ numeral(item.proportion).format('0,0.000%') }}
     </template>
+    <template v-slot:item.newProportion="{ item }">
+      {{ numeral(item.newProportion).format('0,0.000%') }}
+    </template>
     <template v-slot:item.apr="{ item }">
       {{ numeral(item.apr).format('0,0.00') }}%
     </template>
@@ -114,16 +117,17 @@ const headers = ref([
           key: 'image',
         },
         { title: 'Name', key: 'displayName' },
-        { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
         { title: 'Current APR', key: 'apr'},
         { title: 'New APR', key: 'newApr'},
         { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
         { title: 'Est Daily Rewards (After Cut)', key: 'dailyRewardsCut'},
+        { title: 'Current Proportion', key: 'proportion'},
+        { title: 'New Proportion', key: 'newProportion'},
         {
           title: 'Current Signal',
           key: 'currentSignalledTokens',
         },
-        { title: 'Current Proportion', key: 'proportion'},
+        { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
         { title: 'Current Allocations', key: 'currentVersion.subgraphDeployment.stakedTokens'},
         { title: 'Total Query Fees', key: 'currentVersion.subgraphDeployment.queryFeesAmount'},
         { title: 'Total Indexing Rewards', key: 'currentVersion.subgraphDeployment.indexingRewardAmount'},
