@@ -6,10 +6,12 @@ import { useAllocationStore } from './allocations';
 import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import { calculateNewApr, calculateSubgraphDailyRewards, maxAllo, indexerCut } from '@/plugins/commonCalcs';
+import { useChainStore } from './chains';
 const subgraphStore = useSubgraphsStore();
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
 const allocationStore = useAllocationStore();
+const chainStore = useChainStore();
 
 
 export const useNewAllocationSetterStore = defineStore('allocationSetter', {
@@ -154,11 +156,11 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     buildCommands: (state) => {
       let commands = "";
       for(const i in allocationStore.getSelectedAllocations){
-        commands += `graph indexer rules delete ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash}\n`
+        commands += `graph indexer rules delete ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} --network ${chainStore.getActiveChain.id}\n`
       }
       for(const i in state.getSelectedS){
         if(state.newAllocations[state.getSelectedS[i].id] > 0)
-          commands += `graph indexer rules set ${state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash} allocationAmount ${state.newAllocations[state.getSelectedS[i].id]} decisionBasis always\n`
+          commands += `graph indexer rules set ${state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash} allocationAmount ${state.newAllocations[state.getSelectedS[i].id]} decisionBasis always --network ${chainStore.getActiveChain.id}\n`
       }
       return commands;
     },
@@ -169,15 +171,15 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       let skip = [];
       for(const i in allocationStore.getSelectedAllocations){
         if(Object.keys(state.newAllocations).includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash)){
-          reallocate += `graph indexer actions queue reallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id} ${state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]}\n`
+          reallocate += `graph indexer actions queue reallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id} ${state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} --network ${chainStore.getActiveChain.id}\n`
           skip.push(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash);
         }else{
-          unallocate += `graph indexer actions queue unallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id}\n`
+          unallocate += `graph indexer actions queue unallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id} --network ${chainStore.getActiveChain.id}\n`
         }
       }
       for(const i in state.getSelectedS){
         if(state.newAllocations[state.getSelectedS[i].id] > 0 && !skip.includes(i))
-          allocate += `graph indexer actions queue allocate ${state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash} ${state.newAllocations[state.getSelectedS[i].id]}\n`
+          allocate += `graph indexer actions queue allocate ${state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash} ${state.newAllocations[state.getSelectedS[i].id]} --network ${chainStore.getActiveChain.id}\n`
       }
       return `${unallocate}${reallocate}${allocate}`;
     },

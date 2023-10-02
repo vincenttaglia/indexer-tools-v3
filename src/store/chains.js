@@ -10,7 +10,7 @@ let startChain;
 
 if(localStorage.accounts){
   const chain = JSON.parse(localStorage.accounts).find((a) => a.active).chain;
-  if(["mainnet", "arbitrum", "goerli"].includes(chain)){
+  if(["mainnet", "arbitrum-one", "goerli"].includes(chain)){
     startChain = chain;
   }else{
     startChain = "mainnet";
@@ -32,14 +32,14 @@ export const useChainStore = defineStore('chainStore', {
       active: startChain == "mainnet",
       },
       {
-      id: "arbitrum",
+      id: "arbitrum-one",
       default_rpc: "https://arb-mainnet.g.alchemy.com/v2/er8LBcXpoFwlV8xJee-WXFbFG_M8L4JK",
       web3: new Web3(subgraphSettingStore.settings.rpc.arbitrum != '' ? subgraphSettingStore.settings.rpc.arbitrum : "https://arb-mainnet.g.alchemy.com/v2/er8LBcXpoFwlV8xJee-WXFbFG_M8L4JK"),
       rewardsContractAddress: "0x971B9d3d0Ae3ECa029CAB5eA1fB0F72c85e6a525",
       stakingContractAddress: "0x00669A4CF01450B64E8A2A20E9b1FCB71E61eF03",
       networkSubgraphClient: arbitrumApolloClient,
       blocksPerDay: 5760,
-      active: startChain == "arbitrum",
+      active: startChain == "arbitrum-one",
       },
       {
       id: "goerli",

@@ -17,7 +17,7 @@ export const useNetworkStore = defineStore('network', {
         totalSupply: "0",
         currentEpoch: "0",
       },
-      "arbitrum": {
+      "arbitrum-one": {
         totalTokensSignalled: "0",
         issuancePerBlock: "0",
         issuancePerYear: "0",
