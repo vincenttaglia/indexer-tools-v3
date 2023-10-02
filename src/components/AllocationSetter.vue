@@ -92,7 +92,7 @@
 import moment from 'moment';
 import Web3 from 'web3';
 import numeral from 'numeral';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useSubgraphsStore } from '@/store/subgraphs';
 import { useNewAllocationSetterStore } from '@/store/newAllocationSetter';
 import { storeToRefs } from 'pinia';
@@ -100,7 +100,11 @@ const subgraphStore = useSubgraphsStore();
 const newAllocationSetterStore = useNewAllocationSetterStore();
 newAllocationSetterStore.update();
 
-const { newAllocations } = storeToRefs(newAllocationSetterStore);
+const { newAllocations, getSelectedS } = storeToRefs(newAllocationSetterStore);
+
+watch(getSelectedS, (getSelectedS) => {
+  newAllocationSetterStore.update();
+})
 
 const headers = ref([
         {
