@@ -292,7 +292,7 @@ const headers = ref([
     console.log(oldAccount);
     allocationStore.loaded = false;
     allocationStore.loading = false;
-    if(newAccount.address != oldAccount.address)
+    if(newAccount.address != oldAccount.address || newAccount.chain != oldAccount.chain)
       allocationStore.fetchData();
   });
 

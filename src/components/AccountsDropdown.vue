@@ -104,13 +104,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useAccountStore } from '@/store/accounts';
 import AccountsEdit from './AccountsEdit.vue';
 import { useChainStore } from '@/store/chains';
 import { useAllocationStore } from '@/store/allocations';
 import { useNetworkStore } from '@/store/network';
 import { useSubgraphsStore } from '@/store/subgraphs';
+import { useDeploymentStatusStore } from '@/store/deploymentStatuses';
+import { storeToRefs } from "pinia";
 const accountStore = useAccountStore();
 const editDialog = ref(false);
 const addDialog = ref(false);
@@ -120,6 +122,8 @@ const chainStore = useChainStore();
 const subgraphStore = useSubgraphsStore();
 const allocationStore = useAllocationStore();
 const networkStore = useNetworkStore();
+const deploymentStatusStore = useDeploymentStatusStore();
+const { getActiveUrl } = storeToRefs(accountStore);
 function switchAccount(address, chain){
   const oldChain = chainStore.getChainID;
   const newAccount = accountStore.switchAccount(address, chain);
@@ -131,4 +135,8 @@ function switchAccount(address, chain){
   }
   
 }
+watch(getActiveUrl,  async (newUrl, oldUrl) => {
+    if(newUrl != oldUrl)
+      deploymentStatusStore.update();
+  });
 </script>

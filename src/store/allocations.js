@@ -6,6 +6,7 @@ import { useDeploymentStatusStore } from './deploymentStatuses';
 import gql from 'graphql-tag';
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
+import { storeToRefs } from 'pinia';
 import { calculateApr, calculateReadableDuration, calculateAllocationDailyRewards, indexerCut } from '@/plugins/commonCalcs';
 
 
@@ -13,6 +14,8 @@ const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
 const chainStore = useChainStore();
 const deploymentStatusStore = useDeploymentStatusStore();
+const { getDeploymentStatuses } = storeToRefs(deploymentStatusStore);
+
 
 networkStore.init();
 accountStore.fetchData()
@@ -30,6 +33,9 @@ export const useAllocationStore = defineStore('allocationStore', {
     loading: false,
   }),
   getters: {
+    getDeploymentStatusesCall: () => {
+      return getDeploymentStatuses.value;
+    },
     getAllocations: (state) => {
       let allocations = [];
       for(let i = 0; i < state.allocations.length; i++){
@@ -154,13 +160,13 @@ export const useAllocationStore = defineStore('allocationStore', {
       let deploymentStatuses = [];
       console.log("DEPLOY STATUS");
       for(let i = 0; i < state.allocations.length; i++){
-        let deploymentStatus = deploymentStatusStore.getDeploymentStatuses.find((e) => e.subgraph === state.allocations[i].subgraphDeployment.ipfsHash);
+        let deploymentStatus = state.getDeploymentStatusesCall.find((e) => e.subgraph == state.allocations[i].subgraphDeployment.ipfsHash);
         console.log("DEPLOYY STATUS");
         console.log(deploymentStatus);
-        if(deploymentStatus != null){
+        if(deploymentStatus != undefined){
           deploymentStatuses[i] = { deploymentStatus: deploymentStatus }
         }else{
-          deploymentStatuses[i] = { deploymentStatus: null }
+          deploymentStatuses[i] = { deploymentStatus: undefined }
         }
       }
       return deploymentStatuses;
