@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { useNetworkStore } from '@/store/network';
 import { useAccountStore } from '@/store/accounts';
 import { useChainStore } from '@/store/chains';
+import { useDeploymentStatusStore } from './deploymentStatuses';
 import gql from 'graphql-tag';
 import moment from 'moment';
 import BigNumber from 'bignumber.js';
@@ -11,9 +12,13 @@ import { calculateApr, calculateReadableDuration, calculateAllocationDailyReward
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
 const chainStore = useChainStore();
+const deploymentStatusStore = useDeploymentStatusStore();
 
 networkStore.init();
-accountStore.fetchData();
+accountStore.fetchData()
+.then(() => {
+  deploymentStatusStore.update();
+});
 
 
 export const useAllocationStore = defineStore('allocationStore', {
@@ -39,6 +44,7 @@ export const useAllocationStore = defineStore('allocationStore', {
           ...state.getDailyRewardsCuts[i],
           ...state.getPendingRewards[i],
           ...state.getPendingRewardsCuts[i],
+          ...state.getDeploymentStatuses[i],
         };
       }
       console.log(state.allocations);
@@ -144,6 +150,21 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
       return pendingRewardsCuts;
     },
+    getDeploymentStatuses: (state) => {
+      let deploymentStatuses = [];
+      console.log("DEPLOY STATUS");
+      for(let i = 0; i < state.allocations.length; i++){
+        let deploymentStatus = deploymentStatusStore.getDeploymentStatuses.find((e) => e.subgraph === state.allocations[i].subgraphDeployment.ipfsHash);
+        console.log("DEPLOYY STATUS");
+        console.log(deploymentStatus);
+        if(deploymentStatus != null){
+          deploymentStatuses[i] = { deploymentStatus: deploymentStatus }
+        }else{
+          deploymentStatuses[i] = { deploymentStatus: null }
+        }
+      }
+      return deploymentStatuses;
+    },
     totalAllocatedStake: (state) => {
       let totalAllocatedStake = new BigNumber(0);
       if(state.allocations.length > 0){
@@ -216,7 +237,7 @@ export const useAllocationStore = defineStore('allocationStore', {
     },
     dailyRewardsSum: (state) => {
       return state.getDailyRewards.reduce((sum, cur) => sum.plus(cur.dailyRewards), new BigNumber(0));
-    }
+    },
   },
   actions: {
     async fetchAllPendingRewards(){

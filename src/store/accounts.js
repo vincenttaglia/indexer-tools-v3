@@ -10,11 +10,15 @@ export const useAccountStore = defineStore('accountStore', {
     accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : [ { address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: true, chain: "mainnet" } ],
     loading: true,
     cut: '0',
+    url: '',
     availableStake: '0',
   }),
   getters: {
     getActiveAccount: (state) => {
       return state.accounts.find(e => e.active);
+    },
+    getActiveUrl: (state) => {
+      return state.url;
     }
   },
   actions: {
@@ -24,6 +28,7 @@ export const useAccountStore = defineStore('accountStore', {
           indexer(id: $indexer){
             indexingRewardCut
             availableStake
+            url
           }
         }`,
         variables: {
@@ -33,6 +38,7 @@ export const useAccountStore = defineStore('accountStore', {
       .then((data) => {
         this.cut = data.data.indexer.indexingRewardCut;
         this.availableStake = data.data.indexer.availableStake;
+        this.url = data.data.indexer.url;
         this.loading = false;
       });
     },

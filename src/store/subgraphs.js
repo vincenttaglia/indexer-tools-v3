@@ -8,10 +8,12 @@ import { useAccountStore } from './accounts';
 import { useSubgraphSettingStore } from './subgraphSettings';
 import { useAllocationStore } from './allocations';
 import { useChainStore } from './chains';
+import { useDeploymentStatusStore } from './deploymentStatuses';
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
 const allocationStore = useAllocationStore();
 const chainStore = useChainStore();
+const deploymentStatusStore = useDeploymentStatusStore();
 accountStore.fetchData();
 const subgraphSettingStore = useSubgraphSettingStore();
 import BigNumber from "bignumber.js";
@@ -82,6 +84,7 @@ export const useSubgraphsStore = defineStore({
           ...state.getNewAprs[i],
           ...state.getMaxAllos[i],
           ...state.getCurrentlyAllocated[i],
+          ...state.getDeploymentStatuses[i],
         };
       }
       return subgraphs;
@@ -99,6 +102,18 @@ export const useSubgraphsStore = defineStore({
         };
       }
       return selectedSubgraphs;
+    },
+    getDeploymentStatuses: (state) => {
+      let deploymentStatuses = [];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        let deploymentStatus = deploymentStatusStore.getDeploymentStatuses.find((e) => e.subgraph === state.subgraphs[i].currentVersion.subgraphDeployment.ipfsHash);
+        if(deploymentStatus != null){
+          deploymentStatuses[i] = { deploymentStatus: deploymentStatus }
+        }else{
+          deploymentStatuses[i] = { deploymentStatus: null }
+        }
+      }
+      return deploymentStatuses;
     },
     getProportions: (state) => {
       let proportions = [];
