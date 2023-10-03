@@ -123,7 +123,7 @@
     <template v-slot:item.dailyRewardsCut="{ item }">
       {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.dailyRewardsCut))).format('0,0') }} GRT
     </template>
-    <template v-slot:item.pendingRewards="{ item }">
+    <template v-slot:item.pendingRewards.value="{ item }">
       <span
         v-if="!item.pendingRewards.loading && !item.pendingRewards.loaded"
         >
@@ -269,7 +269,7 @@ const headers = ref([
     { title: 'Current APR', key: 'apr'},
     { title: 'Est Daily Rewards', key: 'dailyRewards'},
     { title: 'Est Daily Rewards (After Cut)', key: 'dailyRewardsCut'},
-    { title: 'Pending Rewards', key: 'pendingRewards'},
+    { title: 'Pending Rewards', key: 'pendingRewards.value'},
     { title: 'Pending Rewards (After Cut)', key: 'pendingRewardsCut'},
     { title: 'Current Signal', key: 'subgraphDeployment.signalledTokens'},
     { title: 'Current Proportion', key: 'proportion'},
@@ -315,7 +315,15 @@ const headers = ref([
         } else {
           return t(b, index[0]).safeObject - t(a, index[0]).safeObject;
         }
-      } else {
+      }else if(index[0] == 'pendingRewards' || index[0] == 'pendingRewardsCut'){
+        console.log(t(a, index[0]).safeObject);
+        console.log(t(b, index[0]).safeObject);
+        if(!isDesc[0]){
+          return t(a, index[0]).safeObject.value - t(b, index[0]).safeObject.value;
+        } else{
+          return t(b, index[0]).safeObject.value - t(a, index[0]).safeObject.value;
+        }
+      }else {
         if(typeof t(a, index[0]) !== 'undefined'){
           let objA = t(a, index[0]).safeObject;
           let objB = t(b, index[0]).safeObject;
