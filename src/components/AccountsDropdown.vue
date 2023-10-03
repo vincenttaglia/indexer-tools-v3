@@ -90,7 +90,7 @@
           <v-list-item
               v-for="(indexerAccount) in accountStore.accounts"
               :key="indexerAccount.address"
-              @click="switchAccount(indexerAccount.address);"
+              @click="switchAccount(indexerAccount.address, indexerAccount.chain);"
           >
             <v-list-item-content>
               <v-list-item-title v-text="indexerAccount.name"></v-list-item-title>
@@ -120,9 +120,9 @@ const chainStore = useChainStore();
 const subgraphStore = useSubgraphsStore();
 const allocationStore = useAllocationStore();
 const networkStore = useNetworkStore();
-function switchAccount(address){
+function switchAccount(address, chain){
   const oldChain = chainStore.getChainID;
-  const newAccount = accountStore.switchAccount(address);
+  const newAccount = accountStore.switchAccount(address, chain);
   // If chain switch was triggered, reload data
   if(newAccount && oldChain != chainStore.getChainID){
     networkStore.init();
