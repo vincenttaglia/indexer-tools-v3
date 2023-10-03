@@ -88,8 +88,10 @@
             avatar
             v-if="(item.currentVersion.subgraphDeployment.deniedAt && item.currentlyAllocated) || (!item.currentVersion.subgraphDeployment.deniedAt && !item.currentlyAllocated) || (item.currentVersion.subgraphDeployment.deniedAt && !item.currentlyAllocated)"
         >
-        <v-avatar size="30">
-          <v-img :src="item.image" />
+        <v-avatar :color="item.deploymentStatus != null ? (item.deploymentStatus.health == 'healthy' && item.deploymentStatus.synced ? 'green' : 'yellow') : 'red'" size="34">
+          <v-avatar size="30">
+            <v-img :src="item.image" />
+          </v-avatar>
         </v-avatar>
       </v-badge>
       <v-badge
@@ -101,8 +103,10 @@
           avatar
           v-if="!item.currentVersion.subgraphDeployment.deniedAt && item.currentlyAllocated"
       >
-        <v-avatar size="30">
-          <v-img :src="item.image" />
+        <v-avatar :color="item.deploymentStatus != null ? (item.deploymentStatus.health == 'healthy' && item.deploymentStatus.synced ? 'green' : 'yellow') : 'red'" size="34">
+          <v-avatar size="30">
+            <v-img :src="item.image" />
+          </v-avatar>
         </v-avatar>
       </v-badge>
     </template>

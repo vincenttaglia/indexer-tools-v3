@@ -22,12 +22,16 @@
           overlap
           avatar
       >
+      <v-avatar :color="item.deploymentStatus != null ? (item.deploymentStatus.health == 'healthy' && item.deploymentStatus.synced ? 'green' : 'yellow') : 'red'" size="34">
         <v-avatar size="30">
           <v-img :src="item.subgraphDeployment.versions[0].subgraph.image" />
         </v-avatar>
+      </v-avatar>
       </v-badge>
-      <v-avatar size="30" v-if="!item.subgraphDeployment.deniedAt">
-        <v-img :src="item.subgraphDeployment.versions[0].subgraph.image" />
+      <v-avatar :color="item.deploymentStatus != null ? (item.deploymentStatus.health == 'healthy' && item.deploymentStatus.synced ? 'green' : 'yellow') : 'red'" size="34">
+        <v-avatar size="30" v-if="!item.subgraphDeployment.deniedAt">
+          <v-img :src="item.subgraphDeployment.versions[0].subgraph.image" />
+        </v-avatar>
       </v-avatar>
     </template>
     <template v-slot:item.id="{ item }" style="width:100;max-width:100px;min-width:100px;overflow-x: scroll;">
