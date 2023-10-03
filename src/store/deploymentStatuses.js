@@ -16,7 +16,7 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
       fetch(`${this.getIndexerUrl}status`,  {
         method: "POST",
         headers: {"Content-type": "application/json"},
-        body: JSON.stringify({query: "{ indexingStatuses { subgraph synced health fatalError{ message deterministic block{ hash number } } node chains{ latestBlock{number} chainHeadBlock{number} } } }"}),
+        body: JSON.stringify({query: "{ indexingStatuses { subgraph synced health fatalError{ message deterministic block{ hash number } } node chains{ latestBlock{number} chainHeadBlock{number} earliestBlock{number} } } }"}),
       })
       .then((res) => res.json())
       .then((json) => {
