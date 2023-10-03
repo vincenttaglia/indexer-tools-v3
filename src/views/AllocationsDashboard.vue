@@ -31,13 +31,13 @@
               overlap
               avatar
             >
-              <v-avatar :color="item.deploymentStatus != null ? (item.deploymentStatus.health == 'healthy' && item.deploymentStatus.synced ? 'green' : 'yellow') : 'red'" size="34">
+              <v-avatar :color="item.deploymentStatus != undefined ? item.deploymentStatus.color : ''" size="34">
                 <v-avatar size="30">
                   <v-img :src="item.subgraphDeployment.versions[0].subgraph.image" />
                 </v-avatar>
               </v-avatar>
             </v-badge>
-            <v-avatar :color="item.deploymentStatus != null ? (item.deploymentStatus.health == 'healthy' && item.deploymentStatus.synced ? 'green' : 'yellow') : 'red'" size="34">
+            <v-avatar :color="item.deploymentStatus != undefined ? item.deploymentStatus.color : ''" size="34">
               <v-avatar size="30" v-if="!item.subgraphDeployment.deniedAt">
                 <v-img :src="item.subgraphDeployment.versions[0].subgraph.image" />
               </v-avatar>
@@ -49,14 +49,20 @@
             <div class="mx-auto text-center">
               <v-avatar
                 size="25"
-                :color="item.deploymentStatus != null ? (item.deploymentStatus.health == 'healthy' && item.deploymentStatus.synced ? 'green' : 'yellow') : 'red'"
+                :color="item.deploymentStatus != undefined ? item.deploymentStatus.color : ''"
               >
-                <v-icon :icon="item.deploymentStatus.synced ? 'mdi-check' : 'mdi-alpha-x'"></v-icon>
+                <v-icon :icon="item.deploymentStatus != undefined ? item.deploymentStatus.icon : 'mdi-close'"></v-icon>
               </v-avatar>
               <h4 class="mt-1">{{item.deploymentStatus.health}}</h4>
               <v-divider class="my-2"></v-divider>
-              <p class="text-caption mt-2 mb-1">
+              <p class="text-caption mt-2">
+                First block: {{  item.deploymentStatus.chains[0].earliestBlock.number }}
+              </p>
+              <p class="text-caption">
                 Last block: {{ item.deploymentStatus.chains[0].latestBlock.number }}
+              </p>
+              <p class="text-caption mb-1">
+                Chainhead: {{ item.deploymentStatus.chains[0].chainHeadBlock.number }}
               </p>
               {{ numeral((item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)).format('0.00%') }}
               <v-progress-linear :model-value="(item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)*100"></v-progress-linear>

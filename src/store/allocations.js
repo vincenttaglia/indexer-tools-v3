@@ -164,9 +164,26 @@ export const useAllocationStore = defineStore('allocationStore', {
         console.log("DEPLOYY STATUS");
         console.log(deploymentStatus);
         if(deploymentStatus != undefined){
+          if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError.deterministic == false){
+            deploymentStatus.icon = 'mdi-refresh';
+            deploymentStatus.color = 'yellow';
+          }else if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError.deterministic == true){
+            deploymentStatus.icon = 'mdi-close';
+            deploymentStatus.color = 'red';
+          }else if(deploymentStatus.health == 'healthy' && deploymentStatus.synced == true){
+            deploymentStatus.icon = 'mdi-check';
+            deploymentStatus.color = 'green';
+          }else if(deploymentStatus.health == 'healthy' && deploymentStatus.synced == false){
+            deploymentStatus.icon = 'mdi-minus';
+            deploymentStatus.color = 'blue'
+          }else{
+            deploymentStatus.icon = 'mdi-help';
+            deploymentStatus.color = 'default';
+          }
+
           deploymentStatuses[i] = { deploymentStatus: deploymentStatus }
         }else{
-          deploymentStatuses[i] = { deploymentStatus: undefined }
+          deploymentStatuses[i] = { deploymentStatus: { icon: 'mdi-close', color: 'default'} }
         }
       }
       return deploymentStatuses;
