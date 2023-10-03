@@ -79,36 +79,103 @@
       ></v-checkbox>
     </template>
     <template v-slot:item.image="{ item }">
-      <v-badge
-            :model-value="item.currentVersion.subgraphDeployment.deniedAt != '0'"
-            bordered
-            color="error"
-            icon="mdi-currency-usd-off"
-            overlap
-            avatar
-            v-if="(item.currentVersion.subgraphDeployment.deniedAt && item.currentlyAllocated) || (!item.currentVersion.subgraphDeployment.deniedAt && !item.currentlyAllocated) || (item.currentVersion.subgraphDeployment.deniedAt && !item.currentlyAllocated)"
-        >
-        <v-avatar :color="item.deploymentStatus != null ? (item.deploymentStatus.health == 'healthy' && item.deploymentStatus.synced ? 'green' : 'yellow') : 'red'" size="34">
-          <v-avatar size="30">
-            <v-img :src="item.image" />
-          </v-avatar>
-        </v-avatar>
-      </v-badge>
-      <v-badge
-          :model-value="item.currentlyAllocated"
-          bordered
-          color="warning"
-          icon="mdi-exclamation-thick"
-          overlap
-          avatar
-          v-if="!item.currentVersion.subgraphDeployment.deniedAt && item.currentlyAllocated"
+      <v-menu
+        min-width="200px"
+        rounded
       >
-        <v-avatar :color="item.deploymentStatus != null ? (item.deploymentStatus.health == 'healthy' && item.deploymentStatus.synced ? 'green' : 'yellow') : 'red'" size="34">
-          <v-avatar size="30">
-            <v-img :src="item.image" />
-          </v-avatar>
-        </v-avatar>
-      </v-badge>
+        <template v-slot:activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+          >
+            <v-badge
+              :model-value="item.currentVersion.subgraphDeployment.deniedAt != '0'"
+              bordered
+              color="error"
+              icon="mdi-currency-usd-off"
+              overlap
+              avatar
+              v-if="(item.currentVersion.subgraphDeployment.deniedAt && item.currentlyAllocated) || (!item.currentVersion.subgraphDeployment.deniedAt && !item.currentlyAllocated) || (item.currentVersion.subgraphDeployment.deniedAt && !item.currentlyAllocated)"
+              >
+              <v-avatar :color="item.deploymentStatus != undefined ? item.deploymentStatus.color : ''" size="34">
+                <v-avatar size="30">
+                  <v-img :src="item.image" />
+                </v-avatar>
+              </v-avatar>
+            </v-badge>
+            <v-badge
+                :model-value="item.currentlyAllocated"
+                bordered
+                color="warning"
+                icon="mdi-exclamation-thick"
+                overlap
+                avatar
+                v-if="!item.currentVersion.subgraphDeployment.deniedAt && item.currentlyAllocated"
+            >
+              <v-avatar :color="item.deploymentStatus != undefined ? item.deploymentStatus.color : ''" size="34">
+                <v-avatar size="30">
+                  <v-img :src="item.image" />
+                </v-avatar>
+              </v-avatar>
+            </v-badge>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-text>
+            <div class="mx-auto text-center">
+              <v-avatar
+                size="25"
+                :color="item.deploymentStatus != undefined ? item.deploymentStatus.color : ''"
+              >
+                <v-icon :icon="item.deploymentStatus != undefined ? item.deploymentStatus.icon : 'mdi-close'"></v-icon>
+              </v-avatar>
+              <h4 class="mt-1">{{item.deploymentStatus.health.toUpperCase()}}</h4>
+              <v-divider v-if="item.deploymentStatus.health == 'failed' && item.deploymentStatus.fatalError" class="my-2"></v-divider>
+              <div v-if="item.deploymentStatus.health == 'failed' && item.deploymentStatus.fatalError">
+                <p class="mt-2">
+                  Deterministic: <v-icon :icon="item.deploymentStatus.fatalError.deterministic ? 'mdi-check' : 'mdi-close'"></v-icon>
+                </p>
+                <v-btn
+                  rounded
+                  variant="text"
+                  @click="copyToClipboard(item.deploymentStatus.fatalError.block.number)"
+                >
+                  Block: {{ item.deploymentStatus.fatalError.block.number }}
+                </v-btn>
+                <br>
+                <v-btn
+                  rounded
+                  variant="text"
+                  @click="copyToClipboard(item.deploymentStatus.fatalError.block.hash)"
+                >
+                  Hash: {{ item.deploymentStatus.fatalError.block.hash.slice(0,6) }}...{{ item.deploymentStatus.fatalError.block.hash.slice(item.deploymentStatus.fatalError.block.hash.length-4,item.deploymentStatus.fatalError.block.hash.length) }}
+                </v-btn>
+                <br>
+                <v-btn
+                  rounded
+                  variant="text"
+                  @click="copyToClipboard(item.deploymentStatus.fatalError.message)"
+                >
+                  Copy Error
+                </v-btn>
+              </div>
+              
+              <v-divider class="my-2"></v-divider>
+              <p class="text-caption mt-2">
+                First block: {{  item.deploymentStatus.chains[0].earliestBlock.number }}
+              </p>
+              <p class="text-caption">
+                Last block: {{ item.deploymentStatus.chains[0].latestBlock.number }}
+              </p>
+              <p class="text-caption mb-1">
+                Chainhead: {{ item.deploymentStatus.chains[0].chainHeadBlock.number }}
+              </p>
+              {{ numeral((item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)).format('0.00%') }}
+              <v-progress-linear class="mt-1" :model-value="(item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)*100"></v-progress-linear>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-menu>
     </template>
     <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
       <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ moment(item.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>

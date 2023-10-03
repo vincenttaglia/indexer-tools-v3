@@ -9,6 +9,7 @@ import { useSubgraphSettingStore } from './subgraphSettings';
 import { useAllocationStore } from './allocations';
 import { useChainStore } from './chains';
 import { useDeploymentStatusStore } from './deploymentStatuses';
+import { storeToRefs } from 'pinia';
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
 const allocationStore = useAllocationStore();
@@ -19,6 +20,8 @@ const subgraphSettingStore = useSubgraphSettingStore();
 import BigNumber from "bignumber.js";
 import { calculateNewApr, calculateSubgraphDailyRewards, maxAllo, indexerCut } from '@/plugins/commonCalcs';
 
+const { getDeploymentStatuses } = storeToRefs(deploymentStatusStore);
+
 export const useSubgraphsStore = defineStore({
   id: 'subgraphs',
   state: () => ({
@@ -27,6 +30,9 @@ export const useSubgraphsStore = defineStore({
     loading: false,
   }),
   getters: {
+    getDeploymentStatusesCall: () => {
+      return getDeploymentStatuses.value;
+    },
     getFilteredSubgraphs: (state) => {
       let subgraphs = state.getSubgraphs;
       
@@ -106,11 +112,28 @@ export const useSubgraphsStore = defineStore({
     getDeploymentStatuses: (state) => {
       let deploymentStatuses = [];
       for(let i = 0; i < state.subgraphs.length; i++){
-        let deploymentStatus = deploymentStatusStore.getDeploymentStatuses.find((e) => e.subgraph === state.subgraphs[i].currentVersion.subgraphDeployment.ipfsHash);
-        if(deploymentStatus != null){
+        let deploymentStatus = state.getDeploymentStatusesCall.find((e) => e.subgraph == state.subgraphs[i].currentVersion.subgraphDeployment.ipfsHash);
+        if(deploymentStatus != undefined){
+          if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError.deterministic == false){
+            deploymentStatus.icon = 'mdi-refresh';
+            deploymentStatus.color = 'yellow';
+          }else if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError.deterministic == true){
+            deploymentStatus.icon = 'mdi-close';
+            deploymentStatus.color = 'red';
+          }else if(deploymentStatus.health == 'healthy' && deploymentStatus.synced == true){
+            deploymentStatus.icon = 'mdi-check';
+            deploymentStatus.color = 'green';
+          }else if(deploymentStatus.health == 'healthy' && deploymentStatus.synced == false){
+            deploymentStatus.icon = 'mdi-minus';
+            deploymentStatus.color = 'blue'
+          }else{
+            deploymentStatus.icon = 'mdi-help';
+            deploymentStatus.color = 'default';
+          }
+
           deploymentStatuses[i] = { deploymentStatus: deploymentStatus }
         }else{
-          deploymentStatuses[i] = { deploymentStatus: null }
+          deploymentStatuses[i] = { deploymentStatus: { icon: 'mdi-close', color: 'default'} }
         }
       }
       return deploymentStatuses;
