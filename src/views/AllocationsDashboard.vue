@@ -53,7 +53,37 @@
               >
                 <v-icon :icon="item.deploymentStatus != undefined ? item.deploymentStatus.icon : 'mdi-close'"></v-icon>
               </v-avatar>
-              <h4 class="mt-1">{{item.deploymentStatus.health}}</h4>
+              <h4 class="mt-1">{{item.deploymentStatus.health.toUpperCase()}}</h4>
+              <v-divider v-if="item.deploymentStatus.health == 'failed' && item.deploymentStatus.fatalError" class="my-2"></v-divider>
+              <div v-if="item.deploymentStatus.health == 'failed' && item.deploymentStatus.fatalError">
+                <p class="mt-2">
+                  Deterministic: <v-icon :icon="item.deploymentStatus.fatalError.deterministic ? 'mdi-check' : 'mdi-close'"></v-icon>
+                </p>
+                <v-btn
+                  rounded
+                  variant="text"
+                  @click="copyToClipboard(item.deploymentStatus.fatalError.block.number)"
+                >
+                  Block: {{ item.deploymentStatus.fatalError.block.number }}
+                </v-btn>
+                <br>
+                <v-btn
+                  rounded
+                  variant="text"
+                  @click="copyToClipboard(item.deploymentStatus.fatalError.block.hash)"
+                >
+                  Hash: {{ item.deploymentStatus.fatalError.block.hash.slice(0,6) }}...{{ item.deploymentStatus.fatalError.block.hash.slice(item.deploymentStatus.fatalError.block.hash.length-4,item.deploymentStatus.fatalError.block.hash.length) }}
+                </v-btn>
+                <br>
+                <v-btn
+                  rounded
+                  variant="text"
+                  @click="copyToClipboard(item.deploymentStatus.fatalError.message)"
+                >
+                  Copy Error
+                </v-btn>
+              </div>
+              
               <v-divider class="my-2"></v-divider>
               <p class="text-caption mt-2">
                 First block: {{  item.deploymentStatus.chains[0].earliestBlock.number }}
@@ -65,7 +95,7 @@
                 Chainhead: {{ item.deploymentStatus.chains[0].chainHeadBlock.number }}
               </p>
               {{ numeral((item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)).format('0.00%') }}
-              <v-progress-linear :model-value="(item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)*100"></v-progress-linear>
+              <v-progress-linear class="mt-1" :model-value="(item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)*100"></v-progress-linear>
             </div>
           </v-card-text>
         </v-card>
@@ -260,6 +290,10 @@ defineProps({
     default: false,
   },
 })
+
+function copyToClipboard (copy) {
+  navigator.clipboard.writeText(copy)
+}
 
 const headers = ref([
     {
