@@ -76,6 +76,12 @@ export const useSubgraphsStore = defineStore({
         });
       }
 
+      if(subgraphSettingStore.settings.activateStatusList){
+        subgraphs = subgraphs.filter((i) => {
+          return deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash) != undefined;
+        });
+      }
+
       return subgraphs;
     },
     getSubgraphs: (state) => {

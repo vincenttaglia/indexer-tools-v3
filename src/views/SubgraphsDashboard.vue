@@ -68,6 +68,11 @@
           style="min-width:13rem;max-width: 15rem;top: -5px"
       ></v-select>
       <v-checkbox
+        v-model="subgraphSettingStore.settings.activateStatusList"
+        label="Status List"
+        class="d-inline-block"
+      ></v-checkbox>
+      <v-checkbox
         v-model="subgraphSettingStore.settings.activateBlacklist"
         label="Blacklist"
         class="d-inline-block mr-3"
