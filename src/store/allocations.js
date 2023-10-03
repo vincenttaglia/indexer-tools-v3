@@ -232,12 +232,11 @@ export const useAllocationStore = defineStore('allocationStore', {
         allocation.pendingRewards.loading = true;
 
         chainStore.getRewardsContract.methods.getRewards(allocation.id).call(function(error, value){
-          if(value === undefined)
-            allocation.pendingRewards.error = true;
-          else
+          if(value != undefined){
             allocation.pendingRewards.value = BigNumber(value);
+            allocation.pendingRewards.loaded = true;
+          }
           
-          allocation.pendingRewards.loaded = true;
           allocation.pendingRewards.loading = false;
         })
       }

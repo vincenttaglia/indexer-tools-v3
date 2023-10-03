@@ -106,12 +106,6 @@
         >
         {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.pendingRewards.value))).format('0,0') }} GRT
       </span>
-      <span
-        v-if="item.pendingRewards.error"
-        >
-        error
-      </span>
-
     </template>
     <template v-slot:item.pendingRewardsCut="{ item }">
       <span
@@ -130,11 +124,6 @@
           v-if="!item.pendingRewards.loading && item.pendingRewards.loaded"
       >
         {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.pendingRewardsCut))).format('0,0') }} GRT
-      </span>
-      <span
-        v-if="item.pendingRewards.error"
-        >
-        error
       </span>
     </template>
     <template v-slot:body.append>
