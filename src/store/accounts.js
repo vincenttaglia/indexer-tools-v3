@@ -37,15 +37,15 @@ export const useAccountStore = defineStore('accountStore', {
       });
     },
     addAccount(address, name, chain){
-      let alreadyAdded = this.accounts.find(e => e.address == address.toLowerCase());
+      let alreadyAdded = this.accounts.find(e => e.address == address.toLowerCase() && e.chain == chain);
   
       if(!alreadyAdded){
         this.accounts.push({ address: address.toLowerCase(), name: name, active: false, chain: chain});
-        this.switchAccount(address);
+        this.switchAccount(address, chain);
       }
     },
-    switchAccount(address){
-      let newAccount = this.accounts.find(e => e.address == address.toLowerCase());
+    switchAccount(address, chain){
+      let newAccount = this.accounts.find(e => e.address == address.toLowerCase() && e.chain == chain);
       let oldAccount = this.getActiveAccount;
   
       if(newAccount){
@@ -73,7 +73,7 @@ export const useAccountStore = defineStore('accountStore', {
           }
           for(let i = 0; i < this.accounts.length; i++){
             if(this.accounts[i].address != indexer.address){
-              this.switchAccount(this.accounts[i].address);
+              this.switchAccount(this.accounts[i].address, this.accounts[i].chain);
               break;
             }
           }
