@@ -217,7 +217,7 @@ function customSort(items, index, isDesc) {
 }
 
   const headers = ref([
-    { title: 'Img', key: 'image' },
+    { title: 'Img', key: 'image', sortable: false, align: 'start' },
     { title: 'Name', key: 'displayName' },
     { title: 'Network', key: 'currentVersion.subgraphDeployment.network.id'},
     { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
