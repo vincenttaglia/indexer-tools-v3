@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div v-for="indexerAccount in accountStore.accounts" :key="indexerAccount.address" class="indexer-edit">
+      <v-sheet v-for="indexerAccount in accountStore.accounts" :key="indexerAccount.address" class="indexer-edit px-2 py-3 mt-4" border>
           <v-text-field
               v-model="indexerAccount.name"
               label="Indexer Name"
@@ -15,9 +15,9 @@
             class="ml-5 mr-2"
             :items="chainStore.getChains.map(chain => chain.id)"
           ></v-select>
-          <v-icon @click="removeAccount(indexerAccount.address)" v-if="indexerAccount.address != '0xeddd4ec5d3775de964416b7b9d4da885f530f90a'">mdi-delete</v-icon>
-          <span v-if="indexerAccount.address == '0xeddd4ec5d3775de964416b7b9d4da885f530f90a'">(Active)</span>
-      </div>
+          <v-divider class="mb-4"></v-divider>
+          <v-icon @click="accountStore.removeAccount(indexerAccount.address)">mdi-delete</v-icon>
+      </v-sheet>
   </div>
 </template>
 <script setup>
