@@ -18,7 +18,7 @@
       <v-text-field
           v-model="search"
           label="Search"
-          class="d-inline-block mx-4"
+          class="d-inline-block mx-4 mt-2"
           style="width:13rem;max-width:15rem"
       ></v-text-field>
       <v-text-field
