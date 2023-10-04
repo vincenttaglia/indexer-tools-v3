@@ -244,11 +244,16 @@
         <td></td>
         <td></td>
       </tr>
-      <download-csv
+      <v-btn
+        text
+        class="my-5 mx-3"
+      >
+        <download-csv
           :data   = "allocationStore.getAllocations" 
           :csv-title="'allocations'">
           Download Data
-      </download-csv>
+        </download-csv>
+      </v-btn>
   </div>
 </template>
 
