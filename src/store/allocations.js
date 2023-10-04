@@ -164,10 +164,10 @@ export const useAllocationStore = defineStore('allocationStore', {
         console.log("DEPLOYY STATUS");
         console.log(deploymentStatus);
         if(deploymentStatus != undefined){
-          if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError.deterministic == false){
+          if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError && deploymentStatus.fatalError.deterministic == false){
             deploymentStatus.icon = 'mdi-refresh';
             deploymentStatus.color = 'yellow';
-          }else if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError.deterministic == true){
+          }else if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError && deploymentStatus.fatalError.deterministic == true){
             deploymentStatus.icon = 'mdi-close';
             deploymentStatus.color = 'red';
           }else if(deploymentStatus.health == 'healthy' && deploymentStatus.synced == true){
