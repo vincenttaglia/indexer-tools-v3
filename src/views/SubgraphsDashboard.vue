@@ -143,11 +143,17 @@
       {{ item.currentVersion.subgraphDeployment.network ? item.currentVersion.subgraphDeployment.network.id : "null" }}
     </template> 
   </v-data-table>
-  <download-csv
+  <v-btn
+      text
+      class="my-5 mx-3"
+  >
+    <download-csv
       :data   = "subgraphStore.getSubgraphs" 
       :csv-title="'subgraphs'">
       Download Data
-  </download-csv>
+    </download-csv>
+  </v-btn>
+  
 </template>
 
 <script setup>
