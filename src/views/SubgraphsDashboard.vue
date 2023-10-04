@@ -69,7 +69,7 @@
       ></v-select>
       <v-select
           v-model="subgraphSettingStore.settings.statusFilter"
-          :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Deterministic', value:'deterministic'},{title:'Non-Deterministic', value:'non-deterministic'}]"
+          :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"
           label="Status Filter"
           class="d-inline-block mx-4"
           style="min-width:13rem;max-width: 15rem;top: -5px"
