@@ -60,7 +60,7 @@
       ></v-select>
       <v-select
           v-model="subgraphSettingStore.settings.networkFilter"
-          :items="subgraphSettingStore.settings.networks"
+          :items="subgraphStore.getSubgraphNetworks"
           label="Subgraph Networks"
           multiple
           chips
