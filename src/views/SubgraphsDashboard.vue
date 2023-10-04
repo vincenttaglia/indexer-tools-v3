@@ -67,11 +67,13 @@
           class="d-inline-block mx-4"
           style="min-width:13rem;max-width: 15rem;top: -5px"
       ></v-select>
-      <v-checkbox
-        v-model="subgraphSettingStore.settings.activateStatusList"
-        label="Status List"
-        class="d-inline-block"
-      ></v-checkbox>
+      <v-select
+          v-model="subgraphSettingStore.settings.statusFilter"
+          :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Deterministic', value:'deterministic'},{title:'Non-Deterministic', value:'non-deterministic'}]"
+          label="Status Filter"
+          class="d-inline-block mx-4"
+          style="min-width:13rem;max-width: 15rem;top: -5px"
+      ></v-select>
       <v-checkbox
         v-model="subgraphSettingStore.settings.activateBlacklist"
         label="Blacklist"

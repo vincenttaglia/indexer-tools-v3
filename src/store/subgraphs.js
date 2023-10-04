@@ -76,9 +76,63 @@ export const useSubgraphsStore = defineStore({
         });
       }
 
-      if(subgraphSettingStore.settings.activateStatusList){
+      if(subgraphSettingStore.settings.statusFilter == 'all'){
         subgraphs = subgraphs.filter((i) => {
           return deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash) != undefined;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'closable'){
+        subgraphs = subgraphs.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.synced == true && (status.fatalError == undefined || status.fatalError.deterministic == true))
+              return true
+          return false;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'healthy-synced'){
+        subgraphs = subgraphs.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.health == 'healthy' && status.synced == true)
+              return true
+          return false;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'syncing'){
+        subgraphs = subgraphs.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.health == 'healthy' && status.synced == false)
+              return true
+          return false;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'failed'){
+        subgraphs = subgraphs.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.health == 'failed')
+              return true
+          return false;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'non-deterministic'){
+        subgraphs = subgraphs.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == false)
+              return true
+          return false;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'deterministic'){
+        subgraphs = subgraphs.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == true)
+              return true
+          return false;
         });
       }
 
