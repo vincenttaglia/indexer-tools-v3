@@ -300,6 +300,15 @@ export const useSubgraphsStore = defineStore({
       }
       return currentlyAllocated;
     },
+    getSubgraphNetworks: (state) => {
+      let networks = ["mainnet","arbitrum-one","matic"];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        if(state.subgraphs[i].currentVersion && state.subgraphs[i].currentVersion.subgraphDeployment && state.subgraphs[i].currentVersion.subgraphDeployment.network && !networks.includes(state.subgraphs[i].currentVersion.subgraphDeployment.network.id) && state.subgraphs[i].currentVersion.subgraphDeployment.network.id != 'polygon'){
+          networks.push(state.subgraphs[i].currentVersion.subgraphDeployment.network.id);
+        }
+      }
+      return networks;
+    }
   },
   actions: {
     async fetch(skip){
