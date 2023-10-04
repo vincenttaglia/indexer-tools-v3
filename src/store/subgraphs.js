@@ -296,7 +296,15 @@ export const useSubgraphsStore = defineStore({
         this.loading = true;
         this.fetch(0)
         .then((data) => {
-          this.subgraphs = data.subgraphs;
+          let uniqueSubgraphs = []
+          let subgraphs = [];
+          for(let i = 0; i < data.subgraphs.length; i++){
+            if(!uniqueSubgraphs.includes(data.subgraphs[i].currentVersion.subgraphDeployment.ipfsHash)){
+              uniqueSubgraphs.push(data.subgraphs[i].currentVersion.subgraphDeployment.ipfsHash);
+              subgraphs.push(data.subgraphs[i]);
+            }
+          }
+          this.subgraphs = subgraphs;
           this.loading = false;
         })
       });
