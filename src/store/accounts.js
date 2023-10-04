@@ -68,18 +68,24 @@ export const useAccountStore = defineStore('accountStore', {
   
       if(indexer){
         if(indexer.active){
-          if(this.accounts.length == 1){
+          if(this.accounts.length == 1 && !(indexer.address == '0xeddd4ec5d3775de964416b7b9d4da885f530f90a' && indexer.chain == 'mainnet')){
             this.accounts.push({ address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: false, chain: "mainnet" });
           }
-          for(let i = 0; i < this.accounts.length; i++){
-            if(this.accounts[i].address != indexer.address){
-              this.switchAccount(this.accounts[i].address, this.accounts[i].chain);
-              break;
+          if(this.accounts.length > 1){
+            for(let i = 0; i < this.accounts.length; i++){
+              if(this.accounts[i].address != indexer.address && this.accounts[i].chain != indexer.chain){
+                this.switchAccount(this.accounts[i].address, this.accounts[i].chain);
+                break;
+              }
             }
           }
+          
         }
-        this.accounts = this.accounts.filter((e) => { return e.address != indexer.address; });
-        localStorage.accounts = JSON.stringify(this.accounts);
+        if(this.accounts.length > 1){
+          this.accounts = this.accounts.filter((e) => { return !(e.address == indexer.address && e.chain == indexer.chain); });
+          localStorage.accounts = JSON.stringify(this.accounts);
+        }
+        
       }
     }
   },
