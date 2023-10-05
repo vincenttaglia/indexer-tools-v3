@@ -13,6 +13,7 @@
     v-model:loading="subgraphStore.loading"
     v-model:items-per-page="tableSettingsStore.subgraphSettings.itemsPerPage"
     :search="search"
+    hover
   >
     <template v-slot:top>
       <v-text-field
