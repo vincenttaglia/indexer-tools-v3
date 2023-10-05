@@ -263,6 +263,10 @@
     },
   })
 
+function copyToClipboard (copy) {
+  navigator.clipboard.writeText(copy)
+}
+
 function customSort(items, index, isDesc) {
   items.sort((a, b) => {
     if (index[0] == 'currentVersion.subgraphDeployment.createdAt'
