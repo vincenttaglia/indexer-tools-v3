@@ -12,6 +12,7 @@
       v-model:sort-by="tableSettingsStore.allocationSettings.sortBy"
       v-model:loading="allocationStore.loading"
       v-model:items-per-page="tableSettingsStore.allocationSettings.itemsPerPage"
+      hover
   >
     <template v-slot:item.subgraphDeployment.versions[0].subgraph.image="{ item }">
       <v-menu
