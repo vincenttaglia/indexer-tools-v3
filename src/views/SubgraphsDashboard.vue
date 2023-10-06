@@ -138,6 +138,21 @@
                 <v-icon :icon="item.deploymentStatus.health != undefined ? item.deploymentStatus.icon : 'mdi-close'"></v-icon>
               </v-avatar>
               <h4 class="mt-1">{{item.deploymentStatus.health != undefined ? item.deploymentStatus.health.toUpperCase() : "Not Deployed"}}</h4>
+              <div>
+                <v-icon
+                  size="small"
+                  class="me-2"
+                  @click="offchainSync(item.currentVersion.subgraphDeployment.ipfsHash)"
+                >
+                  mdi-sync
+                </v-icon>
+                <v-icon
+                  size="small"
+                  @click="removeOffchainSync(item.currentVersion.subgraphDeployment.ipfsHash)"
+                >
+                  mdi-sync-off
+                </v-icon>
+              </div>
               <v-divider v-if="item.deploymentStatus.health != undefined && item.deploymentStatus.health == 'failed' && item.deploymentStatus.fatalError" class="my-2"></v-divider>
               <div v-if="item.deploymentStatus.health != undefined && item.deploymentStatus.health == 'failed' && item.deploymentStatus.fatalError">
                 <p class="mt-2">
@@ -245,10 +260,14 @@
   import BigNumber from 'bignumber.js';
   import { storeToRefs } from 'pinia';
   import { useTableSettingStore } from "@/store/tableSettings";
+  import { agentApolloClient } from "@/plugins/graphAgentClient";
+  import { useChainStore } from '@/store/chains';
+  import gql from 'graphql-tag';
+
 
   const search = ref('');
 
-
+  const chainStore = useChainStore();
   const subgraphStore = useSubgraphsStore();
   const subgraphSettingStore = useSubgraphSettingStore();
   const tableSettingsStore = useTableSettingStore();
@@ -262,6 +281,45 @@
       default: false,
     },
   })
+
+function offchainSync(ipfsHash){
+  let indexingRuleInput = {
+    identifier: ipfsHash,
+    identifierType: 'deployment',
+    decisionBasis: 'offchain',
+    protocolNetwork: chainStore.getActiveChain.id,
+  }
+  agentApolloClient.mutate({
+    mutation: gql`mutation setIndexingRule($rule: IndexingRuleInput!){
+      setIndexingRule(rule: $rule) {
+        identifier
+        decisionBasis
+      }
+    }`,
+    variables: { rule: indexingRuleInput }
+  }).then((data) => {
+    console.log("AGENT CONNECT DATA");
+    console.log(data);
+  });
+}
+
+function removeOffchainSync(ipfsHash){
+  let indexingRuleIdentifier = {
+    identifier: ipfsHash,
+    protocolNetwork: chainStore.getActiveChain.id,
+  }
+  agentApolloClient.mutate({
+    mutation: gql`mutation deleteIndexingRule($identifier: IndexingRuleIdentifier!){
+      deleteIndexingRule(identifier: $identifier) {
+        identifier
+      }
+    }`,
+    variables: { identifier: indexingRuleIdentifier }
+  }).then((data) => {
+    console.log("AGENT CONNECT DATA");
+    console.log(data);
+  });
+}
 
 function copyToClipboard (copy) {
   navigator.clipboard.writeText(copy)
