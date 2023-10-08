@@ -39,8 +39,16 @@
 <script setup>
   import { useAccountStore } from '@/store/accounts';
   import { useChainStore } from '@/store/chains';
+  import { storeToRefs } from 'pinia';
+  import { watch } from 'vue';
   const accountStore = useAccountStore();
   const chainStore = useChainStore();
+  const { getAccounts } = storeToRefs(accountStore);
+
+  watch(getAccounts,  () => {
+    console.log("UPDATE!!!");
+    accountStore.saveAccounts();
+  }, { deep: true });
 </script>
   
 <style scoped>

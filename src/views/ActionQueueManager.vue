@@ -114,14 +114,16 @@ import { useSubgraphsStore } from '@/store/subgraphs';
 import { useNewAllocationSetterStore } from '@/store/newAllocationSetter';
 import { storeToRefs } from 'pinia';
 import { useChainStore } from '@/store/chains';
-import { agentApolloClient } from '@/plugins/graphAgentClient';
 import gql from 'graphql-tag';
+import { useAccountStore } from '@/store/accounts';
 const subgraphStore = useSubgraphsStore();
 const newAllocationSetterStore = useNewAllocationSetterStore();
 newAllocationSetterStore.update();
 
 const { newAllocations, getSelectedS } = storeToRefs(newAllocationSetterStore);
 const chainStore = useChainStore();
+const accountStore = useAccountStore();
+
 
 const actions = ref([]);
 const selected = ref([]);
@@ -132,7 +134,7 @@ function getURL(path, base){
 }
 
 function approveActions(){
-  return agentApolloClient.mutate({
+  return accountStore.getAgentConnectClient.mutate({
     mutation: gql`mutation approveActions($actionIDs: [String!]!){
       approveActions(actionIDs: $actionIDs) {
         id
@@ -167,7 +169,7 @@ function approveActions(){
 }
 
 async function queryActions(){
-  return agentApolloClient.query({
+  return accountStore.getAgentConnectClient.query({
     query: gql`query actions($filter: ActionFilter!){
       actions(filter: $filter) {
         id

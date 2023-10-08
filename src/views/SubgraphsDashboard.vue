@@ -309,9 +309,9 @@
   import BigNumber from 'bignumber.js';
   import { storeToRefs } from 'pinia';
   import { useTableSettingStore } from "@/store/tableSettings";
-  import { agentApolloClient } from "@/plugins/graphAgentClient";
   import { useChainStore } from '@/store/chains';
   import gql from 'graphql-tag';
+  import { useAccountStore } from '@/store/accounts';
 
 
   const search = ref('');
@@ -320,7 +320,9 @@
   const subgraphStore = useSubgraphsStore();
   const subgraphSettingStore = useSubgraphSettingStore();
   const tableSettingsStore = useTableSettingStore();
+  const accountStore = useAccountStore();
   subgraphStore.fetchData();
+
 
   const { selected } = storeToRefs(subgraphStore);
 
@@ -338,7 +340,7 @@ function offchainSync(ipfsHash){
     decisionBasis: 'offchain',
     protocolNetwork: chainStore.getActiveChain.id,
   }
-  agentApolloClient.mutate({
+  accountStore.getAgentConnectClient.mutate({
     mutation: gql`mutation setIndexingRule($rule: IndexingRuleInput!){
       setIndexingRule(rule: $rule) {
         identifier
@@ -357,7 +359,7 @@ function removeOffchainSync(ipfsHash){
     identifier: ipfsHash,
     protocolNetwork: chainStore.getActiveChain.id,
   }
-  agentApolloClient.mutate({
+  accountStore.getAgentConnectClient.mutate({
     mutation: gql`mutation deleteIndexingRule($identifier: IndexingRuleIdentifier!){
       deleteIndexingRule(identifier: $identifier) {
         identifier

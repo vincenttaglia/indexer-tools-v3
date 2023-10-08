@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useChainStore } from './chains';
 import gql from 'graphql-tag';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core';
 
 const chainStore = useChainStore();
 
@@ -14,12 +15,31 @@ export const useAccountStore = defineStore('accountStore', {
     availableStake: '0',
   }),
   getters: {
+    getAccounts: (state) => state.accounts,
     getActiveAccount: (state) => {
       return state.accounts.find(e => e.active);
     },
     getActiveUrl: (state) => {
       return state.url;
-    }
+    },
+    getAgentConnectStatus: (state) => state.getActiveAccount.agentConnect,
+    getAgentConnectEndpoint: (state) => state.getActiveAccount.agentEndpoint,
+    getAgentConnectClient: (state) => {
+      // HTTP connection to the API
+      const httpLink = createHttpLink({
+        // You should use an absolute URL here
+        uri: state.getAgentConnectEndpoint,
+      });
+
+      // Cache implementation
+      const cache = new InMemoryCache();
+
+      // Create the apollo client
+      return new ApolloClient({
+        link: httpLink,
+        cache,
+      });
+    },
   },
   actions: {
     async fetchData(){
@@ -75,7 +95,7 @@ export const useAccountStore = defineStore('accountStore', {
       if(indexer){
         if(indexer.active){
           if(this.accounts.length == 1 && !(indexer.address == '0xeddd4ec5d3775de964416b7b9d4da885f530f90a' && indexer.chain == 'mainnet')){
-            this.accounts.push({ address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: false, chain: "mainnet" });
+            this.accounts.push({ address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: false, chain: "mainnet", agentConnect: false, agentEndpoint: "" });
           }
           if(this.accounts.length > 1){
             for(let i = 0; i < this.accounts.length; i++){
@@ -93,6 +113,9 @@ export const useAccountStore = defineStore('accountStore', {
         }
         
       }
-    }
+    },
+    saveAccounts(){
+      localStorage.accounts = JSON.stringify(this.accounts);
+    },
   },
 })
