@@ -50,36 +50,36 @@
             <div class="mx-auto text-center">
               <v-avatar
                 size="25"
-                :color="item.deploymentStatus != undefined ? item.deploymentStatus.color : ''"
+                :color="item.deploymentStatus?.color != undefined ? item.deploymentStatus.color : 'white'"
               >
-                <v-icon :icon="item.deploymentStatus != undefined ? item.deploymentStatus.icon : 'mdi-close'"></v-icon>
+                <v-icon :icon="item.deploymentStatus?.icon != undefined ? item.deploymentStatus.icon : 'mdi-close'"></v-icon>
               </v-avatar>
-              <h4 class="mt-1">{{item.deploymentStatus.health.toUpperCase()}}</h4>
-              <v-divider v-if="item.deploymentStatus.health == 'failed' && item.deploymentStatus.fatalError" class="my-2"></v-divider>
-              <div v-if="item.deploymentStatus.health == 'failed' && item.deploymentStatus.fatalError">
+              <h4 class="mt-1">{{item.deploymentStatus?.health != undefined ? item.deploymentStatus.health.toUpperCase() : "Not Deployed"}}</h4>
+              <v-divider v-if="item.deploymentStatus?.health != undefined && item.deploymentStatus?.health == 'failed' && item.deploymentStatus?.fatalError" class="my-2"></v-divider>
+              <div v-if="item.deploymentStatus?.health != undefined && item.deploymentStatus?.health == 'failed' && item.deploymentStatus?.fatalError">
                 <p class="mt-2">
                   Deterministic: <v-icon :icon="item.deploymentStatus.fatalError.deterministic ? 'mdi-check' : 'mdi-close'"></v-icon>
                 </p>
                 <v-btn
                   rounded
                   variant="text"
-                  @click="copyToClipboard(item.deploymentStatus.fatalError.block.number)"
+                  @click="copyToClipboard(item.deploymentStatus?.fatalError?.block?.number)"
                 >
-                  Block: {{ item.deploymentStatus.fatalError.block.number }}
+                  Block: {{ item.deploymentStatus?.fatalError?.block?.number }}
                 </v-btn>
                 <br>
                 <v-btn
                   rounded
                   variant="text"
-                  @click="copyToClipboard(item.deploymentStatus.fatalError.block.hash)"
+                  @click="copyToClipboard(item.deploymentStatus?.fatalError?.block?.hash)"
                 >
-                  Hash: {{ item.deploymentStatus.fatalError.block.hash.slice(0,6) }}...{{ item.deploymentStatus.fatalError.block.hash.slice(item.deploymentStatus.fatalError.block.hash.length-4,item.deploymentStatus.fatalError.block.hash.length) }}
+                  Hash: {{ item.deploymentStatus?.fatalError?.block?.hash.slice(0,6) }}...{{ item.deploymentStatus.fatalError.block.hash.slice(item.deploymentStatus.fatalError.block.hash.length-4,item.deploymentStatus.fatalError.block.hash.length) }}
                 </v-btn>
                 <br>
                 <v-btn
                   rounded
                   variant="text"
-                  @click="copyToClipboard(item.deploymentStatus.fatalError.message)"
+                  @click="copyToClipboard(item.deploymentStatus?.fatalError?.message)"
                 >
                   Copy Error
                 </v-btn>
@@ -87,16 +87,16 @@
               
               <v-divider class="my-2"></v-divider>
               <p class="text-caption mt-2">
-                First block: {{  item.deploymentStatus.chains[0].earliestBlock.number }}
+                First block: {{ item.deploymentStatus?.chains?.[0]?.earliestBlock?.number != undefined ? item.deploymentStatus.chains[0].earliestBlock.number : '-' }}
               </p>
               <p class="text-caption">
-                Last block: {{ item.deploymentStatus.chains[0].latestBlock.number }}
+                Last block: {{ item.deploymentStatus?.chains?.[0]?.latestBlock?.number != undefined ? item.deploymentStatus.chains[0].latestBlock.number: '-' }}
               </p>
               <p class="text-caption mb-1">
-                Chainhead: {{ item.deploymentStatus.chains[0].chainHeadBlock.number }}
+                Chainhead: {{ item.deploymentStatus?.chains[0]?.chainHeadBlock?.number != undefined ? item.deploymentStatus.chains[0].chainHeadBlock.number: '-' }}
               </p>
-              {{ numeral((item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)).format('0.00%') }}
-              <v-progress-linear class="mt-1" :model-value="(item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)*100"></v-progress-linear>
+              {{ item.deploymentStatus?.chains?.[0]?.earliestBlock?.number != undefined && item.deploymentStatus?.chains?.[0]?.latestBlock?.number != undefined && item.deploymentStatus?.chains[0]?.chainHeadBlock?.number != undefined ? numeral((item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)).format('0.00%') : '-%' }}
+              <v-progress-linear class="mt-1" :model-value="item.deploymentStatus?.chains?.[0]?.earliestBlock?.number != undefined && item.deploymentStatus?.chains?.[0]?.latestBlock?.number != undefined && item.deploymentStatus?.chains[0]?.chainHeadBlock?.number != undefined ? (item.deploymentStatus.chains[0].latestBlock.number - item.deploymentStatus.chains[0].earliestBlock.number) / (item.deploymentStatus.chains[0].chainHeadBlock.number - item.deploymentStatus.chains[0].earliestBlock.number)*100 : 0"></v-progress-linear>
             </div>
           </v-card-text>
         </v-card>
