@@ -29,9 +29,9 @@ export const useAccountStore = defineStore('accountStore', {
       const httpLink = createHttpLink({
         // You should use an absolute URL here
         uri: state.getAgentConnectEndpoint,
-        headers: {
-          "Access-Control-Request-Private-Network": true
-        }
+        fetchOptions: {
+          mode: 'no-cors',
+        },
       });
 
       // Cache implementation
