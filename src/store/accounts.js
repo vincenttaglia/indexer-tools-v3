@@ -27,8 +27,10 @@ export const useAccountStore = defineStore('accountStore', {
     getAgentConnectClient: (state) => {
       // HTTP connection to the API
       const httpLink = createHttpLink({
-        // You should use an absolute URL here
         uri: state.getAgentConnectEndpoint,
+        headers: {
+          "Access-Control-Request-Private-Network": 'true'
+        },
         fetchOptions: {
           mode: 'no-cors',
         },
