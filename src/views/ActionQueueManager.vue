@@ -1,4 +1,5 @@
 <template>
+  <v-btn text="Refresh actions" @click="queryActions()" class="mx-5 my-6"></v-btn>
   <v-data-table
       :headers="headers"
       :items="actions"
@@ -134,8 +135,8 @@ function approveActions(){
     console.log("AGENT CONNECT DATA");
     console.log(data);
     for(let i = 0; i < data.data.approveActions.length; i++){
-      let action = actions.value.find((e) => e.id == data.data.approveActions[i].id);
-      action = data.data.approveActions[i];
+      let actionI = actions.value.findIndex((e) => e.id == data.data.approveActions[i].id);
+      actions.value[actionI] = data.data.approveActions[i];
     }
     return data.data.approveActions;
   });
@@ -163,7 +164,7 @@ async function queryActions(){
         protocolNetwork
       }
     }`,
-    variables: { filter: { status: 'queued' } },
+    variables: { filter: {  } },
   }).then((data) => {
     console.log("AGENT CONNECT QUERY ACTIONS DATA");
     console.log(data);
