@@ -88,7 +88,7 @@
                 <v-btn
                     color="primary"
                     text
-                    @click="accountStore.addAccount(newIndexerAddress, newIndexerName, newIndexerChain); clearForms();"
+                    @click="accountStore.addAccount(newIndexerAddress, newIndexerName, newIndexerChain, newIndexerAgentConnect, newIndexerAgentEndpoint); clearForms();"
 
                 >
                   Add
