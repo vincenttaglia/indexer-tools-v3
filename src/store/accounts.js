@@ -29,8 +29,7 @@ export const useAccountStore = defineStore('accountStore', {
       const httpLink = createHttpLink({
         uri: state.getAgentConnectEndpoint,
         headers: {
-          "Access-Control-Request-Private-Network": true,
-          "Access-Control-Allow-Origin": '*',
+          "Access-Control-Request-Private-Network": "true",
         },
         /*fetchOptions: {
           mode: 'no-cors',
