@@ -190,10 +190,10 @@ export const useSubgraphsStore = defineStore({
             deploymentStatus.icon = 'mdi-help';
             deploymentStatus.color = 'default';
           }
-
+          deploymentStatus.blocksBehindChainhead = deploymentStatus != undefined && deploymentStatus.chains[0] ? parseInt(deploymentStatus.chains[0].chainHeadBlock.number) - parseInt(deploymentStatus.chains[0].latestBlock.number) : Number.MAX_SAFE_INTEGER;
           deploymentStatuses[i] = { deploymentStatus: deploymentStatus }
         }else{
-          deploymentStatuses[i] = { deploymentStatus: { icon: 'mdi-close', color: 'default'} }
+          deploymentStatuses[i] = { deploymentStatus: { icon: 'mdi-close', color: 'default', blocksBehindChainhead: deploymentStatus != undefined && deploymentStatus.chains[0] ? parseInt(deploymentStatus.chains[0].chainHeadBlock.number) - parseInt(deploymentStatus.chains[0].latestBlock.number) : Number.MAX_SAFE_INTEGER } }
         }
       }
       return deploymentStatuses;
