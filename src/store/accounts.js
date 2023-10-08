@@ -30,6 +30,7 @@ export const useAccountStore = defineStore('accountStore', {
         uri: state.getAgentConnectEndpoint,
         headers: {
           "Access-Control-Request-Private-Network": "true",
+          "Access-Control-Request-Private-Network-Test": "true",
         },
         /*fetchOptions: {
           mode: 'no-cors',
