@@ -51,20 +51,34 @@
                 <v-text-field
                     v-model="newIndexerName"
                     label="Indexer Name"
-                    class="mx-6"
+                    class="mx-3"
                 ></v-text-field>
                 <v-text-field
                     v-model="newIndexerAddress"
                     label="Indexer Address"
-                    class="mx-6"
+                    class="mx-3"
                 ></v-text-field>
                 <v-select
                   v-model="newIndexerChain"
                   label="Chain"
-                  class="ml-5 mr-2"
+                  class="mx-3"
                   :items="chainStore.getChains.map(chain => chain.id)"
-                  :value="chainStore.getChainID"
                 ></v-select>
+                <v-checkbox
+                    v-model="newIndexerAgentConnect"
+                    label="Enable Agent Connect"
+                    class="mx-3"
+                >
+                </v-checkbox>
+                <Transition>
+                  <v-text-field
+                      v-if="newIndexerAgentConnect"
+                      v-model="newIndexerAgentEndpoint"
+                      label="Indexer Agent Endpoint"
+                      class="mx-3"
+                  ></v-text-field>
+                </Transition>
+                
               </v-card-text>
 
               <v-divider></v-divider>
@@ -74,7 +88,7 @@
                 <v-btn
                     color="primary"
                     text
-                    @click="accountStore.addAccount(newIndexerAddress, newIndexerName, newIndexerChain);"
+                    @click="accountStore.addAccount(newIndexerAddress, newIndexerName, newIndexerChain); clearForms();"
 
                 >
                   Add
@@ -114,16 +128,32 @@ import { useSubgraphsStore } from '@/store/subgraphs';
 import { useDeploymentStatusStore } from '@/store/deploymentStatuses';
 import { storeToRefs } from "pinia";
 const accountStore = useAccountStore();
-const editDialog = ref(false);
-const addDialog = ref(false);
-const newIndexerName = ref("");
-const newIndexerAddress = ref("");
 const chainStore = useChainStore();
 const subgraphStore = useSubgraphsStore();
 const allocationStore = useAllocationStore();
 const networkStore = useNetworkStore();
 const deploymentStatusStore = useDeploymentStatusStore();
 const { getActiveUrl } = storeToRefs(accountStore);
+
+
+const editDialog = ref(false);
+const addDialog = ref(false);
+const newIndexerName = ref("");
+const newIndexerAddress = ref("");
+const newIndexerAgentConnect = ref(false);
+const newIndexerAgentEndpoint = ref("");
+const newIndexerChain = ref(chainStore.getChainID);
+
+function clearForms(){
+  editDialog.value = false;
+  addDialog.value = false;
+  newIndexerName.value = "";
+  newIndexerAddress.value = "";
+  newIndexerAgentConnect.value = false;
+  newIndexerAgentEndpoint.value = "";
+  newIndexerChain.value = chainStore.getChainID;
+}
+
 function switchAccount(address, chain){
   const oldChain = chainStore.getChainID;
   const newAccount = accountStore.switchAccount(address, chain);
@@ -140,3 +170,16 @@ watch(getActiveUrl,  async (newUrl, oldUrl) => {
       deploymentStatusStore.update();
   });
 </script>
+
+<style scoped>
+/* we will explain what these classes do next! */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

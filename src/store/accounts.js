@@ -7,7 +7,7 @@ const chainStore = useChainStore();
 
 export const useAccountStore = defineStore('accountStore', {
   state: () => ({
-    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : [ { address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: true, chain: "mainnet" } ],
+    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : [ { address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: true, chain: "mainnet", agentConnect: false, agentEndpoint: "" } ],
     loading: true,
     cut: '0',
     url: '',
@@ -42,11 +42,11 @@ export const useAccountStore = defineStore('accountStore', {
         this.loading = false;
       });
     },
-    addAccount(address, name, chain){
+    addAccount(address, name, chain, agentConnect, agentEndpoint){
       let alreadyAdded = this.accounts.find(e => e.address == address.toLowerCase() && e.chain == chain);
   
       if(!alreadyAdded){
-        this.accounts.push({ address: address.toLowerCase(), name: name, active: false, chain: chain});
+        this.accounts.push({ address: address.toLowerCase(), name: name, active: false, chain: chain, agentConnect: agentConnect, agentEndpoint: agentEndpoint });
         this.switchAccount(address, chain);
       }
     },
