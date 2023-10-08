@@ -8,6 +8,16 @@
       show-select
       v-model="selected"
   >
+    <template v-slot:item.transaction="{ item }">
+      <v-btn  
+          variant="tonal"
+          v-if="item.transaction != undefined" 
+          :href="getURL(`/tx/${item.transaction}`, chainStore.getBlockExplorer)"
+          target="_blank"
+      > 
+        {{item.transaction.slice(0,6) }}...{{ item.transaction.slice(item.transaction.length-4,item.transaction.length) }}
+      </v-btn>
+    </template>
     <template v-slot:item.image="{ item }">
       <v-badge
           :model-value="item.currentVersion.subgraphDeployment && item.currentVersion.subgraphDeployment.deniedAt != '0'"
@@ -107,6 +117,10 @@ const actions = ref([]);
 const selected = ref([]);
 queryActions();
 
+function getURL(path, base){
+  return new URL(path, base);
+}
+
 function approveActions(){
   return agentApolloClient.mutate({
     mutation: gql`mutation approveActions($actionIDs: [String!]!){
@@ -192,7 +206,7 @@ const headers = ref([
         { title: 'POI', key: 'poi' },
         { force: 'Force', key: 'force' },
         { title: 'Source', key: 'source'},
-        { title: 'transaction', key: 'transaction' },
+        { title: 'Transaction', key: 'transaction' },
         { title: 'Failure Reason', key: 'failureReason' }, 
 
         
