@@ -32,9 +32,9 @@ export const useAccountStore = defineStore('accountStore', {
           "Access-Control-Request-Private-Network": 'true',
           "Access-Control-Allow-Origin": '*',
         },
-        fetchOptions: {
+        /*fetchOptions: {
           mode: 'no-cors',
-        },
+        },*/
       });
 
       // Cache implementation
