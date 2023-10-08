@@ -139,19 +139,68 @@
               </v-avatar>
               <h4 class="mt-1">{{item.deploymentStatus?.health != undefined ? item.deploymentStatus.health.toUpperCase() : "Not Deployed"}}</h4>
               <div>
-                <v-icon
-                  size="small"
-                  class="me-2"
-                  @click="offchainSync(item.currentVersion.subgraphDeployment.ipfsHash)"
-                >
-                  mdi-sync
-                </v-icon>
-                <v-icon
-                  size="small"
-                  @click="removeOffchainSync(item.currentVersion.subgraphDeployment.ipfsHash)"
-                >
-                  mdi-sync-off
-                </v-icon>
+                <v-dialog width="500">
+                  <template v-slot:activator="{ props }">
+                    <v-icon
+                      size="small"
+                      class="me-2"
+                      v-bind="props"
+                    >
+                      mdi-sync
+                    </v-icon>
+                  </template>
+
+                  <template v-slot:default="{ isActive }">
+                    <v-card title="Offchain Sync Subgraph">
+                      <v-card-text>
+                        Add {{ item.displayName }} ({{ item.currentVersion.subgraphDeployment.ipfsHash }}) to list of offchain sync subgraphs.
+                      </v-card-text>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text="Cancel"
+                          @click="isActive.value = false"
+                        ></v-btn>
+                        <v-btn
+                          text="Start syncing"
+                          @click="offchainSync(item.currentVersion.subgraphDeployment.ipfsHash); isActive.value = false"
+                        ></v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </template>
+                </v-dialog>
+                <v-dialog width="500">
+                  <template v-slot:activator="{ props }">
+                    <v-icon
+                      size="small"
+                      v-bind="props"
+                    >
+                      mdi-sync-off
+                    </v-icon>
+                  </template>
+
+                  <template v-slot:default="{ isActive }">
+                    <v-card title="Remove Offchain Subgraph">
+                      <v-card-text>
+                        Remove {{ item.displayName }} ({{  item.currentVersion.subgraphDeployment.ipfsHash }}) from list of offchain sync subgraphs.
+                      </v-card-text>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text="Cancel"
+                          @click="isActive.value = false"
+                        ></v-btn>
+                        <v-btn
+                          text="Stop syncing"
+                          @click="removeOffchainSync(item.currentVersion.subgraphDeployment.ipfsHash); isActive.value = false"
+
+                        ></v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </template>
+                </v-dialog>
               </div>
               <v-divider v-if="item.deploymentStatus?.health != undefined && item.deploymentStatus?.health == 'failed' && item.deploymentStatus?.fatalError" class="my-2"></v-divider>
               <div v-if="item.deploymentStatus?.health != undefined && item.deploymentStatus?.health == 'failed' && item.deploymentStatus?.fatalError">
