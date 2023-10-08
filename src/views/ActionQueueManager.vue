@@ -18,6 +18,16 @@
         {{item.transaction.slice(0,6) }}...{{ item.transaction.slice(item.transaction.length-4,item.transaction.length) }}
       </v-btn>
     </template>
+    <template v-slot:item.failureReason="{ item }">
+      <v-btn
+          variant="tonal"
+          v-if="item.failureReason != undefined"
+          :href="`https://github.com/graphprotocol/indexer/blob/main/docs/errors.md#${item.failureReason.toLowerCase()}`"
+          target="_blank"
+      >
+        {{ item.failureReason }}
+      </v-btn>
+    </template>
     <template v-slot:item.image="{ item }">
       <v-badge
           :model-value="item.currentVersion.subgraphDeployment && item.currentVersion.subgraphDeployment.deniedAt != '0'"
