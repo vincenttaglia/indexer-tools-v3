@@ -86,7 +86,7 @@
         class="d-inline-block"
       ></v-checkbox>
     </template>
-    <template v-slot:item.image="{ item }">
+    <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <v-menu
         min-width="200px"
         rounded
@@ -364,7 +364,7 @@ function customSort(items, index, isDesc) {
 }
 
   const headers = ref([
-    { title: 'Img', key: 'image', sortable: false, align: 'start' },
+    { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },
     { title: 'Name', key: 'displayName' },
     { title: 'Network', key: 'currentVersion.subgraphDeployment.network.id'},
     { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },

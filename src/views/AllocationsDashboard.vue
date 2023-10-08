@@ -14,7 +14,7 @@
       v-model:items-per-page="tableSettingsStore.allocationSettings.itemsPerPage"
       hover
   >
-    <template v-slot:item.subgraphDeployment.versions[0].subgraph.image="{ item }">
+    <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <v-menu
         min-width="200px"
         rounded
@@ -292,10 +292,9 @@ function copyToClipboard (copy) {
 
 const headers = ref([
     {
-      title: 'Img',
+      title: 'Status',
       align: 'start',
-      sortable: false,
-      key: 'subgraphDeployment.versions[0].subgraph.image',
+      key: 'deploymentStatus.blocksBehindChainhead',
     },
     { title: 'Name', key: 'subgraphDeployment.versions[0].subgraph.displayName' },
     { title: 'Allocated', key: 'allocatedTokens'},
