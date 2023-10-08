@@ -153,7 +153,7 @@
                   <template v-slot:default="{ isActive }">
                     <v-card title="Offchain Sync Subgraph">
                       <v-card-text>
-                        Add {{ item.displayName }} ({{ item.currentVersion.subgraphDeployment.ipfsHash }}) to list of offchain sync subgraphs.
+                        Add {{ item.displayName }} ({{ item.currentVersion.subgraphDeployment.ipfsHash }}) to list of offchain sync subgraphs?
                       </v-card-text>
 
                       <v-card-actions>
@@ -183,7 +183,7 @@
                   <template v-slot:default="{ isActive }">
                     <v-card title="Remove Offchain Subgraph">
                       <v-card-text>
-                        Remove {{ item.displayName }} ({{  item.currentVersion.subgraphDeployment.ipfsHash }}) from list of offchain sync subgraphs.
+                        Remove {{ item.displayName }} ({{  item.currentVersion.subgraphDeployment.ipfsHash }}) from list of offchain sync subgraphs?
                       </v-card-text>
 
                       <v-card-actions>
