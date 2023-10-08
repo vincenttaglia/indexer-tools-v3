@@ -29,6 +29,11 @@ const routes = [
         name: 'Settings',
         component: () => import('@/views/Settings.vue'),
       },
+      {
+        path: 'actions-manager',
+        name: 'Actions Manager',
+        component: () => import('@/views/ActionQueueManager.vue'),
+      }
     ],
   },
 ]

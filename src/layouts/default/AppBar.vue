@@ -58,6 +58,13 @@
     </v-btn>
     <v-btn
         variant="text"
+        to="/actions-manager"
+        class="ml-2 mr-2"
+    >
+      Actions Manager
+    </v-btn>
+    <v-btn
+        variant="text"
         to="/settings"
         class="ml-2 mr-2"
     >
