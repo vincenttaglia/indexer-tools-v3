@@ -32,6 +32,7 @@ export const useAccountStore = defineStore('accountStore', {
           "Access-Control-Request-Private-Network": "true",
           "Access-Control-Request-Private-Network-Test": "true",
         },
+        credentials: 'include',
         /*fetchOptions: {
           mode: 'no-cors',
         },*/
