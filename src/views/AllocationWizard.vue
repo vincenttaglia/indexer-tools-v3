@@ -19,6 +19,7 @@
       <template v-slot:item.4>
         <div class="mt-12 mb-10 ml-5">
           <v-btn
+            v-if="accountStore.getAgentConnectStatus"
             @click="sendActionsToAgent()"
           >
             Queue actions with Indexer Agent
@@ -95,15 +96,16 @@ import { useAllocationStore } from "@/store/allocations";
 import { useNetworkStore } from "@/store/network";
 import { useNewAllocationSetterStore } from "@/store/newAllocationSetter";
 import { VStepper } from 'vuetify/labs/VStepper'
-import { agentApolloClient } from "@/plugins/graphAgentClient";
 import gql from "graphql-tag";
+import { useAccountStore } from "@/store/accounts";
 
+const accountStore = useAccountStore();
 const allocationStore = useAllocationStore();
 const networkStore = useNetworkStore();
 const newAllocationSetterStore = useNewAllocationSetterStore();
 
 function sendActionsToAgent(){
-  agentApolloClient.mutate({
+  accountStore.getAgentConnectClient.mutate({
     mutation: gql`mutation queueActions($actions: [ActionInput!]!){
       queueActions(actions: $actions) {
         actions{
@@ -133,7 +135,7 @@ function sendActionsToAgent(){
   });
 }
 function allocate(deployment, amount, protocolNetwork){
-  return agentApolloClient.mutate({
+  return accountStore.getAgentConnectClient.mutate({
     mutation: gql`mutation createAllocation($deployment: String!, $amount: String!, $protocolNetwork: String!){
       createAllocation(deployment: $deployment, amount: $amount, protocolNetwork: $protocolNetwork) {
         allocation
@@ -149,7 +151,7 @@ function allocate(deployment, amount, protocolNetwork){
   });
 }
 function unallocate(allocation, protocolNetwork){
-  return agentApolloClient.mutate({
+  return accountStore.getAgentConnectClient.mutate({
     mutation: gql`mutation closeAllocation($allocation: String!, $protocolNetwork: String!){
       closeAllocation(allocation: $allocation, protocolNetwork: $protocolNetwork) {
         allocation
@@ -166,7 +168,7 @@ function unallocate(allocation, protocolNetwork){
   });
 }
 function reallocate(allocation, amount, protocolNetwork){
-  return agentApolloClient.mutate({
+  return accountStore.getAgentConnectClient.mutate({
     mutation: gql`mutation reallocateAllocation($allocation: String!, $amount: String!, $protocolNetwork: String!){
       createAllocation(allocation: $allocation, amount: $amount, protocolNetwork: $protocolNetwork) {
         closedAllocation

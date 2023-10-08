@@ -138,7 +138,7 @@
                 <v-icon :icon="item.deploymentStatus?.icon != undefined ? item.deploymentStatus.icon : 'mdi-close'"></v-icon>
               </v-avatar>
               <h4 class="mt-1">{{item.deploymentStatus?.health != undefined ? item.deploymentStatus.health.toUpperCase() : "Not Deployed"}}</h4>
-              <div>
+              <div v-if="accountStore.getAgentConnectStatus">
                 <v-dialog width="500">
                   <template v-slot:activator="{ props }">
                     <v-icon

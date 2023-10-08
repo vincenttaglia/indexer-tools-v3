@@ -1,5 +1,6 @@
 <template>
-  <v-btn text="Refresh actions" @click="queryActions()" class="mx-5 my-6"></v-btn>
+  <h3 v-if="!accountStore.getAgentConnectStatus" class="mx-3 my-5">Set Agent Conenct settings in account settings.</h3>
+  <v-btn text="Refresh actions" @click="queryActions()" class="mx-5 my-6" v-if="accountStore.getAgentConnectStatus"></v-btn>
   <v-data-table
       :headers="headers"
       :items="actions"
@@ -77,7 +78,7 @@
     </template>
   </v-data-table>
   <br>
-  <v-dialog width="500">
+  <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props" text="Approve Actions"> </v-btn>
     </template>
@@ -123,12 +124,19 @@ newAllocationSetterStore.update();
 const { newAllocations, getSelectedS } = storeToRefs(newAllocationSetterStore);
 const chainStore = useChainStore();
 const accountStore = useAccountStore();
+const { getActiveAccount } = storeToRefs(accountStore);
 
 
 const actions = ref([]);
 const selected = ref([]);
-queryActions();
+if(accountStore.getAgentConnectStatus)
+  queryActions();
 
+watch(getActiveAccount, () => {
+  actions.value = [];
+  if(accountStore.getAgentConnectStatus)
+    queryActions();
+});
 function getURL(path, base){
   return new URL(path, base);
 }
@@ -198,11 +206,6 @@ async function queryActions(){
     return data.data.actions;
   });
 }
-
-
-watch(getSelectedS, (getSelectedS) => {
-  newAllocationSetterStore.update();
-})
 
 const headers = ref([
         { title: 'ID', key: 'id'},

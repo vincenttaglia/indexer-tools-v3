@@ -25,18 +25,6 @@
             </v-icon>
             Accounts
           </v-tab>
-          <v-tab value="table-config">
-            <v-icon start>
-            mdi-table-border
-            </v-icon>
-            Table Config
-          </v-tab>
-          <v-tab value="agent-connect">
-            <v-icon start>
-            mdi-access-point
-            </v-icon>
-            Agent Connect
-          </v-tab>
           <v-tab value="custom-rpc">
             <v-icon start>
               mdi-wifi
@@ -68,24 +56,6 @@
             <v-card flat>
             <v-card-text style="width:450px">
                 <AccountsEdit></AccountsEdit>
-            </v-card-text>
-            </v-card>
-          </v-window-item>
-          <v-window-item value="table-config">
-            <v-card flat>
-            <v-card-text>
-                <p>
-                    Soon: more columns and control over which columns are shown. Change order of columns now on dashboard pages.
-                </p>
-            </v-card-text>
-            </v-card>
-          </v-window-item>
-          <v-window-item value="agent-connect">
-            <v-card flat>
-            <v-card-text>
-                <p>
-                Coming soon ;)
-                </p>
             </v-card-text>
             </v-card>
           </v-window-item>
