@@ -1,9 +1,19 @@
 <template>
   <h3 v-if="!accountStore.getAgentConnectStatus" class="mx-3 my-5">Set Agent Conenct settings in account settings.</h3>
   <v-btn text="Refresh actions" @click="queryActions()" class="mx-5 my-6" v-if="accountStore.getAgentConnectStatus"></v-btn>
+  <v-select
+      v-model="managerSettingStore.settings.statusFilter"
+      :items="[{title: 'Queued', value: 'queued'}, {title:'Approved', value: 'approved'}, {title: 'Pending', value: 'pending'}, {title: 'Success', value: 'success'}, {title: 'Failed', value: 'failed'}, {title: 'Canceled', value: 'canceled'}]"
+      label="Status Filter"
+      class="d-inline-block mx-5 my-6"
+      multiple
+      clearable
+      chips
+      style="min-width: 150px;"
+  ></v-select>
   <v-data-table
       :headers="headers"
-      :items="actions"
+      :items="filteredActions"
       class="elevation-1"
       mobile-breakpoint="0"
       show-select
@@ -162,13 +172,14 @@
 import moment from 'moment';
 import Web3 from 'web3';
 import numeral from 'numeral';
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useSubgraphsStore } from '@/store/subgraphs';
 import { useNewAllocationSetterStore } from '@/store/newAllocationSetter';
 import { storeToRefs } from 'pinia';
 import { useChainStore } from '@/store/chains';
 import gql from 'graphql-tag';
 import { useAccountStore } from '@/store/accounts';
+import { useManagerSettingStore } from '@/store/managerSettings';
 const subgraphStore = useSubgraphsStore();
 const newAllocationSetterStore = useNewAllocationSetterStore();
 newAllocationSetterStore.update();
@@ -177,10 +188,20 @@ const { newAllocations, getSelectedS } = storeToRefs(newAllocationSetterStore);
 const chainStore = useChainStore();
 const accountStore = useAccountStore();
 const { getActiveAccount } = storeToRefs(accountStore);
+const managerSettingStore = useManagerSettingStore();
 
 
 const actions = ref([]);
 const selected = ref([]);
+const filteredActions = computed(() => {
+  let fActions = actions.value;
+  
+  if(managerSettingStore.statusFilter.length > 0){
+    fActions = fActions.filter((e) => managerSettingStore.statusFilter.includes(e.status))
+  }
+
+  return fActions;
+})
 if(accountStore.getAgentConnectStatus)
   queryActions();
 
@@ -335,9 +356,9 @@ const headers = ref([
         { title: 'Amount', key: 'amount'},
         { title: 'POI', key: 'poi' },
         { force: 'Force', key: 'force' },
-        { title: 'Source', key: 'source'},
         { title: 'Transaction', key: 'transaction' },
         { title: 'Failure Reason', key: 'failureReason' }, 
+        { title: 'Source', key: 'source'},
 
         
         // { title: 'Current APR', key: 'apr'},
