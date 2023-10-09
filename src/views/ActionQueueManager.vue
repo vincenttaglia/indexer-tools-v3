@@ -80,7 +80,7 @@
   <br>
   <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" text="Approve Actions"> </v-btn>
+      <v-btn v-bind="props" text="Approve Actions" class="mx-5"> </v-btn>
     </template>
 
     <template v-slot:default="{ isActive }">
@@ -93,12 +93,64 @@
           <v-spacer></v-spacer>
 
           <v-btn
-            text="Cancel"
+            text="Back"
             @click="isActive.value = false"
           ></v-btn>
           <v-btn
             text="Approve Actions"
             @click="approveActions(); isActive.value = false"
+          ></v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-dialog>
+  <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" text="Cancel Actions" class="mx-5"> </v-btn>
+    </template>
+
+    <template v-slot:default="{ isActive }">
+      <v-card title="Cancel Actions">
+        <v-card-text>
+          Are you sure you want to cancel action IDs {{ selected.toString() }}?
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            text="Back"
+            @click="isActive.value = false"
+          ></v-btn>
+          <v-btn
+            text="Cancel Actions"
+            @click="cancelActions(); isActive.value = false"
+          ></v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-dialog>
+  <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" text="Delete Actions" class="mx-5"> </v-btn>
+    </template>
+
+    <template v-slot:default="{ isActive }">
+      <v-card title="Approve Actions">
+        <v-card-text>
+          Are you sure you want to delete action IDs {{ selected.toString() }}?
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            text="Back"
+            @click="isActive.value = false"
+          ></v-btn>
+          <v-btn
+            text="Delete Actions"
+            @click="deleteActions(); isActive.value = false"
           ></v-btn>
         </v-card-actions>
       </v-card>
@@ -163,16 +215,78 @@ function approveActions(){
         protocolNetwork
       }
     }`,
-    variables: { actionIDs: selected.value.map(String) }
+    variables: { actionIDs: selected.value.map(String) },
   }).then((data) => {
     selected.value = [];
-    console.log("AGENT CONNECT DATA");
-    console.log(data);
     for(let i = 0; i < data.data.approveActions.length; i++){
       let actionI = actions.value.findIndex((e) => e.id == data.data.approveActions[i].id);
       actions.value[actionI] = data.data.approveActions[i];
     }
     return data.data.approveActions;
+  });
+}
+
+function deleteActions(){
+  return accountStore.getAgentConnectClient.mutate({
+    mutation: gql`mutation deleteActions($actionIDs: [String!]!){
+      deleteActions(actionIDs: $actionIDs) {
+        id
+        status
+        type
+        deploymentID
+        allocationID
+        amount
+        poi
+        force
+        priority
+        source
+        reason
+        transaction
+        failureReason
+        createdAt
+        updatedAt
+        protocolNetwork
+      }
+    }`,
+    variables: { actionIDs: selected.value.map(String) }
+  }).then((data) => {
+    for(let i = 0; i < selected.value.length; i++){
+      actions.value = actions.value.filter((e) =>  e.id != selected.value[i]);
+    }
+    selected.value = [];
+  });
+}
+
+function cancelActions(){
+  return accountStore.getAgentConnectClient.mutate({
+    mutation: gql`mutation cancelActions($actionIDs: [String!]!){
+      cancelActions(actionIDs: $actionIDs) {
+        id
+        status
+        type
+        deploymentID
+        allocationID
+        amount
+        poi
+        force
+        priority
+        source
+        reason
+        transaction
+        failureReason
+        createdAt
+        updatedAt
+        protocolNetwork
+      }
+    }`,
+    variables: { actionIDs: selected.value.map(String) }
+  }).then((data) => {
+    selected.value = [];
+    for(let i = 0; i < data.data.cancelActions.length; i++){
+      let actionI = actions.value.findIndex((e) => e.id == data.data.cancelActions[i].id);
+      actions.value[actionI] = data.data.cancelActions[i];
+    }
+    return data.data.cancelActions;
   });
 }
 
@@ -199,6 +313,7 @@ async function queryActions(){
       }
     }`,
     variables: { filter: {  } },
+    fetchPolicy: 'network-only',
   }).then((data) => {
     console.log("AGENT CONNECT QUERY ACTIONS DATA");
     console.log(data);
