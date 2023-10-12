@@ -28,6 +28,11 @@ yarn dev
 yarn build
 ```
 
+### Serve compiled app
+```
+yarn start
+```
+
 ### Lints and fixes files
 
 ```
