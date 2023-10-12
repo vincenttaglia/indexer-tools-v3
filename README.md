@@ -1,55 +1,37 @@
-# essentials
+# Indexer Tools v3
+### [Website](https://indexer-tools.vincenttaglia.com)
+
+## About
+Indexer tools aims to be the one-stop-shop for indexers that are a part of the Graph Protocol's decentralized network. View allocations via the Allocation Dashboard, filter subgraphs in the Subgraph Dashboard, calculate the effectiveness of potential allocations in the Allocation Wizard, and more to come soon!
+
+Indexer Tools utilizes Vue 3's Composition API and Vuetify 3's component framework in an effort to create a more sustainable project architecture.
+
+## Requirements
+* Node v16
+* Yarn
 
 ## Project setup
 
 ```
-# yarn
 yarn
-
-# npm
-npm install
-
-# pnpm
-pnpm install
 ```
 
 ### Compiles and hot-reloads for development
 
 ```
-# yarn
 yarn dev
-
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
 ```
 
 ### Compiles and minifies for production
 
 ```
-# yarn
 yarn build
-
-# npm
-npm run build
-
-# pnpm
-pnpm build
 ```
 
 ### Lints and fixes files
 
 ```
-# yarn
 yarn lint
-
-# npm
-npm run lint
-
-# pnpm
-pnpm lint
 ```
 
 ### Customize configuration
