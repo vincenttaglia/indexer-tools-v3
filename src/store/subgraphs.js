@@ -344,10 +344,11 @@ export const useSubgraphsStore = defineStore({
         if(networkStatus == 7 && data.subgraphs.length == 100){
           return this.fetch(skip + data.subgraphs.length)
           .then((data1) => {
+            let concatData = {};
             if(typeof data.subgraphs == "object" && typeof data1.subgraphs == "object")
-              data.subgraphs = data.subgraphs.concat(data1.subgraphs).filter((s) => s.currentVersion);
+            concatData.subgraphs = data.subgraphs.concat(data1.subgraphs).filter((s) => s.currentVersion);
             
-            return data;
+            return concatData;
           })
         }
         

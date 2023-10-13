@@ -353,11 +353,12 @@ export const useAllocationStore = defineStore('allocationStore', {
         if(networkStatus == 7 && data.allocations.length == 100){
           return this.fetch(skip + data.allocations.length)
           .then((data1) => {
+            let concatData = {};
             console.log(data1);
             if(typeof data.allocations == "object" && typeof data1.allocations == "object")
-              data.allocations = data.allocations.concat(data1.allocations);
+              concatData.allocations = data.allocations.concat(data1.allocations);
             
-            return data;
+            return concatData;
           })
         }
         return data;
