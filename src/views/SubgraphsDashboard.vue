@@ -16,75 +16,77 @@
     hover
   >
     <template v-slot:top>
-      <v-text-field
-          v-model="search"
-          label="Search"
-          class="d-inline-block mx-4 mt-2"
-          style="width:13rem;max-width:15rem"
-      ></v-text-field>
-      <v-text-field
-          v-model="subgraphSettingStore.settings.minSignal"
-          type="number"
-          label="Min Signal"
-          class="d-inline-block mx-4"
-          style="max-width:15rem"
-      ></v-text-field>
-      <v-text-field
-          v-model="subgraphSettingStore.settings.maxSignal"
-          type="number"
-          label="Max Signal"
-          class="d-inline-block mx-4"
-          style="max-width:15rem"
-      ></v-text-field>
-      <v-text-field
-          v-model="subgraphSettingStore.settings.newAllocation"
-          type="number"
-          label="New Allocation"
-          class="d-inline-block mx-4"
-          style="max-width:15rem"
-      ></v-text-field>
-      <v-text-field
-          v-model="subgraphSettingStore.settings.targetApr"
-          type="number"
-          label="Target APR"
-          class="d-inline-block mx-4"
-          style="max-width:15rem"
-      ></v-text-field>
-      <v-select
-          v-model="subgraphSettingStore.settings.noRewardsFilter"
-          :items="[{text: 'Exclude Denied', action: 0}, {text:'Include Denied', action: 1}, {text: 'Only Denied', action: 2}]"
-          item-title="text"
-          item-value="action"
-          label="Subgraphs w/ Denied Rewards"
-          style="max-width: 15rem;"
-          class="d-inline-block mx-4"
-      ></v-select>
-      <v-select
-          v-model="subgraphSettingStore.settings.networkFilter"
-          :items="subgraphStore.getSubgraphNetworks"
-          label="Subgraph Networks"
-          multiple
-          chips
-          class="d-inline-block mx-4"
-          style="min-width:13rem;max-width: 15rem;top: -5px"
-      ></v-select>
-      <v-select
-          v-model="subgraphSettingStore.settings.statusFilter"
-          :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"
-          label="Status Filter"
-          class="d-inline-block mx-4"
-          style="min-width:13rem;max-width: 15rem;top: -5px"
-      ></v-select>
-      <v-checkbox
-        v-model="subgraphSettingStore.settings.activateBlacklist"
-        label="Blacklist"
-        class="d-inline-block mr-3"
-      ></v-checkbox>
-      <v-checkbox
-        v-model="subgraphSettingStore.settings.activateSynclist"
-        label="Synclist"
-        class="d-inline-block"
-      ></v-checkbox>
+      <div class="d-block">
+        <v-text-field
+            v-model="search"
+            label="Search"
+            class="d-inline-block mx-4 mt-2"
+            style="width:13rem;max-width:15rem"
+        ></v-text-field>
+        <v-text-field
+            v-model="subgraphSettingStore.settings.minSignal"
+            type="number"
+            label="Min Signal"
+            class="d-inline-block mx-4"
+            style="max-width:15rem"
+        ></v-text-field>
+        <v-text-field
+            v-model="subgraphSettingStore.settings.maxSignal"
+            type="number"
+            label="Max Signal"
+            class="d-inline-block mx-4"
+            style="max-width:15rem"
+        ></v-text-field>
+        <v-text-field
+            v-model="subgraphSettingStore.settings.newAllocation"
+            type="number"
+            label="New Allocation"
+            class="d-inline-block mx-4"
+            style="max-width:15rem"
+        ></v-text-field>
+        <v-text-field
+            v-model="subgraphSettingStore.settings.targetApr"
+            type="number"
+            label="Target APR"
+            class="d-inline-block mx-4"
+            style="max-width:15rem"
+        ></v-text-field>
+        <v-select
+            v-model="subgraphSettingStore.settings.noRewardsFilter"
+            :items="[{text: 'Exclude Denied', action: 0}, {text:'Include Denied', action: 1}, {text: 'Only Denied', action: 2}]"
+            item-title="text"
+            item-value="action"
+            label="Subgraphs w/ Denied Rewards"
+            style="max-width: 15rem;"
+            class="d-inline-block mx-4"
+        ></v-select>
+        <v-select
+            v-model="subgraphSettingStore.settings.networkFilter"
+            :items="subgraphStore.getSubgraphNetworks"
+            label="Subgraph Networks"
+            multiple
+            chips
+            class="d-inline-block mx-4"
+            style="min-width:13rem;max-width: 15rem;top: -5px"
+        ></v-select>
+        <v-select
+            v-model="subgraphSettingStore.settings.statusFilter"
+            :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"
+            label="Status Filter"
+            class="d-inline-block mx-4"
+            style="min-width:13rem;max-width: 15rem;top: -5px"
+        ></v-select>
+        <v-checkbox
+          v-model="subgraphSettingStore.settings.activateBlacklist"
+          label="Blacklist"
+          class="d-inline-block mr-3"
+        ></v-checkbox>
+        <v-checkbox
+          v-model="subgraphSettingStore.settings.activateSynclist"
+          label="Synclist"
+          class="d-inline-block"
+        ></v-checkbox>
+      </div>
     </template>
     <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <v-menu
