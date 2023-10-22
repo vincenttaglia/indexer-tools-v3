@@ -186,6 +186,32 @@
       </v-card>
     </template>
   </v-dialog>
+  <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" text="Execute Approved Actions" class="mx-5"> </v-btn>
+    </template>
+
+    <template v-slot:default="{ isActive }">
+      <v-card title="Execute Approved Actions">
+        <v-card-text>
+          Are you sure you want to execute all approved actions?
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            text="Back"
+            @click="isActive.value = false"
+          ></v-btn>
+          <v-btn
+            text="Execute Approved Actions"
+            @click="executeApprovedActions(); isActive.value = false"
+          ></v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -429,6 +455,49 @@ async function queryActions(){
     actions.value = data.data.actions;
     loading.value = false;
     return data.data.actions;
+  });
+}
+
+async function executeApprovedActions(){
+  return accountStore.getAgentConnectClient.mutate({
+    mutation: gql`mutation executeApprovedActions{
+      executeApprovedActions {
+        id
+        type
+        deploymentID
+        allocationID
+        amount
+        poi
+        force
+        source
+        reason
+        transaction
+        failureReason
+        priority
+        protocolNetwork
+      }
+    }`,
+  }).then((data) => {
+    console.log(data);
+    if(!data.data.errors){
+      selected.value = [];
+      for(let i = 0; i < data.data.executeApprovedActions.length; i++){
+        let actionI = actions.value.findIndex((e) => e.id == data.data.executeApprovedActions[i].id);
+        actions.value[actionI] = data.data.executeApprovedActions[i];
+        if(!data.data.executeApprovedActions[i].failureReason){
+          actions.value[actionI].status = 'success';
+        }else{
+          actions.value[actionI].status = 'failed';
+        }
+        
+      }
+      text.value = `Executed ${data.data.executeApprovedActions.length} actions`
+      snackbar.value = true;
+    }else{
+      text.value = 'Indexer Agent error. Check console for details.'
+      snackbar.value = true;
+    }
+    return data.data.executeApprovedActions;
   });
 }
 
