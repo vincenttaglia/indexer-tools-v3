@@ -28,6 +28,12 @@ yarn dev
 yarn build
 ```
 
+### Sets default environment variables
+
+```
+cp .env.example .env
+```
+
 ### Serve compiled app
 ```
 yarn start
