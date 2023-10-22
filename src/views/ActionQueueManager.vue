@@ -18,7 +18,7 @@
     </template>
   </v-snackbar>
   <h3 v-if="!accountStore.getAgentConnectStatus" class="mx-3 my-5">Set Agent Conenct settings in account settings.</h3>
-  <v-btn text="Queue actions" @click="sendActionsToAgent()"></v-btn>
+  <v-btn text="Queue actions" @click="sendActionsToAgent()" class="mx-5 my-6"></v-btn>
   <v-btn text="Refresh actions" @click="queryActions()" class="mx-5 my-6" v-if="accountStore.getAgentConnectStatus"></v-btn>
   <v-select
       v-model="managerSettingStore.settings.statusFilter"
@@ -38,6 +38,7 @@
       show-select
       v-model="selected"
       :loading="loading"
+      v-model:sort-by="sortBy"
   >
     <template v-slot:item.transaction="{ item }">
       <v-btn  
@@ -242,6 +243,7 @@ const selected = ref([]);
 const loading = ref(accountStore.getAgentConnectStatus);
 const snackbar = ref(false);
 const text = ref("");
+const sortBy = ref([{ key: 'id', order: 'desc' }]);
 const filteredActions = computed(() => {
   let fActions = actions.value;
   
