@@ -8,7 +8,7 @@ const chainStore = useChainStore();
 
 export const useAccountStore = defineStore('accountStore', {
   state: () => ({
-    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : JSON.parse(process.env.INDEXER_TOOLS_DEFAULT_ACCOUNTS),
+    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : JSON.parse(import.meta.env.VITE_DEFAULT_ACCOUNTS),
     loading: true,
     cut: '0',
     url: '',
@@ -97,7 +97,7 @@ export const useAccountStore = defineStore('accountStore', {
       if(indexer){
         if(indexer.active){
           if(this.accounts.length == 1){
-            this.accounts.push(JSON.parse(process.env.INDEXER_TOOLS_DEFAULT_ACCOUNTS));
+            this.accounts.push(JSON.parse(import.meta.env.VITE_DEFAULT_ACCOUNTS));
           }
           for(let i = 0; i < this.accounts.length; i++){
             if(this.accounts[i].address != indexer.address && this.accounts[i].chain != indexer.chain){
