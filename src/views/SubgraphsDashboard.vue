@@ -1,4 +1,21 @@
 <template>
+  <v-snackbar
+    v-model="snackbar"
+    variant="flat"
+    location="top"
+    style="margin-top:100px"
+  >
+    {{ text }}
+
+    <template v-slot:actions>
+      <v-btn
+        variant="text"
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
   <v-data-table
     :headers="headers"
     :items="subgraphStore.getFilteredSubgraphs"
@@ -323,6 +340,8 @@
   const subgraphSettingStore = useSubgraphSettingStore();
   const tableSettingsStore = useTableSettingStore();
   const accountStore = useAccountStore();
+  const snackbar = ref(false);
+  const text = ref("");
   subgraphStore.fetchData();
 
 
@@ -353,6 +372,13 @@ function offchainSync(ipfsHash){
   }).then((data) => {
     console.log("AGENT CONNECT DATA");
     console.log(data);
+    if(!data.data.errors){
+      text.value = `${data.data.setIndexingRule.identifier.slice(0,7)}... added to offchain sync list`;
+      snackbar.value = true;
+    }else{
+      text.value = 'Indexer Agent error. Check console for details.'
+      snackbar.value = true;
+    }
   });
 }
 
@@ -371,6 +397,13 @@ function removeOffchainSync(ipfsHash){
   }).then((data) => {
     console.log("AGENT CONNECT DATA");
     console.log(data);
+    if(!data.data.errors){
+      text.value = `Subgraph removed from offchain sync list`;
+      snackbar.value = true;
+    }else{
+      text.value = 'Indexer Agent error. Check console for details.'
+      snackbar.value = true;
+    }
   });
 }
 
