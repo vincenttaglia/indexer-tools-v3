@@ -239,7 +239,7 @@ const managerSettingStore = useManagerSettingStore();
 
 const actions = ref([]);
 const selected = ref([]);
-const loading = ref(true);
+const loading = ref(accountStore.getAgentConnectStatus);
 const snackbar = ref(false);
 const text = ref("");
 const filteredActions = computed(() => {
