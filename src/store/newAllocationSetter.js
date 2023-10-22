@@ -199,6 +199,55 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       }
       return `${unallocate}${reallocate}${allocate}`;
     },
+    actionsQueueBuildAPIObject: (state) => {
+      let unallocate = [];
+      let reallocate = [];
+      let allocate = [];
+      let skip = [];
+      for(const i in allocationStore.getSelectedAllocations){
+        if(Object.keys(state.newAllocations).includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash)){
+          reallocate.push({
+            status: 'queued',
+            type: 'reallocate',
+            deploymentID: allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash,
+            allocationID: allocationStore.getSelectedAllocations[i].id,
+            amount: state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash].toString(),
+            protocolNetwork: chainStore.getActiveChain.id,
+            source: 'Indexer Tools - Agent Connect',
+            reason: 'Allocation Wizard',
+            priority: 2,
+          });
+          skip.push(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash);
+        }else{
+          unallocate.push({
+            status: 'queued',
+            type: 'unallocate',
+            deploymentID: allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash,
+            allocationID: allocationStore.getSelectedAllocations[i].id,
+            protocolNetwork: chainStore.getActiveChain.id,
+            source: 'Indexer Tools - Agent Connect',
+            reason: 'Allocation Wizard',
+            priority: 1,
+          });
+        }
+      }
+      for(const i in state.getSelectedS){
+        if(state.newAllocations[state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash] > 0 && !skip.includes(state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash)){
+          allocate.push({
+            status: 'queued',
+            type: 'allocate',
+            deploymentID: state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash,
+            amount: state.newAllocations[state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash].toString(),
+            protocolNetwork: chainStore.getActiveChain.id,
+            source: 'Indexer Tools - Agent Connect',
+            reason: 'Allocation Wizard',
+            priority: 3,
+          });
+        }
+          
+      }
+      return unallocate.concat(reallocate).concat(allocate);
+    },
   },
   actions: {
     async update(){

@@ -17,6 +17,12 @@
         <AllocationSetter />
       </template>
       <template v-slot:item.4>
+        <div
+          class="mb-15 mx-5"
+          v-if="accountStore.getAgentConnectStatus"
+        >
+          <ActionQueueManager></ActionQueueManager>
+        </div>
         <div class="mt-12 mb-10 ml-5">
           <h3>Action Queue Commands <small>(>=v0.20.0)</small></h3>
           <v-textarea readonly :value="newAllocationSetterStore.actionsQueueBuildCommands" rows="10" ></v-textarea>
@@ -77,22 +83,20 @@
 </template>
 
 <script setup>
-import moment from "moment";
 import numeral from "numeral";
 import Web3 from "web3";
-import { ref, computed } from "vue";
 import AllocationsDashboard from "./AllocationsDashboard.vue";
 import SubgraphsDashboard from "./SubgraphsDashboard.vue";
 import AllocationSetter from "@/components/AllocationSetter.vue";
+import ActionQueueManager from "./ActionQueueManager.vue";
 import { useAllocationStore } from "@/store/allocations";
-import { useNetworkStore } from "@/store/network";
 import { useNewAllocationSetterStore } from "@/store/newAllocationSetter";
 import { VStepper } from 'vuetify/labs/VStepper'
+import { useAccountStore } from "@/store/accounts";
 
+const accountStore = useAccountStore();
 const allocationStore = useAllocationStore();
-const networkStore = useNetworkStore();
 const newAllocationSetterStore = useNewAllocationSetterStore();
-
 
 </script>
 

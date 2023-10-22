@@ -1,25 +1,47 @@
 import { defineStore } from 'pinia'
 import { useChainStore } from './chains';
 import gql from 'graphql-tag';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core';
 
 const chainStore = useChainStore();
 
 
 export const useAccountStore = defineStore('accountStore', {
   state: () => ({
-    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : [ { address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: true, chain: "mainnet" } ],
+    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : JSON.parse(process.env.INDEXER_TOOLS_DEFAULT_ACCOUNTS),
     loading: true,
     cut: '0',
     url: '',
     availableStake: '0',
   }),
   getters: {
+    getAccounts: (state) => state.accounts,
     getActiveAccount: (state) => {
       return state.accounts.find(e => e.active);
     },
     getActiveUrl: (state) => {
       return state.url;
-    }
+    },
+    getAgentConnectStatus: (state) => state.getActiveAccount.agentConnect,
+    getAgentConnectEndpoint: (state) => state.getActiveAccount.agentEndpoint,
+    getAgentConnectClient: (state) => {
+      // HTTP connection to the API
+      const httpLink = createHttpLink({
+        uri: state.getAgentConnectEndpoint,
+        headers: {
+          "Access-Control-Request-Private-Network": "true",
+        },
+      });
+
+      // Cache implementation
+      const cache = new InMemoryCache();
+
+      // Create the apollo client
+      return new ApolloClient({
+        link: httpLink,
+        cache,
+      });
+    },
   },
   actions: {
     async fetchData(){
@@ -42,11 +64,11 @@ export const useAccountStore = defineStore('accountStore', {
         this.loading = false;
       });
     },
-    addAccount(address, name, chain){
+    addAccount(address, name, chain, agentConnect, agentEndpoint){
       let alreadyAdded = this.accounts.find(e => e.address == address.toLowerCase() && e.chain == chain);
   
       if(!alreadyAdded){
-        this.accounts.push({ address: address.toLowerCase(), name: name, active: false, chain: chain});
+        this.accounts.push({ address: address.toLowerCase(), name: name, active: false, chain: chain, agentConnect: agentConnect, agentEndpoint: agentEndpoint });
         this.switchAccount(address, chain);
       }
     },
@@ -74,15 +96,13 @@ export const useAccountStore = defineStore('accountStore', {
   
       if(indexer){
         if(indexer.active){
-          if(this.accounts.length == 1 && !(indexer.address == '0xeddd4ec5d3775de964416b7b9d4da885f530f90a' && indexer.chain == 'mainnet')){
-            this.accounts.push({ address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: false, chain: "mainnet" });
+          if(this.accounts.length == 1){
+            this.accounts.push(JSON.parse(process.env.INDEXER_TOOLS_DEFAULT_ACCOUNTS));
           }
-          if(this.accounts.length > 1){
-            for(let i = 0; i < this.accounts.length; i++){
-              if(this.accounts[i].address != indexer.address && this.accounts[i].chain != indexer.chain){
-                this.switchAccount(this.accounts[i].address, this.accounts[i].chain);
-                break;
-              }
+          for(let i = 0; i < this.accounts.length; i++){
+            if(this.accounts[i].address != indexer.address && this.accounts[i].chain != indexer.chain){
+              this.switchAccount(this.accounts[i].address, this.accounts[i].chain);
+              break;
             }
           }
           
@@ -93,6 +113,9 @@ export const useAccountStore = defineStore('accountStore', {
         }
         
       }
-    }
+    },
+    saveAccounts(){
+      localStorage.accounts = JSON.stringify(this.accounts);
+    },
   },
 })

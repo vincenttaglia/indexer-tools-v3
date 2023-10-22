@@ -16,75 +16,77 @@
     hover
   >
     <template v-slot:top>
-      <v-text-field
-          v-model="search"
-          label="Search"
-          class="d-inline-block mx-4 mt-2"
-          style="width:13rem;max-width:15rem"
-      ></v-text-field>
-      <v-text-field
-          v-model="subgraphSettingStore.settings.minSignal"
-          type="number"
-          label="Min Signal"
-          class="d-inline-block mx-4"
-          style="max-width:15rem"
-      ></v-text-field>
-      <v-text-field
-          v-model="subgraphSettingStore.settings.maxSignal"
-          type="number"
-          label="Max Signal"
-          class="d-inline-block mx-4"
-          style="max-width:15rem"
-      ></v-text-field>
-      <v-text-field
-          v-model="subgraphSettingStore.settings.newAllocation"
-          type="number"
-          label="New Allocation"
-          class="d-inline-block mx-4"
-          style="max-width:15rem"
-      ></v-text-field>
-      <v-text-field
-          v-model="subgraphSettingStore.settings.targetApr"
-          type="number"
-          label="Target APR"
-          class="d-inline-block mx-4"
-          style="max-width:15rem"
-      ></v-text-field>
-      <v-select
-          v-model="subgraphSettingStore.settings.noRewardsFilter"
-          :items="[{text: 'Exclude Denied', action: 0}, {text:'Include Denied', action: 1}, {text: 'Only Denied', action: 2}]"
-          item-title="text"
-          item-value="action"
-          label="Subgraphs w/ Denied Rewards"
-          style="max-width: 15rem;"
-          class="d-inline-block mx-4"
-      ></v-select>
-      <v-select
-          v-model="subgraphSettingStore.settings.networkFilter"
-          :items="subgraphStore.getSubgraphNetworks"
-          label="Subgraph Networks"
-          multiple
-          chips
-          class="d-inline-block mx-4"
-          style="min-width:13rem;max-width: 15rem;top: -5px"
-      ></v-select>
-      <v-select
-          v-model="subgraphSettingStore.settings.statusFilter"
-          :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"
-          label="Status Filter"
-          class="d-inline-block mx-4"
-          style="min-width:13rem;max-width: 15rem;top: -5px"
-      ></v-select>
-      <v-checkbox
-        v-model="subgraphSettingStore.settings.activateBlacklist"
-        label="Blacklist"
-        class="d-inline-block mr-3"
-      ></v-checkbox>
-      <v-checkbox
-        v-model="subgraphSettingStore.settings.activateSynclist"
-        label="Synclist"
-        class="d-inline-block"
-      ></v-checkbox>
+      <div class="d-block">
+        <v-text-field
+            v-model="search"
+            label="Search"
+            class="d-inline-block mx-4 mt-2"
+            style="width:13rem;max-width:15rem"
+        ></v-text-field>
+        <v-text-field
+            v-model="subgraphSettingStore.settings.minSignal"
+            type="number"
+            label="Min Signal"
+            class="d-inline-block mx-4"
+            style="max-width:15rem"
+        ></v-text-field>
+        <v-text-field
+            v-model="subgraphSettingStore.settings.maxSignal"
+            type="number"
+            label="Max Signal"
+            class="d-inline-block mx-4"
+            style="max-width:15rem"
+        ></v-text-field>
+        <v-text-field
+            v-model="subgraphSettingStore.settings.newAllocation"
+            type="number"
+            label="New Allocation"
+            class="d-inline-block mx-4"
+            style="max-width:15rem"
+        ></v-text-field>
+        <v-text-field
+            v-model="subgraphSettingStore.settings.targetApr"
+            type="number"
+            label="Target APR"
+            class="d-inline-block mx-4"
+            style="max-width:15rem"
+        ></v-text-field>
+        <v-select
+            v-model="subgraphSettingStore.settings.noRewardsFilter"
+            :items="[{text: 'Exclude Denied', action: 0}, {text:'Include Denied', action: 1}, {text: 'Only Denied', action: 2}]"
+            item-title="text"
+            item-value="action"
+            label="Subgraphs w/ Denied Rewards"
+            style="max-width: 15rem;"
+            class="d-inline-block mx-4"
+        ></v-select>
+        <v-select
+            v-model="subgraphSettingStore.settings.networkFilter"
+            :items="subgraphStore.getSubgraphNetworks"
+            label="Subgraph Networks"
+            multiple
+            chips
+            class="d-inline-block mx-4"
+            style="min-width:13rem;max-width: 15rem;top: -5px"
+        ></v-select>
+        <v-select
+            v-model="subgraphSettingStore.settings.statusFilter"
+            :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"
+            label="Status Filter"
+            class="d-inline-block mx-4"
+            style="min-width:13rem;max-width: 15rem;top: -5px"
+        ></v-select>
+        <v-checkbox
+          v-model="subgraphSettingStore.settings.activateBlacklist"
+          label="Blacklist"
+          class="d-inline-block mr-3"
+        ></v-checkbox>
+        <v-checkbox
+          v-model="subgraphSettingStore.settings.activateSynclist"
+          label="Synclist"
+          class="d-inline-block"
+        ></v-checkbox>
+      </div>
     </template>
     <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <v-menu
@@ -138,6 +140,70 @@
                 <v-icon :icon="item.deploymentStatus?.icon != undefined ? item.deploymentStatus.icon : 'mdi-close'"></v-icon>
               </v-avatar>
               <h4 class="mt-1">{{item.deploymentStatus?.health != undefined ? item.deploymentStatus.health.toUpperCase() : "Not Deployed"}}</h4>
+              <div v-if="accountStore.getAgentConnectStatus">
+                <v-dialog width="500">
+                  <template v-slot:activator="{ props }">
+                    <v-icon
+                      size="small"
+                      class="me-2"
+                      v-bind="props"
+                    >
+                      mdi-sync
+                    </v-icon>
+                  </template>
+
+                  <template v-slot:default="{ isActive }">
+                    <v-card title="Offchain Sync Subgraph">
+                      <v-card-text>
+                        Add {{ item.displayName }} ({{ item.currentVersion.subgraphDeployment.ipfsHash }}) to list of offchain sync subgraphs?
+                      </v-card-text>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text="Cancel"
+                          @click="isActive.value = false"
+                        ></v-btn>
+                        <v-btn
+                          text="Start syncing"
+                          @click="offchainSync(item.currentVersion.subgraphDeployment.ipfsHash); isActive.value = false"
+                        ></v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </template>
+                </v-dialog>
+                <v-dialog width="500">
+                  <template v-slot:activator="{ props }">
+                    <v-icon
+                      size="small"
+                      v-bind="props"
+                    >
+                      mdi-sync-off
+                    </v-icon>
+                  </template>
+
+                  <template v-slot:default="{ isActive }">
+                    <v-card title="Remove Offchain Subgraph">
+                      <v-card-text>
+                        Remove {{ item.displayName }} ({{  item.currentVersion.subgraphDeployment.ipfsHash }}) from list of offchain sync subgraphs?
+                      </v-card-text>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                          text="Cancel"
+                          @click="isActive.value = false"
+                        ></v-btn>
+                        <v-btn
+                          text="Stop syncing"
+                          @click="removeOffchainSync(item.currentVersion.subgraphDeployment.ipfsHash); isActive.value = false"
+
+                        ></v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </template>
+                </v-dialog>
+              </div>
               <v-divider v-if="item.deploymentStatus?.health != undefined && item.deploymentStatus?.health == 'failed' && item.deploymentStatus?.fatalError" class="my-2"></v-divider>
               <div v-if="item.deploymentStatus?.health != undefined && item.deploymentStatus?.health == 'failed' && item.deploymentStatus?.fatalError">
                 <p class="mt-2">
@@ -245,14 +311,20 @@
   import BigNumber from 'bignumber.js';
   import { storeToRefs } from 'pinia';
   import { useTableSettingStore } from "@/store/tableSettings";
+  import { useChainStore } from '@/store/chains';
+  import gql from 'graphql-tag';
+  import { useAccountStore } from '@/store/accounts';
+
 
   const search = ref('');
 
-
+  const chainStore = useChainStore();
   const subgraphStore = useSubgraphsStore();
   const subgraphSettingStore = useSubgraphSettingStore();
   const tableSettingsStore = useTableSettingStore();
+  const accountStore = useAccountStore();
   subgraphStore.fetchData();
+
 
   const { selected } = storeToRefs(subgraphStore);
 
@@ -262,6 +334,45 @@
       default: false,
     },
   })
+
+function offchainSync(ipfsHash){
+  let indexingRuleInput = {
+    identifier: ipfsHash,
+    identifierType: 'deployment',
+    decisionBasis: 'offchain',
+    protocolNetwork: chainStore.getActiveChain.id,
+  }
+  accountStore.getAgentConnectClient.mutate({
+    mutation: gql`mutation setIndexingRule($rule: IndexingRuleInput!){
+      setIndexingRule(rule: $rule) {
+        identifier
+        decisionBasis
+      }
+    }`,
+    variables: { rule: indexingRuleInput }
+  }).then((data) => {
+    console.log("AGENT CONNECT DATA");
+    console.log(data);
+  });
+}
+
+function removeOffchainSync(ipfsHash){
+  let indexingRuleIdentifier = {
+    identifier: ipfsHash,
+    protocolNetwork: chainStore.getActiveChain.id,
+  }
+  accountStore.getAgentConnectClient.mutate({
+    mutation: gql`mutation deleteIndexingRule($identifier: IndexingRuleIdentifier!){
+      deleteIndexingRule(identifier: $identifier) {
+        identifier
+      }
+    }`,
+    variables: { identifier: indexingRuleIdentifier }
+  }).then((data) => {
+    console.log("AGENT CONNECT DATA");
+    console.log(data);
+  });
+}
 
 function copyToClipboard (copy) {
   navigator.clipboard.writeText(copy)
