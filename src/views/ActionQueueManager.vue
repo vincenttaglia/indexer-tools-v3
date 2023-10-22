@@ -1,5 +1,24 @@
 <template>
+  <v-snackbar
+    v-model="snackbar"
+    variant="flat"
+    location="top"
+    style="margin-top:100px"
+  >
+    {{ text }}
+
+    <template v-slot:actions>
+      <v-btn
+        variant="text"
+        @click="snackbar = false"
+        location = "bottom"
+      >
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
   <h3 v-if="!accountStore.getAgentConnectStatus" class="mx-3 my-5">Set Agent Conenct settings in account settings.</h3>
+  <v-btn text="Queue actions" @click="sendActionsToAgent()"></v-btn>
   <v-btn text="Refresh actions" @click="queryActions()" class="mx-5 my-6" v-if="accountStore.getAgentConnectStatus"></v-btn>
   <v-select
       v-model="managerSettingStore.settings.statusFilter"
@@ -18,6 +37,7 @@
       mobile-breakpoint="0"
       show-select
       v-model="selected"
+      :loading="loading"
   >
     <template v-slot:item.transaction="{ item }">
       <v-btn  
@@ -193,6 +213,9 @@ const managerSettingStore = useManagerSettingStore();
 
 const actions = ref([]);
 const selected = ref([]);
+const loading = ref(true);
+const snackbar = ref(false);
+const text = ref("");
 const filteredActions = computed(() => {
   let fActions = actions.value;
   
@@ -214,7 +237,46 @@ function getURL(path, base){
   return new URL(path, base);
 }
 
-function approveActions(){
+function sendActionsToAgent(){
+  accountStore.getAgentConnectClient.mutate({
+    mutation: gql`mutation queueActions($actions: [ActionInput!]!){
+      queueActions(actions: $actions) {
+        actions{
+          id
+          status
+          type
+          deploymentID
+          allocationID
+          amount
+          poi
+          force
+          priority
+          source
+          reason
+          transaction
+          failureReason
+          createdAt
+          updatedAt
+          protocolNetwork
+        }
+      }
+    }`,
+    variables: { actions: newAllocationSetterStore.actionsQueueBuildAPIObject }
+  }).then((data) => {
+    console.log("AGENT CONNECT SEND ACTIONS DATA");
+    console.log(data);
+    if(!data.data.errors){
+      text.value = `Queued ${data.data.queueActions.length} actions`;
+      snackbar.value = true;
+      queryActions();
+    }else{
+      text.value = 'Indexer Agent error. Check console for details.'
+      snackbar.value = true;
+    }
+  });
+}
+
+async function approveActions(){
   return accountStore.getAgentConnectClient.mutate({
     mutation: gql`mutation approveActions($actionIDs: [String!]!){
       approveActions(actionIDs: $actionIDs) {
@@ -238,16 +300,24 @@ function approveActions(){
     }`,
     variables: { actionIDs: selected.value.map(String) },
   }).then((data) => {
-    selected.value = [];
-    for(let i = 0; i < data.data.approveActions.length; i++){
-      let actionI = actions.value.findIndex((e) => e.id == data.data.approveActions[i].id);
-      actions.value[actionI] = data.data.approveActions[i];
+    console.log(data);
+    if(!data.data.errors){
+      selected.value = [];
+      for(let i = 0; i < data.data.approveActions.length; i++){
+        let actionI = actions.value.findIndex((e) => e.id == data.data.approveActions[i].id);
+        actions.value[actionI] = data.data.approveActions[i];
+      }
+      text.value = `Approved ${data.data.approveActions.length} actions`
+      snackbar.value = true;
+    }else{
+      text.value = 'Indexer Agent error. Check console for details.'
+      snackbar.value = true;
     }
     return data.data.approveActions;
   });
 }
 
-function deleteActions(){
+async function deleteActions(){
   return accountStore.getAgentConnectClient.mutate({
     mutation: gql`mutation deleteActions($actionIDs: [String!]!){
       deleteActions(actionIDs: $actionIDs) {
@@ -271,14 +341,23 @@ function deleteActions(){
     }`,
     variables: { actionIDs: selected.value.map(String) }
   }).then((data) => {
-    for(let i = 0; i < selected.value.length; i++){
-      actions.value = actions.value.filter((e) =>  e.id != selected.value[i]);
+    console.log(data);
+    if(!data.data.errors){
+      for(let i = 0; i < selected.value.length; i++){
+        actions.value = actions.value.filter((e) =>  e.id != selected.value[i]);
+      }
+      text.value = `Deleted ${data.data.deleteActions} actions`
+      snackbar.value = true;
+      selected.value = [];
+    }else{
+      text.value = 'Indexer Agent error. Check console for details.'
+      snackbar.value = true;
     }
-    selected.value = [];
+    return data;
   });
 }
 
-function cancelActions(){
+async function cancelActions(){
   return accountStore.getAgentConnectClient.mutate({
     mutation: gql`mutation cancelActions($actionIDs: [String!]!){
       cancelActions(actionIDs: $actionIDs) {
@@ -302,16 +381,25 @@ function cancelActions(){
     }`,
     variables: { actionIDs: selected.value.map(String) }
   }).then((data) => {
-    selected.value = [];
-    for(let i = 0; i < data.data.cancelActions.length; i++){
-      let actionI = actions.value.findIndex((e) => e.id == data.data.cancelActions[i].id);
-      actions.value[actionI] = data.data.cancelActions[i];
+    console.log(data);
+    if(!data.data.errors){
+      selected.value = [];
+      for(let i = 0; i < data.data.cancelActions.length; i++){
+        let actionI = actions.value.findIndex((e) => e.id == data.data.cancelActions[i].id);
+        actions.value[actionI] = data.data.cancelActions[i];
+      }
+      text.value = `Cancelled ${data.data.cancelActions.length} actions`
+      snackbar.value = true;
+    }else{
+      text.value = 'Indexer Agent error. Check console for details.'
+      snackbar.value = true;
     }
     return data.data.cancelActions;
   });
 }
 
 async function queryActions(){
+  loading.value = true;
   return accountStore.getAgentConnectClient.query({
     query: gql`query actions($filter: ActionFilter!){
       actions(filter: $filter) {
@@ -339,6 +427,7 @@ async function queryActions(){
     console.log("AGENT CONNECT QUERY ACTIONS DATA");
     console.log(data);
     actions.value = data.data.actions;
+    loading.value = false;
     return data.data.actions;
   });
 }
