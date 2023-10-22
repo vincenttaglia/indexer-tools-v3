@@ -8,7 +8,7 @@ const chainStore = useChainStore();
 
 export const useAccountStore = defineStore('accountStore', {
   state: () => ({
-    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : [ { address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: true, chain: "mainnet", agentConnect: false, agentEndpoint: "" } ],
+    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : JSON.parse(process.env.INDEXER_TOOLS_DEFAULT_ACCOUNTS),
     loading: true,
     cut: '0',
     url: '',
@@ -96,15 +96,13 @@ export const useAccountStore = defineStore('accountStore', {
   
       if(indexer){
         if(indexer.active){
-          if(this.accounts.length == 1 && !(indexer.address == '0xeddd4ec5d3775de964416b7b9d4da885f530f90a' && indexer.chain == 'mainnet')){
-            this.accounts.push({ address: '0xeddd4ec5d3775de964416b7b9d4da885f530f90a', name: 'vincenttaglia.eth', active: false, chain: "mainnet", agentConnect: false, agentEndpoint: "" });
+          if(this.accounts.length == 1){
+            this.accounts.push(JSON.parse(process.env.INDEXER_TOOLS_DEFAULT_ACCOUNTS));
           }
-          if(this.accounts.length > 1){
-            for(let i = 0; i < this.accounts.length; i++){
-              if(this.accounts[i].address != indexer.address && this.accounts[i].chain != indexer.chain){
-                this.switchAccount(this.accounts[i].address, this.accounts[i].chain);
-                break;
-              }
+          for(let i = 0; i < this.accounts.length; i++){
+            if(this.accounts[i].address != indexer.address && this.accounts[i].chain != indexer.chain){
+              this.switchAccount(this.accounts[i].address, this.accounts[i].chain);
+              break;
             }
           }
           
