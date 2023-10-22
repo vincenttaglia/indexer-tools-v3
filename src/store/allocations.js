@@ -8,6 +8,7 @@ import moment from 'moment';
 import BigNumber from 'bignumber.js';
 import { storeToRefs } from 'pinia';
 import { calculateApr, calculateReadableDuration, calculateAllocationDailyRewards, indexerCut } from '@/plugins/commonCalcs';
+import { useSubgraphSettingStore } from './subgraphSettings';
 
 
 const networkStore = useNetworkStore();
@@ -15,6 +16,7 @@ const accountStore = useAccountStore();
 const chainStore = useChainStore();
 const deploymentStatusStore = useDeploymentStatusStore();
 const { getDeploymentStatuses } = storeToRefs(deploymentStatusStore);
+const subgraphSettingStore = useSubgraphSettingStore();
 
 
 networkStore.init();
@@ -35,6 +37,71 @@ export const useAllocationStore = defineStore('allocationStore', {
   getters: {
     getDeploymentStatusesCall: () => {
       return getDeploymentStatuses.value;
+    },
+    getFilteredAllocations: (state) => {
+      let allocations = state.getAllocations;
+      
+      if(subgraphSettingStore.settings.statusFilter == 'all'){
+        allocations = allocations.filter((i) => {
+          return deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash) != undefined;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'closable'){
+        allocations = allocations.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.synced == true && (status.fatalError == undefined || status.fatalError.deterministic == true))
+              return true
+          return false;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'healthy-synced'){
+        allocations = allocations.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.health == 'healthy' && status.synced == true)
+              return true
+          return false;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'syncing'){
+        allocations = allocations.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.health == 'healthy' && status.synced == false)
+              return true
+          return false;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'failed'){
+        allocations = allocations.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.health == 'failed')
+              return true
+          return false;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'non-deterministic'){
+        allocations = allocations.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == false)
+              return true
+          return false;
+        });
+      }
+
+      if(subgraphSettingStore.settings.statusFilter == 'deterministic'){
+        allocations = allocations.filter((i) => {
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
+            if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == true)
+              return true
+          return false;
+        });
+      }
+
+      return allocations;
     },
     getAllocations: (state) => {
       let allocations = [];
