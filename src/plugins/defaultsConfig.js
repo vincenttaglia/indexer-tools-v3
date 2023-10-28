@@ -15,9 +15,6 @@ export const defaultsConfig = {
  */
 export const loadDefaultsConfig = async () => {
     const resp = await fetch('/indexer-tools-config.json');
-    console.log("RESP");
-    console.log(resp);
-    console.log(import.meta.env.VITE_DEFAULT_ACCOUNTS);
     if(resp.ok){
       const value = await resp.json()
 
