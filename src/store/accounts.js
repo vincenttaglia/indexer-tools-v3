@@ -3,12 +3,16 @@ import { useChainStore } from './chains';
 import gql from 'graphql-tag';
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core';
 
+import { loadDefaultsConfig } from '@/plugins/defaultsConfig';
+
+const defaultsConfigVariables = await loadDefaultsConfig();
+const defaultsConfig = defaultsConfigVariables.variables;
 const chainStore = useChainStore();
 
 
 export const useAccountStore = defineStore('accountStore', {
   state: () => ({
-    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : JSON.parse(import.meta.env.VITE_DEFAULT_ACCOUNTS),
+    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : defaultsConfig.accounts,
     loading: true,
     cut: '0',
     url: '',
@@ -97,7 +101,7 @@ export const useAccountStore = defineStore('accountStore', {
       if(indexer){
         if(indexer.active){
           if(this.accounts.length == 1){
-            this.accounts.push(JSON.parse(import.meta.env.VITE_DEFAULT_ACCOUNTS));
+            this.accounts.push(defaultsConfig.accounts);
           }
           for(let i = 0; i < this.accounts.length; i++){
             if(this.accounts[i].address != indexer.address && this.accounts[i].chain != indexer.chain){

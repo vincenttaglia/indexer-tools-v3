@@ -22,16 +22,21 @@ yarn
 yarn dev
 ```
 
+### Set default variables
+
+#### Build-time
+```
+cp .env.example .env
+```
+#### Runtime
+```
+cp indexer-tools-config.json.example public/indexer-tools-config.json
+```
+
 ### Compiles and minifies for production
 
 ```
 yarn build
-```
-
-### Sets default environment variables
-
-```
-cp .env.example .env
 ```
 
 ### Serve compiled app

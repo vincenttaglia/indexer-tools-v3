@@ -13,9 +13,16 @@ import { createApp } from 'vue'
 // Plugins
 import { registerPlugins } from '@/plugins'
 
+import { loadDefaultsConfig, defaultsConfig } from "@/plugins/defaultsConfig";
+
+const defaultConfigOptions = await loadDefaultsConfig();
+console.log(defaultConfigOptions);
+
 import JsonCSV from 'vue-json-csv';
 
 const app = createApp(App)
+
+app.use(defaultsConfig, defaultConfigOptions);
 
 registerPlugins(app)
 
