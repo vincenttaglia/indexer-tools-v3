@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NO_ENV_ACCOUNTS='[ { "address": "0xeddd4ec5d3775de964416b7b9d4da885f530f90a", "name": "vincenttaglia.eth WORKSS", "active": true, "chain": "mainnet", "agentConnect": false, "agentEndpoint": "" }, { "address": "0x1b92e4cba0f82c85c1298af861247849988c788c", "name": "vincenttaglia-indexer.eth", "active": true, "chain": "arbitrum-one", "agentConnect": false, "agentEndpoint": "" } ]'
+NO_ENV_ACCOUNTS='[ { "address": "0xeddd4ec5d3775de964416b7b9d4da885f530f90a", "name": "vincenttaglia.eth", "active": true, "chain": "mainnet", "agentConnect": false, "agentEndpoint": "" }, { "address": "0x1b92e4cba0f82c85c1298af861247849988c788c", "name": "vincenttaglia-indexer.eth", "active": true, "chain": "arbitrum-one", "agentConnect": false, "agentEndpoint": "" } ]'
 
 JSON_STRING="{
   \"DEFAULT_ACCOUNTS\": ${DEFAULT_ACCOUNTS:-$NO_ENV_ACCOUNTS},
