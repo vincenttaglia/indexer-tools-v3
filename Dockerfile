@@ -14,6 +14,9 @@ COPY . .
 # Build the application
 RUN yarn build
 
+# Entrypoint for runtime env vars
+ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
+
 # Expose the port the app runs on
 EXPOSE 3000
 
