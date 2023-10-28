@@ -136,6 +136,12 @@ export const useSubgraphsStore = defineStore({
         });
       }
 
+      if(subgraphSettingStore.settings.hideCurrentlyAllocated == true){
+        subgraphs = subgraphs.filter((i) => {
+          return !i.currentlyAllocated;
+        });
+      }
+
       return subgraphs;
     },
     getSubgraphs: (state) => {

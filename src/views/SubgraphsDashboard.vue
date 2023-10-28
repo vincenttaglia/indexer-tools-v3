@@ -103,6 +103,11 @@
           label="Synclist"
           class="d-inline-block"
         ></v-checkbox>
+        <v-checkbox
+          v-model="subgraphSettingStore.settings.hideCurrentlyAllocated"
+          label="Hide Currently Allocated"
+          class="d-inline-block"
+        ></v-checkbox>
       </div>
     </template>
     <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
