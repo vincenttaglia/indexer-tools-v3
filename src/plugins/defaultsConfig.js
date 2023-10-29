@@ -19,12 +19,12 @@ export const loadDefaultsConfig = async () => {
       const value = await resp.json()
 
       return {
-          variables: {
-            accounts: value.DEFAULT_ACCOUNTS,
-            rpcMainnet: value.DEFAULT_RPC_MAINNET,
-            rpcArbitrum: value.DEFAULT_RPC_ARBITRUM,
-            rpcGoerli: value.DEFAULT_RPC_GOERLI,
-          }
+        variables: {
+          accounts: value.DEFAULT_ACCOUNTS,
+          rpcMainnet: value.DEFAULT_RPC_MAINNET,
+          rpcArbitrum: value.DEFAULT_RPC_ARBITRUM,
+          rpcGoerli: value.DEFAULT_RPC_GOERLI,
+        }
       }
 
     }else if(import.meta.env.VITE_DEFAULT_ACCOUNTS != undefined){

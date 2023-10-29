@@ -1,4 +1,22 @@
 <template>
+  <v-text-field
+      class="mx-2 my-1 d-inline-block"
+      type="number"
+      v-model="newAllocationSetterStore.minAllocation"
+      label="Minimum Allocation"
+  ></v-text-field>
+  <v-text-field
+      class="mx-2 my-1 d-inline-block"
+      type="number"
+      v-model="newAllocationSetterStore.minAllocation0Signal"
+      label="Minimum Allocation (0 Signal)"
+  ></v-text-field>
+  <v-btn
+      class="d-inline-block mx-2 my-1"
+      @click="newAllocationSetterStore.setAllMinimums()"
+  >
+    Set Minimums
+  </v-btn>
   <v-data-table
       :headers="headers"
       :items="newAllocationSetterStore.getSelectedSubgraphs"
@@ -103,10 +121,19 @@ const subgraphStore = useSubgraphsStore();
 const newAllocationSetterStore = useNewAllocationSetterStore();
 newAllocationSetterStore.update();
 
-const { newAllocations, getSelectedS } = storeToRefs(newAllocationSetterStore);
 
-watch(getSelectedS, (getSelectedS) => {
+const { newAllocations, getSelectedS, minAllocation, minAllocation0Signal } = storeToRefs(newAllocationSetterStore);
+
+watch(getSelectedS, () => {
   newAllocationSetterStore.update();
+})
+
+watch(minAllocation, () =>{
+  newAllocationSetterStore.setMinimums();
+})
+
+watch(minAllocation0Signal, () =>{
+  newAllocationSetterStore.setMinimums0Signal();
 })
 
 const headers = ref([

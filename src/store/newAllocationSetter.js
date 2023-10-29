@@ -17,6 +17,8 @@ const chainStore = useChainStore();
 export const useNewAllocationSetterStore = defineStore('allocationSetter', {
   state: () => ({
     newAllocations: {},
+    minAllocation: 0,
+    minAllocation0Signal: 0,
   }),
   getters: {
     getSelected: () => subgraphStore.selected,
@@ -252,8 +254,26 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
   actions: {
     async update(){
       for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
-        this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] ||= 0;
+        if(this.getSelectedSubgraphs[i].currentSignalledTokens == 0)
+          this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] ||= this.minAllocation0Signal;
+        else
+          this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] ||= this.minAllocation;
       }
-    }
+    },
+    async setMinimums(){
+      for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
+        if(this.getSelectedSubgraphs[i].currentSignalledTokens > 0 && this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] < this.minAllocation)
+          this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] = this.minAllocation;
+      }
+    },
+    async setMinimums0Signal(){
+      for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
+        if(this.getSelectedSubgraphs[i].currentSignalledTokens == 0 && this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] < this.minAllocation0Signal)
+          this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] = this.minAllocation0Signal;
+      }
+    },
+    async setAllMinimums(){
+      return new Promise([this.setMinimums(), this.setMinimums0Signal()]);
+    },
   },
 })
