@@ -91,7 +91,7 @@ import AllocationSetter from "@/components/AllocationSetter.vue";
 import ActionQueueManager from "./ActionQueueManager.vue";
 import { useAllocationStore } from "@/store/allocations";
 import { useNewAllocationSetterStore } from "@/store/newAllocationSetter";
-import { VStepper } from 'vuetify/labs/VStepper'
+import { VStepper } from 'vuetify/components/VStepper'
 import { useAccountStore } from "@/store/accounts";
 
 const accountStore = useAccountStore();
