@@ -67,6 +67,13 @@
       </v-btn>
       <v-btn
           variant="text"
+          to="/offchain-manager"
+          class="ml-2 mr-2"
+      >
+        Offchain Sync Manager
+      </v-btn>
+      <v-btn
+          variant="text"
           to="/settings"
           class="ml-2 mr-2"
       >
@@ -84,6 +91,7 @@
       <v-list-item title="Allocations Dashboard" to="/allocations"></v-list-item>
       <v-list-item title="Allocation Wizard" to="/wizard"></v-list-item>
       <v-list-item title="Actions Manager" to="/actions-manager"></v-list-item>
+      <v-list-item title="Offchain Sync Manager" to="/offchain-manager"></v-list-item>
       <v-list-item title="Settings" to="/settings"></v-list-item>
     </v-list>
   </v-navigation-drawer>

@@ -33,7 +33,12 @@ const routes = [
         path: 'actions-manager',
         name: 'Actions Manager',
         component: () => import('@/views/ActionQueueManager.vue'),
-      }
+      },
+      {
+        path: 'offchain-manager',
+        name: 'Offchain Sync Manager',
+        component: () => import('@/views/OffchainSyncManager.vue'),
+      },
     ],
   },
 ]
