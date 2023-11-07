@@ -3540,10 +3540,10 @@ vue@^3.2, vue@^3.3.4:
     "@vue/server-renderer" "3.3.4"
     "@vue/shared" "3.3.4"
 
-vuetify@^3.3.19:
-  version "3.3.19"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.3.19.tgz#cd27f38c226a9f0faa5cdc163b1a7709f0c75a12"
-  integrity sha512-6/byccc79pq2LmveSgte/AXqyEXkq3aFMxKMwoizsDzDPH4vz/44wRx0+TxhiDk4+n8WOhMa2VlXq1xsJIi1HA==
+vuetify@3.4.0-beta.0:
+  version "3.4.0-beta.0"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.4.0-beta.0.tgz#395871ed893b5952e0c778184979dc9605867d16"
+  integrity sha512-DHpaguw8EICDp/4ROymOfiyhuDleR5haya4iWdN5BonUNCKHJVgTJ8WyD0sAbTUat+fspgPBiaIDAvvgnFq9GQ==
 
 web3-bzz@1.8.2:
   version "1.8.2"
