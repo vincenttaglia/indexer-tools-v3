@@ -209,7 +209,7 @@ export const useSubgraphsStore = defineStore({
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
         if(subgraph.currentVersion.subgraphDeployment.stakedTokens > 0)
-            proportions[i] = { proportion: subgraph.currentSignalledTokens / subgraph.currentVersion.subgraphDeployment.stakedTokens };
+            proportions[i] = { proportion: ( subgraph.currentVersion.subgraphDeployment.signalledTokens / networkStore.getTotalTokensSignalled ) / ( subgraph.currentVersion.subgraphDeployment.stakedTokens / networkStore.getTotalTokensAllocated ) };
           else
             proportions[i] = { proportion: 0 };
       }
@@ -333,6 +333,7 @@ export const useSubgraphsStore = defineStore({
                 indexingRewardAmount
                 queryFeesAmount
                 stakedTokens
+                signalledTokens
                 createdAt
                 deniedAt
                 network{

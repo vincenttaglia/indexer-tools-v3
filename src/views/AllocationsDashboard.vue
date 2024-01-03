@@ -158,7 +158,7 @@
       {{ numeral(Web3.utils.fromWei(item.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
     </template>
     <template v-slot:item.proportion="{ item }">
-      {{ numeral(item.proportion*100).format('0,0.000') }}%
+      {{ numeral(item.proportion).format('0,0.0000') }}
     </template>
     <template v-slot:item.apr="{ item }">
       {{ numeral(item.apr).format('0,0.00') }}%

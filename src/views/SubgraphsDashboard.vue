@@ -277,7 +277,7 @@
       <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ moment(item.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
     <template v-slot:item.proportion="{ item }">
-      {{ numeral(item.proportion*100).format('0,0.000') }}%
+      {{ numeral(item.proportion).format('0,0.0000') }}
     </template>
     <template v-slot:item.apr="{ item }">
       {{ numeral(item.apr).format('0,0.00') }}%

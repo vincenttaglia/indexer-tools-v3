@@ -163,7 +163,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       for(let i = 0; i < state.allocations.length; i++){
         let allocation = state.allocations[i];
         if (allocation.subgraphDeployment.stakedTokens > 0)
-          proportions[i] = { proportion: allocation.subgraphDeployment.signalledTokens / allocation.subgraphDeployment.stakedTokens };
+          proportions[i] = { proportion: ( allocation.subgraphDeployment.signalledTokens / networkStore.getTotalTokensSignalled ) / ( allocation.subgraphDeployment.stakedTokens / networkStore.getTotalTokensAllocated ) };
         else
           proportions[i] = { proportion:  0 };
       }

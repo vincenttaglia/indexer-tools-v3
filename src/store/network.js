@@ -16,6 +16,7 @@ export const useNetworkStore = defineStore('network', {
         issuancePerYear: "0",
         totalSupply: "0",
         currentEpoch: "0",
+        totalTokensAllocated: "0",
       },
       "arbitrum-one": {
         totalTokensSignalled: "0",
@@ -23,6 +24,7 @@ export const useNetworkStore = defineStore('network', {
         issuancePerYear: "0",
         totalSupply: "0",
         currentEpoch: "0",
+        totalTokensAllocated: "0",
       },
       "goerli": {
         totalTokensSignalled: "0",
@@ -30,6 +32,7 @@ export const useNetworkStore = defineStore('network', {
         issuancePerYear: "0",
         totalSupply: "0",
         currentEpoch: "0",
+        totalTokensAllocated: "0",
       }
     }
   }),
@@ -39,6 +42,7 @@ export const useNetworkStore = defineStore('network', {
     getCurrentEpoch: (state) => state.networks[chainStore.getChainID].currentEpoch,
     getIssuancePerBlock: (state) => state.networks[chainStore.getChainID].issuancePerBlock,
     getIssuancePerYear: (state) => state.networks[chainStore.getChainID].issuancePerYear,
+    getTotalTokensAllocated: (state) => state.networks[chainStore.getChainID].totalTokensAllocated,
   },
   actions: {
     async init(){
@@ -51,6 +55,7 @@ export const useNetworkStore = defineStore('network', {
               networkGRTIssuancePerBlock
               totalSupply
               currentEpoch
+              totalTokensAllocated
             }
           }`,
         }).then((data) => {
@@ -60,6 +65,7 @@ export const useNetworkStore = defineStore('network', {
           this.networks[chain.id].totalSupply = data.data.graphNetwork.totalSupply;
           this.networks[chain.id].currentEpoch = data.data.graphNetwork.currentEpoch;
           this.networks[chain.id].issuancePerYear = data.data.graphNetwork.networkGRTIssuancePerBlock * chainStore.getBlocksPerYear;
+          this.networks[chain.id].totalTokensAllocated = data.data.graphNetwork.totalTokensAllocated;
         }));
       }
       return queries;
