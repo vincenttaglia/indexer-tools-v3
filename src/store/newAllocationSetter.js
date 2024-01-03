@@ -71,7 +71,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
         const newAllocation = state.newAllocations[subgraph.currentVersion.subgraphDeployment.ipfsHash] ? state.newAllocations[subgraph.currentVersion.subgraphDeployment.ipfsHash] : 0;
         console.log(newAllocation);
         if(state.getFutureStakedTokens[i].futureStakedTokens.plus(new BigNumber(newAllocation*10**18)) > 0)
-            proportions[i] = { newProportion: subgraph.currentSignalledTokens / networkStore.getTotalTokensSignalled / state.getFutureStakedTokens[i].futureStakedTokens.plus(new BigNumber(newAllocation*10**18)) / networkStore.getTotalTokensAllocated };
+            proportions[i] = { newProportion: ( subgraph.currentVersion.subgraphDeployment.signalledTokens / networkStore.getTotalTokensSignalled ) / ( state.getFutureStakedTokens[i].futureStakedTokens.plus(new BigNumber(newAllocation*10**18)) / networkStore.getTotalTokensAllocated ) };
           else
             proportions[i] = { newProportion: 0 };
       }
