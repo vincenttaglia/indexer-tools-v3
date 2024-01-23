@@ -306,7 +306,7 @@
     <template v-slot:item.currentVersion.subgraphDeployment.stakedTokens="{ item }">
       {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.network.id="{ item }">
+    <template v-slot:item.currentVersion.subgraphDeployment.manifest.network="{ item }">
       {{ item.currentVersion.subgraphDeployment.manifest.network ? item.currentVersion.subgraphDeployment.manifest.network : "null" }}
     </template> 
   </v-data-table>
@@ -457,7 +457,7 @@ function customSort(items, index, isDesc) {
   const headers = ref([
     { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },
     { title: 'Name', key: 'metadata.displayName' },
-    { title: 'Network', key: 'currentVersion.subgraphDeployment.network.id'},
+    { title: 'Network', key: 'currentVersion.subgraphDeployment.manifest.network'},
     { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
     { title: 'Current APR', key: 'apr'},
     { title: 'New APR', key: 'newApr'},

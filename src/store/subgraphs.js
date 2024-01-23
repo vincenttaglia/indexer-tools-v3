@@ -48,7 +48,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.networkFilter.length) {
         subgraphs = subgraphs.filter((i) => {
-          return i.currentVersion.subgraphDeployment.network && subgraphSettingStore.settings.networkFilter.includes(i.currentVersion.subgraphDeployment.network.id);
+          return i.currentVersion.subgraphDeployment.manifest.network && subgraphSettingStore.settings.networkFilter.includes(i.currentVersion.subgraphDeployment.manifest.network);
         });
       }
 
@@ -309,8 +309,8 @@ export const useSubgraphsStore = defineStore({
     getSubgraphNetworks: (state) => {
       let networks = ["mainnet","arbitrum-one","matic"];
       for(let i = 0; i < state.subgraphs.length; i++){
-        if(state.subgraphs[i].currentVersion && state.subgraphs[i].currentVersion.subgraphDeployment && state.subgraphs[i].currentVersion.subgraphDeployment.network && !networks.includes(state.subgraphs[i].currentVersion.subgraphDeployment.network.id) && state.subgraphs[i].currentVersion.subgraphDeployment.network.id != 'polygon'){
-          networks.push(state.subgraphs[i].currentVersion.subgraphDeployment.network.id);
+        if(state.subgraphs[i].currentVersion && state.subgraphs[i].currentVersion.subgraphDeployment && state.subgraphs[i].currentVersion.subgraphDeployment.manifest.network && !networks.includes(state.subgraphs[i].currentVersion.subgraphDeployment.manifest.network) && state.subgraphs[i].currentVersion.subgraphDeployment.manifest.network != 'polygon'){
+          networks.push(state.subgraphs[i].currentVersion.subgraphDeployment.manifest.network);
         }
       }
       return networks;
