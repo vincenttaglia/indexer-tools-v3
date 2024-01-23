@@ -323,10 +323,12 @@ export const useSubgraphsStore = defineStore({
         query: gql`query subgraphs($skip: Int!){
           subgraphs (skip: $skip){
             id
-            displayName
+            metadata{
+              displayName
+              image
+            }
             createdAt
             currentSignalledTokens
-            image
             currentVersion{
               subgraphDeployment{
                 ipfsHash
@@ -336,8 +338,8 @@ export const useSubgraphsStore = defineStore({
                 signalledTokens
                 createdAt
                 deniedAt
-                network{
-                  id
+                manifest{
+                  network
                 }
               }
             }

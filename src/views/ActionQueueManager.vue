@@ -60,7 +60,7 @@
         {{ item.failureReason }}
       </v-btn>
     </template>
-    <template v-slot:item.image="{ item }">
+    <template v-slot:item.metadata.image="{ item }">
       <v-badge
           :model-value="item.currentVersion.subgraphDeployment && item.currentVersion.subgraphDeployment.deniedAt != '0'"
           bordered
@@ -70,7 +70,7 @@
           avatar
       >
         <v-avatar size="30">
-          <v-img :src="item.image" />
+          <v-img :src="item.metadata.image" />
         </v-avatar>
       </v-badge>
     </template>

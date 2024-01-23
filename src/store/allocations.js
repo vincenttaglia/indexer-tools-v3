@@ -385,8 +385,10 @@ export const useAllocationStore = defineStore('allocationStore', {
             subgraphDeployment{
               versions(first:1, orderBy:version, orderDirection:desc){
                 subgraph{
-                  image
-                  displayName
+                  metadata{
+                    image
+                    displayName
+                  }
                 }
               }
               ipfsHash
