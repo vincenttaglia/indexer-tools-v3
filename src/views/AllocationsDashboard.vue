@@ -182,11 +182,26 @@
           color="purple"
           v-if="item.pendingRewards.loading && !item.pendingRewards.loaded"
       ></v-progress-circular>
-      <span
-        v-if="!item.pendingRewards.loading && item.pendingRewards.loaded"
-        >
+      <div 
+       v-if="!item.pendingRewards.loading && item.pendingRewards.loaded"
+       class="d-flex"
+      >
+        <span>
         {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.pendingRewards.value))).format('0,0') }} GRT
       </span>
+      <v-tooltip
+          location="top"
+          v-if="item.subgraphDeployment.deniedAt"
+        >
+          <template v-slot:activator="{ props }">
+            <v-icon v-bind="props" size="12" class="mb-2 mr-3">
+              mdi-information
+            </v-icon>
+          </template>
+          <span>Rewards Denied for Subgraph</span>
+        </v-tooltip>
+      </div>
+      
     </template>
     <template v-slot:item.pendingRewardsCut="{ item }">
       <span
@@ -201,11 +216,25 @@
           color="purple"
           v-if="item.pendingRewards.loading && !item.pendingRewards.loaded"
       ></v-progress-circular>
-      <span
-          v-if="!item.pendingRewards.loading && item.pendingRewards.loaded"
+      <div 
+       v-if="!item.pendingRewards.loading && item.pendingRewards.loaded"
+       class="d-flex"
       >
-        {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.pendingRewardsCut))).format('0,0') }} GRT
+        <span>
+          {{ numeral(Web3.utils.fromWei(Web3.utils.toBN(item.pendingRewardsCut))).format('0,0') }} GRT
       </span>
+      <v-tooltip
+          location="top"
+          v-if="item.subgraphDeployment.deniedAt"
+        >
+          <template v-slot:activator="{ props }">
+            <v-icon v-bind="props" size="12" class="mb-2 mr-3">
+              mdi-information
+            </v-icon>
+          </template>
+          <span>Rewards Denied for Subgraph</span>
+        </v-tooltip>
+      </div>
     </template>
     <template v-slot:body.append>
       <tr>
