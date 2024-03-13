@@ -47,7 +47,7 @@
                 </v-avatar>
               </v-avatar>
             </v-badge>
-            <v-avatar :color="item.deploymentStatus != undefined ? item.deploymentStatus.color : ''" size="34">
+            <v-avatar v-if="!item.subgraphDeployment.deniedAt" :color="item.deploymentStatus != undefined ? item.deploymentStatus.color : ''" size="34">
               <v-avatar size="30" v-if="!item.subgraphDeployment.deniedAt">
                 <v-img :src="item.subgraphDeployment.versions[0].subgraph.metadata.image" />
               </v-avatar>
