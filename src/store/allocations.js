@@ -326,10 +326,10 @@ export const useAllocationStore = defineStore('allocationStore', {
       return state.getPendingRewards.reduce((sum, cur) => cur.pendingRewards.loaded ? sum.plus(cur.pendingRewards.value) : sum, new BigNumber(0));
     },
     dailyRewardsCutSum: (state) => {
-      return state.getDailyRewardsCuts.reduce((sum, cur) => sum.plus(cur.dailyRewardsCut), new BigNumber(0));
+      return state.getAllocations.reduce((sum, cur) => cur.subgraphDeployment.deniedAt ? sum : sum.plus(cur.dailyRewardsCut), new BigNumber(0));
     },
     dailyRewardsSum: (state) => {
-      return state.getDailyRewards.reduce((sum, cur) => sum.plus(cur.dailyRewards), new BigNumber(0));
+      return state.getAllocations.reduce((sum, cur) => cur.subgraphDeployment.deniedAt ? sum : sum.plus(cur.dailyRewards), new BigNumber(0));
     },
   },
   actions: {
