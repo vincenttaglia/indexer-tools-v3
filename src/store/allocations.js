@@ -268,7 +268,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       let totalRewardsPerYear = new BigNumber(0);
       if(state.allocations.length > 0){
         for(const i in state.allocations){
-          if(!new BigNumber(state.allocations[i].allocatedTokens).isEqualTo(new BigNumber(0)) && !new BigNumber(state.allocations[i].subgraphDeployment.signalledTokens).isEqualTo(new BigNumber(0))){
+          if(!new BigNumber(state.allocations[i].allocatedTokens).isEqualTo(new BigNumber(0)) && !new BigNumber(state.allocations[i].subgraphDeployment.signalledTokens).isEqualTo(new BigNumber(0)) && !state.allocations[i].subgraphDeployment.deniedAt){
             totalRewardsPerYear = totalRewardsPerYear.plus(
                 new BigNumber(state.allocations[i].subgraphDeployment.signalledTokens)
                     .dividedBy(networkStore.getTotalTokensSignalled)
@@ -290,14 +290,17 @@ export const useAllocationStore = defineStore('allocationStore', {
       if(state.selected.length > 0){
         for(const i in state.selected){
           let allocation = state.allocations.find((e) => e.id == state.selected[i]);
-          totalRewardsPerYear = totalRewardsPerYear.plus(
+          if(!allocation.subgraphDeployment.deniedAt){
+            totalRewardsPerYear = totalRewardsPerYear.plus(
               new BigNumber(allocation.subgraphDeployment.signalledTokens)
                   .dividedBy(networkStore.getTotalTokensSignalled)
                   .multipliedBy(networkStore.getIssuancePerYear)
                   .multipliedBy(
                       new BigNumber(allocation.allocatedTokens).dividedBy(allocation.subgraphDeployment.stakedTokens)
                   )
-          );
+            );
+          }
+          
         }
       }
       return totalRewardsPerYear;

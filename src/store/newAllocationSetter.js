@@ -131,32 +131,34 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
 
       if(state.getSelectedSubgraphs.length > 0) {
         for (const i in state.getSelectedSubgraphs) {
-          let newAllocationSize = state.newAllocations[state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] ? state.newAllocations[state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] : 0;
+          if(!state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.deniedAt){
+            let newAllocationSize = state.newAllocations[state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] ? state.newAllocations[state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] : 0;
 
-          if (newAllocationSize) {
-            let closingAllocation = allocationStore.getSelectedAllocations.find(e => {
-              return e.subgraphDeployment.ipfsHash === state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash;
-            });
+            if (newAllocationSize) {
+              let closingAllocation = allocationStore.getSelectedAllocations.find(e => {
+                return e.subgraphDeployment.ipfsHash === state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash;
+              });
 
-            if (closingAllocation) {
-              totalRewardsPerYear = totalRewardsPerYear.plus(
-                  new BigNumber(state.getSelectedSubgraphs[i].currentSignalledTokens)
-                      .dividedBy(networkStore.getTotalTokensSignalled)
-                      .multipliedBy(networkStore.getIssuancePerYear)
-                      .multipliedBy(newAllocationSize)
-                      .dividedBy(new BigNumber(state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.stakedTokens).minus(closingAllocation.allocatedTokens).plus(new BigNumber(newAllocationSize).multipliedBy("1000000000000000000")))
-              );
-            } else {
-              totalRewardsPerYear = totalRewardsPerYear.plus(
-                  new BigNumber(state.getSelectedSubgraphs[i].currentSignalledTokens)
-                      .dividedBy(networkStore.getTotalTokensSignalled)
-                      .multipliedBy(networkStore.getIssuancePerYear)
-                      .multipliedBy(newAllocationSize)
-                      .dividedBy(new BigNumber(state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.stakedTokens).plus(new BigNumber(newAllocationSize).multipliedBy("1000000000000000000")))
-              );
+              if (closingAllocation) {
+                totalRewardsPerYear = totalRewardsPerYear.plus(
+                    new BigNumber(state.getSelectedSubgraphs[i].currentSignalledTokens)
+                        .dividedBy(networkStore.getTotalTokensSignalled)
+                        .multipliedBy(networkStore.getIssuancePerYear)
+                        .multipliedBy(newAllocationSize)
+                        .dividedBy(new BigNumber(state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.stakedTokens).minus(closingAllocation.allocatedTokens).plus(new BigNumber(newAllocationSize).multipliedBy("1000000000000000000")))
+                );
+              } else {
+                totalRewardsPerYear = totalRewardsPerYear.plus(
+                    new BigNumber(state.getSelectedSubgraphs[i].currentSignalledTokens)
+                        .dividedBy(networkStore.getTotalTokensSignalled)
+                        .multipliedBy(networkStore.getIssuancePerYear)
+                        .multipliedBy(newAllocationSize)
+                        .dividedBy(new BigNumber(state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.stakedTokens).plus(new BigNumber(newAllocationSize).multipliedBy("1000000000000000000")))
+                );
+
+              }
 
             }
-
           }
         }
       }
@@ -262,13 +264,13 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     },
     async setMinimums(){
       for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
-        if(this.getSelectedSubgraphs[i].currentSignalledTokens > 0 && this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] < this.minAllocation)
+        if(this.getSelectedSubgraphs[i].currentSignalledTokens > 0 && !this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.deniedAt && this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] < this.minAllocation)
           this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] = this.minAllocation;
       }
     },
     async setMinimums0Signal(){
       for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
-        if(this.getSelectedSubgraphs[i].currentSignalledTokens == 0 && this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] < this.minAllocation0Signal)
+        if((this.getSelectedSubgraphs[i].currentSignalledTokens == 0 || this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.deniedAt) && this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] < this.minAllocation0Signal)
           this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] = this.minAllocation0Signal;
       }
     },
