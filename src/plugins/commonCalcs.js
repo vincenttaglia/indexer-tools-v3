@@ -24,6 +24,9 @@ function calculateApr(currentSignalledTokens, stakedTokens, networkStore){
 }
 
 function calculateNewApr(currentSignalledTokens, stakedTokens, networkStore, newAllocation){
+  if(new BigNumber(stakedTokens).plus(newAllocation) <= new BigNumber(0))
+    return new BigNumber(0);
+  
   try{
     // signalledTokens / totalTokensSignalled * issuancePerYear / (stakedTokens + newAllocation)
     return new BigNumber(currentSignalledTokens)
@@ -39,6 +42,9 @@ function calculateNewApr(currentSignalledTokens, stakedTokens, networkStore, new
 }
 
 function calculateAllocationDailyRewards(signalledTokens, stakedTokens, allocatedTokens, networkStore){
+  if(new BigNumber(stakedTokens) <= new BigNumber(0))
+    return new BigNumber(0);
+
   try{
     // signalledTokens / totalTokensSignalled * issuancePerBlock * blocks per day * (allocatedTokens / stakedTokens))
       return new BigNumber(signalledTokens)
@@ -55,6 +61,9 @@ function calculateAllocationDailyRewards(signalledTokens, stakedTokens, allocate
 }
 
 function calculateSubgraphDailyRewards(currentSignalledTokens, stakedTokens, networkStore, newAllocation){
+  if(new BigNumber(stakedTokens) <= new BigNumber(0))
+    return new BigNumber(0);
+
   try{
     return new BigNumber(currentSignalledTokens)
         .dividedBy(networkStore.getTotalTokensSignalled)
