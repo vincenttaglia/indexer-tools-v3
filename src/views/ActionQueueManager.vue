@@ -18,18 +18,21 @@
     </template>
   </v-snackbar>
   <h3 v-if="!accountStore.getAgentConnectStatus" class="mx-3 my-5">Set Agent Conenct settings in account settings.</h3>
-  <v-btn text="Queue actions" @click="sendActionsToAgent()" class="mx-5 my-6"></v-btn>
-  <v-btn text="Refresh actions" @click="queryActions()" class="mx-5 my-6" v-if="accountStore.getAgentConnectStatus"></v-btn>
-  <v-select
-      v-model="managerSettingStore.settings.statusFilter"
-      :items="[{title: 'Queued', value: 'queued'}, {title:'Approved', value: 'approved'}, {title: 'Pending', value: 'pending'}, {title: 'Success', value: 'success'}, {title: 'Failed', value: 'failed'}, {title: 'Canceled', value: 'canceled'}]"
-      label="Status Filter"
-      class="d-inline-block mx-5 my-6"
-      multiple
-      clearable
-      chips
-      style="min-width: 150px;"
-  ></v-select>
+  <br>
+  <div class="d-flex">
+    <v-btn text="Refresh actions" prepend-icon="mdi-refresh" @click="queryActions()" class="mx-5 my-6" v-if="accountStore.getAgentConnectStatus" stacked></v-btn>
+    <v-select
+        v-model="managerSettingStore.settings.statusFilter"
+        :items="[{title: 'Queued', value: 'queued'}, {title:'Approved', value: 'approved'}, {title: 'Pending', value: 'pending'}, {title: 'Success', value: 'success'}, {title: 'Failed', value: 'failed'}, {title: 'Canceled', value: 'canceled'}]"
+        label="Status Filter"
+        class="d-inline-block mx-5 my-6"
+        multiple
+        clearable
+        chips
+        style="min-width:150px;max-width:200px;"
+    ></v-select>
+  </div>
+  
   <v-data-table
       :headers="headers"
       :items="filteredActions"
@@ -109,110 +112,117 @@
     </template>
   </v-data-table>
   <br>
-  <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
-    <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" text="Approve Actions" class="mx-5"> </v-btn>
-    </template>
+  <div class="d-flex">
+    <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" text="Approve Actions" prepend-icon="mdi-check" class="mx-5"> </v-btn>
+      </template>
 
-    <template v-slot:default="{ isActive }">
-      <v-card title="Approve Actions">
-        <v-card-text>
-          Are you sure you want to approve action IDs {{ selected.toString() }}?
-        </v-card-text>
+      <template v-slot:default="{ isActive }">
+        <v-card title="Approve Actions">
+          <v-card-text>
+            Are you sure you want to approve action IDs {{ selected.toString() }}?
+          </v-card-text>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-card-actions>
+            <v-spacer></v-spacer>
 
-          <v-btn
-            text="Back"
-            @click="isActive.value = false"
-          ></v-btn>
-          <v-btn
-            text="Approve Actions"
-            @click="approveActions(); isActive.value = false"
-          ></v-btn>
-        </v-card-actions>
-      </v-card>
-    </template>
-  </v-dialog>
-  <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
-    <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" text="Cancel Actions" class="mx-5"> </v-btn>
-    </template>
+            <v-btn
+              text="Back"
+              @click="isActive.value = false"
+            ></v-btn>
+            <v-btn
+              text="Approve Actions"
+              @click="approveActions(); isActive.value = false"
+            ></v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
+    <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" text="Cancel Actions" prepend-icon="mdi-cancel" class="mx-5"> </v-btn>
+      </template>
 
-    <template v-slot:default="{ isActive }">
-      <v-card title="Cancel Actions">
-        <v-card-text>
-          Are you sure you want to cancel action IDs {{ selected.toString() }}?
-        </v-card-text>
+      <template v-slot:default="{ isActive }">
+        <v-card title="Cancel Actions">
+          <v-card-text>
+            Are you sure you want to cancel action IDs {{ selected.toString() }}?
+          </v-card-text>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-card-actions>
+            <v-spacer></v-spacer>
 
-          <v-btn
-            text="Back"
-            @click="isActive.value = false"
-          ></v-btn>
-          <v-btn
-            text="Cancel Actions"
-            @click="cancelActions(); isActive.value = false"
-          ></v-btn>
-        </v-card-actions>
-      </v-card>
-    </template>
-  </v-dialog>
-  <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
-    <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" text="Delete Actions" class="mx-5"> </v-btn>
-    </template>
+            <v-btn
+              text="Back"
+              @click="isActive.value = false"
+            ></v-btn>
+            <v-btn
+              text="Cancel Actions"
+              @click="cancelActions(); isActive.value = false"
+            ></v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
+    <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" text="Delete Actions" prepend-icon="mdi-delete" class="mx-5"> </v-btn>
+      </template>
 
-    <template v-slot:default="{ isActive }">
-      <v-card title="Approve Actions">
-        <v-card-text>
-          Are you sure you want to delete action IDs {{ selected.toString() }}?
-        </v-card-text>
+      <template v-slot:default="{ isActive }">
+        <v-card title="Approve Actions">
+          <v-card-text>
+            Are you sure you want to delete action IDs {{ selected.toString() }}?
+          </v-card-text>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-card-actions>
+            <v-spacer></v-spacer>
 
-          <v-btn
-            text="Back"
-            @click="isActive.value = false"
-          ></v-btn>
-          <v-btn
-            text="Delete Actions"
-            @click="deleteActions(); isActive.value = false"
-          ></v-btn>
-        </v-card-actions>
-      </v-card>
-    </template>
-  </v-dialog>
-  <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
-    <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" text="Execute Approved Actions" class="mx-5"> </v-btn>
-    </template>
+            <v-btn
+              text="Back"
+              @click="isActive.value = false"
+            ></v-btn>
+            <v-btn
+              text="Delete Actions"
+              @click="deleteActions(); isActive.value = false"
+            ></v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
+  </div>
+  <br>
+  <div class="d-flex my-10">
+    <v-btn text="Queue actions" @click="sendActionsToAgent()" class="mx-5" prepend-icon="mdi-tray-full" stacked></v-btn>
+    <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" text="Execute Approved Actions" prepend-icon="mdi-play" class="mx-5" stacked> </v-btn>
+      </template>
 
-    <template v-slot:default="{ isActive }">
-      <v-card title="Execute Approved Actions">
-        <v-card-text>
-          Are you sure you want to execute all approved actions?
-        </v-card-text>
+      <template v-slot:default="{ isActive }">
+        <v-card title="Execute Approved Actions">
+          <v-card-text>
+            Are you sure you want to execute all approved actions?
+          </v-card-text>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-card-actions>
+            <v-spacer></v-spacer>
 
-          <v-btn
-            text="Back"
-            @click="isActive.value = false"
-          ></v-btn>
-          <v-btn
-            text="Execute Approved Actions"
-            @click="executeApprovedActions(); isActive.value = false"
-          ></v-btn>
-        </v-card-actions>
-      </v-card>
-    </template>
-  </v-dialog>
+            <v-btn
+              text="Back"
+              @click="isActive.value = false"
+            ></v-btn>
+            <v-btn
+              text="Execute Approved Actions"
+              @click="executeApprovedActions(); isActive.value = false"
+            ></v-btn>
+          </v-card-actions>
+        </v-card>
+      </template>
+    </v-dialog>
+  </div>
+  
 </template>
 
 <script setup>
