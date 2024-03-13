@@ -18,26 +18,17 @@
     </template>
   </v-snackbar>
   <h3 v-if="!accountStore.getAgentConnectStatus" class="mx-3 my-5">Set Agent Conenct settings in account settings.</h3>
-  <v-data-table
-      :headers="headers"
-      :items="offchainSyncs"
-      class="elevation-1"
-      mobile-breakpoint="0"
-      show-select
-      v-model="selected"
-      :loading="loading"
-      item-value="identifier"
-  >
-  </v-data-table>
-  <br>
+  <br><br>
   <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
     <template v-slot:activator="{ props }">
-      <v-text-field
-          v-model="newOffchainSync"
-          style="width:250px"
-          class="mx-5 d-inline-block"
-      ></v-text-field>
-      <v-btn v-bind="props" text="Add to Offchain Sync List" class="mx-5 d-inline-block"> </v-btn>
+      <div class="d-flex">
+        <v-text-field
+            v-model="newOffchainSync"
+            style="max-width:350px"
+            class="mx-5 d-inline-block"
+        ></v-text-field>
+        <v-btn v-bind="props" text="Add Deployment" class="mx-5 d-inline-block"> </v-btn>
+      </div>
     </template>
 
     <template v-slot:default="{ isActive }">
@@ -61,13 +52,62 @@
       </v-card>
     </template>
   </v-dialog>
+  <br><br>
   <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
     <template v-slot:activator="{ props }">
-      <v-btn v-bind="props" text="Remove Offchain Sync" class="mx-5"> </v-btn>
+      <div class="d-flex">
+        <v-text-field
+          v-model="newOffchainSyncRemoval"
+          style="max-width:350px"
+          class="mx-5 d-inline-block"
+        ></v-text-field>
+        <v-btn v-bind="props" text="Remove Deployment" class="mx-5 d-inline-block"> </v-btn>
+      </div>
     </template>
 
     <template v-slot:default="{ isActive }">
-      <v-card title="Remove Offchain Sync">
+      <v-card title="Remove from Offchain Sync List">
+        <v-card-text>
+          Are you sure you want to remove {{ newOffchainSyncRemoval }} from offchain sync list?
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            text="Back"
+            @click="isActive.value = false"
+          ></v-btn>
+          <v-btn
+            text="Remove from Offchain Sync List"
+            @click="removeOffchainSync(newOffchainSyncRemoval); isActive.value = false"
+          ></v-btn>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-dialog>
+  <br><br>
+
+  <v-data-table
+      :headers="headers"
+      :items="offchainSyncs"
+      class="elevation-1"
+      mobile-breakpoint="0"
+      show-select
+      v-model="selected"
+      :loading="loading"
+      item-value="identifier"
+      items-per-page="-1"
+  >
+  </v-data-table>
+  <br>
+  <v-dialog width="500" v-if="accountStore.getAgentConnectStatus">
+    <template v-slot:activator="{ props }">
+      <v-btn v-bind="props" text="Remove Deployments" class="mx-5"> </v-btn>
+    </template>
+
+    <template v-slot:default="{ isActive }">
+      <v-card title="Remove Offchain Syncs">
         <v-card-text>
           Are you sure you want to remove offchain syncs {{ selected.toString() }}?
         </v-card-text>
@@ -80,13 +120,15 @@
             @click="isActive.value = false"
           ></v-btn>
           <v-btn
-            text="Approve Actions"
+            text="Remove from Offchain Sync List"
             @click="removeOffchainSyncs(); isActive.value = false"
           ></v-btn>
         </v-card-actions>
       </v-card>
     </template>
   </v-dialog>
+  <br>
+  <br>
 </template>
 
 <script setup>
@@ -110,6 +152,7 @@ const loading = ref(accountStore.getAgentConnectStatus);
 const snackbar = ref(false);
 const text = ref("");
 const newOffchainSync = ref("");
+const newOffchainSyncRemoval = ref("");
 if(accountStore.getAgentConnectStatus)
   queryOffchainSyncs();
 
