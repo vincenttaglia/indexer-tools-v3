@@ -318,12 +318,12 @@ export const useAllocationStore = defineStore('allocationStore', {
       return state.calculatedClosingRewardsPerYear.dividedBy(state.calculatedClosingStake);
     },
     pendingRewardsCutSum: (state) => {
-      return state.getPendingRewardsCuts.reduce((sum, cur) => cur.pendingRewardsCut ? sum.plus(cur.pendingRewardsCut): sum, new BigNumber(0));
+      return state.getAllocations.reduce((sum, cur) => cur.pendingRewardsCut && !cur.subgraphDeployment.deniedAt ? sum.plus(cur.pendingRewardsCut): sum, new BigNumber(0));
     },
     pendingRewardsSum: (state) => {
       console.log("PENDING REWARDS");
       console.log(state.getPendingRewards);
-      return state.getPendingRewards.reduce((sum, cur) => cur.pendingRewards.loaded ? sum.plus(cur.pendingRewards.value) : sum, new BigNumber(0));
+      return state.getAllocations.reduce((sum, cur) => cur.pendingRewards.loaded && !cur.subgraphDeployment.deniedAt ? sum.plus(cur.pendingRewards.value) : sum, new BigNumber(0));
     },
     dailyRewardsCutSum: (state) => {
       return state.getAllocations.reduce((sum, cur) => cur.subgraphDeployment.deniedAt ? sum : sum.plus(cur.dailyRewardsCut), new BigNumber(0));
