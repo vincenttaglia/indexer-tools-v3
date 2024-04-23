@@ -33,6 +33,22 @@ export const useNetworkStore = defineStore('network', {
         totalSupply: "0",
         currentEpoch: "0",
         totalTokensAllocated: "0",
+      },
+      "sepolia": {
+        totalTokensSignalled: "0",
+        issuancePerBlock: "0",
+        issuancePerYear: "0",
+        totalSupply: "0",
+        currentEpoch: "0",
+        totalTokensAllocated: "0",
+      },
+      "arbitrum-sepolia": {
+        totalTokensSignalled: "0",
+        issuancePerBlock: "0",
+        issuancePerYear: "0",
+        totalSupply: "0",
+        currentEpoch: "0",
+        totalTokensAllocated: "0",
       }
     }
   }),

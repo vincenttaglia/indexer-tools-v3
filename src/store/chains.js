@@ -1,6 +1,6 @@
 // Utilities
 import { defineStore } from 'pinia'
-import { apolloClient, arbitrumApolloClient, goerliApolloClient } from "@/plugins/graphNetworkSubgraphClient";
+import { apolloClient, arbitrumApolloClient, goerliApolloClient, sepoliaApolloClient, arbitrumSepoliaApolloClient } from "@/plugins/graphNetworkSubgraphClient";
 import { useSubgraphSettingStore } from './subgraphSettings';
 import Web3 from 'web3';
 import RewardsContractABI from '@/abis/rewardsContractABI.json';
@@ -14,7 +14,7 @@ let startChain;
 
 if(localStorage.accounts){
   const chain = JSON.parse(localStorage.accounts).find((a) => a.active).chain;
-  if(["mainnet", "arbitrum-one", "goerli"].includes(chain)){
+  if(["mainnet", "arbitrum-one", "goerli", "sepolia", "arbitrum-sepolia"].includes(chain)){
     startChain = chain;
   }else{
     startChain = "mainnet";
@@ -57,6 +57,28 @@ export const useChainStore = defineStore('chainStore', {
       networkSubgraphClient: goerliApolloClient,
       blocksPerDay: 43200,
       active: startChain == "goerli",
+      },
+      {
+      id: "sepolia",
+      default_rpc: defaultsConfig.rpcSepolia,
+      block_explorer: "https://sepolia.etherscan.io",
+      web3: new Web3(subgraphSettingStore.settings.rpc.sepolia != '' ? subgraphSettingStore.settings.rpc.sepolia : defaultsConfig.rpcSepolia),
+      rewardsContractAddress: "0x9a86322dEa5136C74ee6d1b06F4Ab9A6bB2724E0",
+      stakingContractAddress: "0x14e9B07Dc56A0B03ac8A58453B5cCCB289d6ec90",
+      networkSubgraphClient: sepoliaApolloClient,
+      blocksPerDay: 43200,
+      active: startChain == "sepolia",
+      },
+      {
+      id: "arbitrum-sepolia",
+      default_rpc: defaultsConfig.rpcArbitrumSepolia,
+      block_explorer: "https://sepolia.arbiscan.io",
+      web3: new Web3(subgraphSettingStore.settings.rpc.arbitrumSepolia != '' ? subgraphSettingStore.settings.rpc.arbitrumSepolia : defaultsConfig.rpcArbitrumSepolia),
+      rewardsContractAddress: "0x00b9d319E3D09E83c62f453B44354049Dd93a345",
+      stakingContractAddress: "0x865365C425f3A593Ffe698D9c4E6707D14d51e08",
+      networkSubgraphClient: arbitrumSepoliaApolloClient,
+      blocksPerDay: 43200,
+      active: startChain == "arbitrum-sepolia",
       },
     ],
   }),
