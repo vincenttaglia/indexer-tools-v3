@@ -1,6 +1,6 @@
 // Utilities
 import { defineStore } from 'pinia'
-import { apolloClient, arbitrumApolloClient, goerliApolloClient, sepoliaApolloClient, arbitrumSepoliaApolloClient } from "@/plugins/graphNetworkSubgraphClient";
+import { apolloClient, arbitrumApolloClient, sepoliaApolloClient, arbitrumSepoliaApolloClient } from "@/plugins/graphNetworkSubgraphClient";
 import { useSubgraphSettingStore } from './subgraphSettings';
 import Web3 from 'web3';
 import RewardsContractABI from '@/abis/rewardsContractABI.json';
@@ -14,7 +14,7 @@ let startChain;
 
 if(localStorage.accounts){
   const chain = JSON.parse(localStorage.accounts).find((a) => a.active).chain;
-  if(["mainnet", "arbitrum-one", "goerli", "sepolia", "arbitrum-sepolia"].includes(chain)){
+  if(["mainnet", "arbitrum-one", "sepolia", "arbitrum-sepolia"].includes(chain)){
     startChain = chain;
   }else{
     startChain = "mainnet";
