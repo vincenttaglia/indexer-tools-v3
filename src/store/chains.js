@@ -48,17 +48,6 @@ export const useChainStore = defineStore('chainStore', {
       active: startChain == "arbitrum-one",
       },
       {
-      id: "goerli",
-      default_rpc: defaultsConfig.rpcGoerli,
-      block_explorer: "https://goerli.etherscan.io",
-      web3: new Web3(subgraphSettingStore.settings.rpc.goerli != '' ? subgraphSettingStore.settings.rpc.goerli : defaultsConfig.rpcGoerli),
-      rewardsContractAddress: "0x1246D7c4c903fDd6147d581010BD194102aD4ee2",
-      stakingContractAddress: "0x35e3Cb6B317690d662160d5d02A5b364578F62c9",
-      networkSubgraphClient: goerliApolloClient,
-      blocksPerDay: 43200,
-      active: startChain == "goerli",
-      },
-      {
       id: "sepolia",
       default_rpc: defaultsConfig.rpcSepolia,
       block_explorer: "https://sepolia.etherscan.io",

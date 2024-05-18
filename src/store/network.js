@@ -26,14 +26,6 @@ export const useNetworkStore = defineStore('network', {
         currentEpoch: "0",
         totalTokensAllocated: "0",
       },
-      "goerli": {
-        totalTokensSignalled: "0",
-        issuancePerBlock: "0",
-        issuancePerYear: "0",
-        totalSupply: "0",
-        currentEpoch: "0",
-        totalTokensAllocated: "0",
-      },
       "sepolia": {
         totalTokensSignalled: "0",
         issuancePerBlock: "0",

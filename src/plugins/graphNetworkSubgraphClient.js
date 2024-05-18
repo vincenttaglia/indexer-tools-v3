@@ -16,11 +16,6 @@ const arbitrumHttpLink = createHttpLink({
   uri: defaultsConfig.subgraphArbitrum,
 });
 
-const goerliHttpLink = createHttpLink({
-  // You should use an absolute URL here
-  uri: "https://api.thegraph.com/subgraphs/name/graphprotocol/graph-network-goerli",
-});
-
 const sepoliaHttpLink = createHttpLink({
   // You should use an absolute URL here
   uri: defaultsConfig.subgraphSepolia,
@@ -34,7 +29,6 @@ const arbitrumSepoliaHttpLink = createHttpLink({
 // Cache implementation
 const cache = new InMemoryCache();
 const arbitrumCache = new InMemoryCache();
-const goerliCache = new InMemoryCache();
 const sepoliaCache = new InMemoryCache();
 const arbitrumSepoliaCache = new InMemoryCache();
 
@@ -47,11 +41,6 @@ export const apolloClient = new ApolloClient({
 export const arbitrumApolloClient = new ApolloClient({
   link: arbitrumHttpLink,
   cache: arbitrumCache,
-});
-
-export const goerliApolloClient = new ApolloClient({
-  link: goerliHttpLink,
-  cache: goerliCache,
 });
 
 export const sepoliaApolloClient = new ApolloClient({

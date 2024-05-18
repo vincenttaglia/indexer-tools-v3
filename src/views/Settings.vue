@@ -76,11 +76,6 @@
                   <v-checkbox v-model="arbitrum_rpc_c"></v-checkbox>
                   <v-text-field v-if="arbitrum_rpc_c" v-model="subgraphSettingsStore.settings.rpc.arbitrum" @change="updateArbitrumRPC"></v-text-field>
                 </v-row>
-                <p>Goerli</p>
-                <v-row>
-                  <v-checkbox v-model="goerli_rpc_c"></v-checkbox>
-                  <v-text-field v-if="goerli_rpc_c" v-model="subgraphSettingsStore.settings.rpc.goerli" @change="updateGoerliRPC"></v-text-field>
-                </v-row>
             </v-card-text>
             </v-card>
           </v-window-item>
@@ -104,7 +99,6 @@
   const tab = ref("general");
   const mainnet_rpc_c = ref(subgraphSettingsStore.settings.rpc.mainnet != '');
   const arbitrum_rpc_c = ref(subgraphSettingsStore.settings.rpc.arbitrum != '');
-  const goerli_rpc_c = ref(subgraphSettingsStore.settings.rpc.goerli != '');
 
   function updateMainnetRPC(rpc){
     if(rpc != '' && new Web3(rpc))
@@ -117,12 +111,6 @@
       chainStore.chains[1].web3 = new Web3(rpc);
     else
       chainStore.chains[1].web3 = new Web3(chainStore.chains[1].default_rpc);
-  }
-  function updateGoerliRPC(rpc){
-    if(rpc != '' && new Web3(rpc))
-      chainStore.chains[2].web3 = new Web3(rpc);
-    else
-      chainStore.chains[2].web3 = new Web3(chainStore.chains[2].default_rpc);
   }
   </script>
   
