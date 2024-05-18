@@ -380,7 +380,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       console.log("Fetch " + skip);
       return chainStore.getNetworkSubgraphClient.query({
         query: gql`query allocations($indexer: String!, $skip: Int!){
-          allocations(where: {activeForIndexer_contains_nocase: $indexer, status: Active}, orderBy:createdAtBlockNumber, orderDirection:desc, skip: $skip){
+          allocations(first: 1000, where: {activeForIndexer_contains_nocase: $indexer, status: Active}, orderBy:createdAtBlockNumber, orderDirection:desc, skip: $skip){
             id
             activeForIndexer{
               id
@@ -422,7 +422,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       })
       .then(({ data, networkStatus }) => {
         console.log(data);
-        if(networkStatus == 7 && data.allocations.length == 100){
+        if(networkStatus == 7 && data.allocations.length == 1000){
           return this.fetch(skip + data.allocations.length)
           .then((data1) => {
             let concatData = {};

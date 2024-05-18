@@ -321,7 +321,7 @@ export const useSubgraphsStore = defineStore({
       console.log("Fetch " + skip);
       return chainStore.getNetworkSubgraphClient.query({
         query: gql`query subgraphs($skip: Int!){
-          subgraphs (skip: $skip){
+          subgraphs (skip: $skip, first: 1000){
             id
             metadata{
               displayName
@@ -350,7 +350,7 @@ export const useSubgraphsStore = defineStore({
         },
       })
       .then(({ data, networkStatus }) => {
-        if(networkStatus == 7 && data.subgraphs.length == 100){
+        if(networkStatus == 7 && data.subgraphs.length == 1000){
           return this.fetch(skip + data.subgraphs.length)
           .then((data1) => {
             let concatData = {};
