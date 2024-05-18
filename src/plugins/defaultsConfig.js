@@ -26,6 +26,10 @@ export const loadDefaultsConfig = async () => {
           rpcGoerli: value.DEFAULT_RPC_GOERLI,
           rpcSepolia: value.DEFAULT_RPC_SEPOLIA,
           rpcArbitrumSepolia: value.DEFAULT_RPC_ARBITRUM_SEPOLIA,
+          subgraphMainnet: value.DEFAULT_SUBGRAPH_MAINNET,
+          subgraphArbitrum: value.DEFAULT_SUBGRAPH_ARBITRUM,
+          subgraphSepolia: value.DEFAULT_SUBGRAPH_SEPOLIA,
+          subgraphArbitrumSepolia: value.DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA,
         }
       }
 
@@ -38,6 +42,10 @@ export const loadDefaultsConfig = async () => {
           rpcGoerli: import.meta.env.VITE_DEFAULT_RPC_GOERLI,
           rpcSepolia: import.meta.env.VITE_DEFAULT_RPC_SEPOLIA,
           rpcArbitrumSepolia: import.meta.env.VITE_DEFAULT_RPC_ARBITRUM_SEPOLIA,
+          subgraphMainnet: import.meta.env.VITE_DEFAULT_SUBGRAPH_MAINNET,
+          subgraphArbitrum: import.meta.env.VITE_DEFAULT_SUBGRAPH_ARBITRUM,
+          subgraphSepolia: import.meta.env.VITE_DEFAULT_SUBGRAPH_SEPOLIA,
+          subgraphArbitrumSepolia: import.meta.env.VITE_DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA,
         }
       }
     }
@@ -50,6 +58,10 @@ export const loadDefaultsConfig = async () => {
         rpcGoerli: "https://goerli.infura.io/v3/659344f230804542a4e653f875172105",
         rpcSepolia: "https://eth-sepolia.g.alchemy.com/v2/eKJ8_13LMaVi2bSITYWTMqskgsGiey8K",
         rpcArbitrumSepolia: "https://arbitrum-sepolia.infura.io/v3/db92de7c459f4d83a2c2c21931a6bdf0",
+        subgraphMainnet: "https://gateway-arbitrum.network.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/9Co7EQe5PgW3ugCUJrJgRv4u9zdEuDJf8NvMWftNsBH8",
+        subgraphArbitrum: "https://gateway-arbitrum.network.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp",
+        subgraphSepolia: "https://api.thegraph.com/subgraphs/name/graphprotocol/graph-network-sepolia",
+        subgraphArbitrumSepolia: "https://api.thegraph.com/subgraphs/name/graphprotocol/graph-network-arbitrum-sepolia",
       }
     }
     
