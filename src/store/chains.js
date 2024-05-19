@@ -17,10 +17,10 @@ if(localStorage.accounts){
   if(["mainnet", "arbitrum-one", "sepolia", "arbitrum-sepolia"].includes(chain)){
     startChain = chain;
   }else{
-    startChain = "mainnet";
+    startChain = "arbitrum-one";
   }
 }else{
-  startChain = "mainnet"
+  startChain = "arbitrum-one"
 }
 export const useChainStore = defineStore('chainStore', {
   state: () => ({
