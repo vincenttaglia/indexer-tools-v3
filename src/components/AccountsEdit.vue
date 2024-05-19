@@ -33,7 +33,7 @@
           </Transition>
           <v-checkbox
               v-model="indexerAccount.poiQuery"
-              label="Enable Agent Connect"
+              label="Enable POI Querying"
               class="mx-3 my-3"
           >
           </v-checkbox>
