@@ -31,6 +31,20 @@
                 class="mx-3 my-3"
             ></v-text-field>
           </Transition>
+          <v-checkbox
+              v-model="indexerAccount.poiQuery"
+              label="Enable Agent Connect"
+              class="mx-3 my-3"
+          >
+          </v-checkbox>
+          <Transition>
+            <v-text-field
+                v-if="indexerAccount.poiQuery"
+                v-model="indexerAccount.poiQueryEndpoint"
+                label="POI Query Endpoint"
+                class="mx-3 my-3"
+            ></v-text-field>
+          </Transition>
           <v-divider class="mb-4"></v-divider>
           <v-icon @click="accountStore.removeAccount(indexerAccount.address)" class="mx-4 mb-1">mdi-delete</v-icon>
       </v-sheet>
