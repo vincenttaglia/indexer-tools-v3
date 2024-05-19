@@ -189,20 +189,33 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       let unallocate = "";
       let reallocate = "";
       let allocate = "";
+      let reallocate2 = "";
       let skip = [];
       for(const i in allocationStore.getSelectedAllocations){
+        let customPOI = "";
+        if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
+          if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash] == "0x0"){
+            customPOI = "0x0000000000000000000000000000000000000000 true ";
+          } else{
+            customPOI = `${state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} true `;
+          }
+        }
         if(Object.keys(state.newAllocations).includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash)){
-          reallocate += `graph indexer actions queue reallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id} ${state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} --network ${chainStore.getActiveChain.id}\n`
+          if(BigNumber(allocationStore.getSelectedAllocations[i].allocatedTokens).dividedBy(10**18) > BigNumber(state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash])){
+            reallocate += `graph indexer actions queue reallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id} ${state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} ${customPOI}--network ${chainStore.getActiveChain.id}\n`;
+          } else{
+            reallocate2 += `graph indexer actions queue reallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id} ${state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} ${customPOI}--network ${chainStore.getActiveChain.id}\n`;
+          }
           skip.push(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash);
         }else{
-          unallocate += `graph indexer actions queue unallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id} --network ${chainStore.getActiveChain.id}\n`
+          unallocate += `graph indexer actions queue unallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id} ${customPOI}--network ${chainStore.getActiveChain.id}\n`
         }
       }
       for(const i in state.getSelectedS){
         if(state.newAllocations[state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash] > 0 && !skip.includes(state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash))
           allocate += `graph indexer actions queue allocate ${state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash} ${state.newAllocations[state.getSelectedS[i].currentVersion.subgraphDeployment.ipfsHash]} --network ${chainStore.getActiveChain.id}\n`
       }
-      return `${unallocate}${reallocate}${allocate}`;
+      return `${unallocate}${reallocate}${allocate}${reallocate2}`;
     },
     actionsQueueBuildAPIObject: (state) => {
       let unallocate = [];
@@ -258,7 +271,11 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
             priority: 1,
           };
           if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
-            allo.poi = state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]
+            if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash] == "0x0"){
+              allo.poi = "0x0000000000000000000000000000000000000000";
+            } else{
+              allo.poi = state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]
+            }
             allo.force = true;
           }
           unallocate.push(allo);
