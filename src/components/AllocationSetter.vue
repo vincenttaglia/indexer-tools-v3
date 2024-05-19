@@ -103,14 +103,14 @@
             </template>
           </v-slider>
         </td>
-        <td>
+        <!-- <td>
           <v-text-field 
               class="mt-0 pt-0"
               style="width: 125px"
               v-model="customPOIs[item.currentVersion.subgraphDeployment.ipfsHash]"
               hint="Manual POI"
           ></v-text-field>
-        </td>
+        </td> -->
       </tr>
       
     </template>
