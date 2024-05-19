@@ -103,6 +103,16 @@ export const useAllocationStore = defineStore('allocationStore', {
 
       return allocations;
     },
+    getSelectedFilteredAllocations: (state) => {
+      let allocations = [];
+      for(let i = 0; i < state.selected.length; i++){
+        let allocation = state.getFilteredAllocations.find((e) => e.id == state.selected[i]);
+        allocations[i] = {
+          ...allocation,
+        }
+      }
+      return allocations;
+    },
     getAllocations: (state) => {
       let allocations = [];
       for(let i = 0; i < state.allocations.length; i++){

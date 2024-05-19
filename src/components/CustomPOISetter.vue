@@ -1,7 +1,7 @@
 <template>
   <v-data-table
       :headers="headers"
-      :items="allocationStore.getSelectedAllocations"
+      :items="allocationStore.getSelectedFilteredAllocations"
       class="elevation-1"
       :custom-sort="customSort"
       loading-text="Loading... Please wait"
@@ -12,6 +12,7 @@
       hover
       show-expand
       :expanded="allocationStore.selected"
+      :sort-by="[{ key: 'status', order: 'desc' }]"
   >
     <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <v-menu
@@ -228,6 +229,7 @@
     </template>
     <template v-slot:expanded-row="{ item }">
       <tr>
+        <td></td>
         <td>
           <v-text-field 
               class="mt-4 pt-0"
@@ -287,10 +289,7 @@ const headers = ref([
     { title: 'Name', key: 'subgraphDeployment.versions[0].subgraph.metadata.displayName' },
     { title: 'Allocated', key: 'allocatedTokens'},
     { title: 'Created', key: 'createdAt' },
-    { title: 'Allocation Duration', key: 'activeDuration'},
-    { title: 'Current APR', key: 'apr'},
     { title: 'Current Signal', key: 'subgraphDeployment.signalledTokens'},
-    { title: 'Current Proportion', key: 'proportion'},
     { title: 'Current Allocations', key: 'subgraphDeployment.stakedTokens'},
     { title: 'Total Query Fees', key: 'subgraphDeployment.queryFeesAmount'},
     { title: 'Total Indexing Rewards', key: 'subgraphDeployment.indexingRewardAmount'},
