@@ -238,7 +238,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
               protocolNetwork: chainStore.getActiveChain.id,
               source: 'Indexer Tools - Agent Connect',
               reason: 'Allocation Wizard',
-              priority: 2,
+              priority: 1,
             };
           } else{
             allo = {
@@ -250,7 +250,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
               protocolNetwork: chainStore.getActiveChain.id,
               source: 'Indexer Tools - Agent Connect',
               reason: 'Allocation Wizard',
-              priority: 3,
+              priority: 2,
             };
           }
           if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
@@ -291,7 +291,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
             protocolNetwork: chainStore.getActiveChain.id,
             source: 'Indexer Tools - Agent Connect',
             reason: 'Allocation Wizard',
-            priority: 4,
+            priority: 2,
           });
         }
           
