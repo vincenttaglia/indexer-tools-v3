@@ -238,6 +238,14 @@
               hint="Manual POI"
           ></v-text-field>
         </td>
+        <td>
+          <v-btn 
+           v-if="accountStore.getActiveAccount.poiQuery && item.deploymentStatus?.fatalError" 
+           @click="queryPOI(item.subgraphDeployment.ipfsHash, item.deploymentStatus?.fatalError?.block?.number, item.deploymentStatus?.fatalError?.block?.hash)"
+          >
+            Query POI
+          </v-btn>
+        </td>
       </tr>
       
     </template>
@@ -296,4 +304,16 @@ const headers = ref([
     { title: 'Deployment ID', key: 'subgraphDeployment.ipfsHash', sortable: false },
     { title: 'Allocation ID', key: 'id', sortable: false, width: "100px" },
   ]);
+
+async function queryPOI(QmHash, block, blockHash){
+  fetch(accountStore.getActiveAccount.poiQueryEndpoint,  {
+      method: "POST",
+      headers: {"Content-type": "application/json"},
+      body: JSON.stringify({query: `{ proofOfIndexing(blockNumber: ${block}, blockHash: "${blockHash}", subgraph: "${QmHash}", indexer: "${accountStore.getActiveAccount.address}") }`}),
+    })
+    .then((res) => res.json())
+    .then((json) => {
+      newAllocationSetterStore.customPOIs[QmHash] = json.data.proofOfIndexing;
+    });
+}
 </script>

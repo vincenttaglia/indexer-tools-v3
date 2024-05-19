@@ -26,6 +26,8 @@ export const useAccountStore = defineStore('accountStore', {
     getActiveUrl: (state) => {
       return state.url;
     },
+    getPOIQueryStatus: (state) => state.getActiveAccount.poiQuery,
+    getPOIQueryEndpoint: (state) => state.getActiveAccount.poiQueryEndpoint,
     getAgentConnectStatus: (state) => state.getActiveAccount.agentConnect,
     getAgentConnectEndpoint: (state) => state.getActiveAccount.agentEndpoint,
     getAgentConnectClient: (state) => {
