@@ -50,7 +50,7 @@ export const loadDefaultsConfig = async () => {
 
     return {
       variables: {
-        accounts: [ { "address": "0xeddd4ec5d3775de964416b7b9d4da885f530f90a", "name": "vincenttaglia.eth", "active": true, "chain": "mainnet", "agentConnect": false, "agentEndpoint": "" }, { "address": "0x1b92e4cba0f82c85c1298af861247849988c788c", "name": "vincenttaglia-indexer.eth", "active": true, "chain": "arbitrum-one", "agentConnect": false, "agentEndpoint": "" } ],
+        accounts: [ { "address": "0x1b92e4cba0f82c85c1298af861247849988c788c", "name": "vincenttaglia-indexer.eth", "active": true, "chain": "arbitrum-one", "agentConnect": false, "agentEndpoint": "", "poiQuery": false, "poiQueryEndpoint": "" } ],
         rpcMainnet: "https://mainnet.infura.io/v3/659344f230804542a4e653f875172105",
         rpcArbitrum: "https://arb-mainnet.g.alchemy.com/v2/er8LBcXpoFwlV8xJee-WXFbFG_M8L4JK",
         rpcSepolia: "https://eth-sepolia.g.alchemy.com/v2/eKJ8_13LMaVi2bSITYWTMqskgsGiey8K",
