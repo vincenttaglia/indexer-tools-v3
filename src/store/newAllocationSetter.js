@@ -19,6 +19,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     newAllocations: {},
     minAllocation: 0,
     minAllocation0Signal: 0,
+    customPOIs: {},
   }),
   getters: {
     getSelected: () => subgraphStore.selected,
@@ -209,12 +210,13 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       let allocate = [];
       let skip = [];
       for(const i in allocationStore.getSelectedAllocations){
+        let allo = {};
         if(Object.keys(state.newAllocations).includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash)){
           //console.log("CHECK");
           //console.log(BigNumber(allocationStore.getSelectedAllocations[i].allocatedTokens).dividedBy(10**18).toString());
           //console.log(state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]);
           if(BigNumber(allocationStore.getSelectedAllocations[i].allocatedTokens).dividedBy(10**18) > BigNumber(state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash])){
-            reallocate.push({
+            allo = {
               status: 'queued',
               type: 'reallocate',
               deploymentID: allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash,
@@ -224,9 +226,9 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
               source: 'Indexer Tools - Agent Connect',
               reason: 'Allocation Wizard',
               priority: 2,
-            });
+            };
           } else{
-            reallocate.push({
+            allo = {
               status: 'queued',
               type: 'reallocate',
               deploymentID: allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash,
@@ -236,12 +238,16 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
               source: 'Indexer Tools - Agent Connect',
               reason: 'Allocation Wizard',
               priority: 3,
-            });
+            };
           }
-          
+          if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
+            allo.poi = state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]
+            allo.force = true;
+          }
+          reallocate.push(allo);
           skip.push(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash);
         }else{
-          unallocate.push({
+          allo = {
             status: 'queued',
             type: 'unallocate',
             deploymentID: allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash,
@@ -250,7 +256,12 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
             source: 'Indexer Tools - Agent Connect',
             reason: 'Allocation Wizard',
             priority: 1,
-          });
+          };
+          if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
+            allo.poi = state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]
+            allo.force = true;
+          }
+          unallocate.push(allo);
         }
       }
       for(const i in state.getSelectedS){

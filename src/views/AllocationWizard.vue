@@ -14,7 +14,10 @@
       </template>
 
       <template v-slot:item.3>
+        <h3 class="mx-4 my-4">Allocation Setter</h3>
         <AllocationSetter />
+        <h3 class="mx-4 my-4">Custom POI Setter</h3>
+        <CustomPoiSetter></CustomPoiSetter>
       </template>
       <template v-slot:item.4>
         <div
@@ -88,6 +91,7 @@ import Web3 from "web3";
 import AllocationsDashboard from "./AllocationsDashboard.vue";
 import SubgraphsDashboard from "./SubgraphsDashboard.vue";
 import AllocationSetter from "@/components/AllocationSetter.vue";
+import CustomPoiSetter from "@/components/CustomPOISetter.vue";
 import ActionQueueManager from "./ActionQueueManager.vue";
 import { useAllocationStore } from "@/store/allocations";
 import { useNewAllocationSetterStore } from "@/store/newAllocationSetter";

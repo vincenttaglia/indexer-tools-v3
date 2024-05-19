@@ -82,7 +82,7 @@
     </template>
     <template v-slot:expanded-row="{ item }">
       <tr>
-        <td :colspan="headers.length">
+        <td :colspan="5">
             <!-- :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(calculatedAvailableStake))) + (newAllocationSizes[item.currentVersion.subgraphDeployment.ipfsHash] ? newAllocationSizes[item.currentVersion.subgraphDeployment.ipfsHash] : 0)" -->
 
           <v-slider
@@ -103,6 +103,14 @@
             </template>
           </v-slider>
         </td>
+        <td>
+          <v-text-field 
+              class="mt-0 pt-0"
+              style="width: 125px"
+              v-model="customPOIs[item.currentVersion.subgraphDeployment.ipfsHash]"
+              hint="Manual POI"
+          ></v-text-field>
+        </td>
       </tr>
       
     </template>
@@ -122,7 +130,7 @@ const newAllocationSetterStore = useNewAllocationSetterStore();
 newAllocationSetterStore.update();
 
 
-const { newAllocations, getSelectedS, minAllocation, minAllocation0Signal } = storeToRefs(newAllocationSetterStore);
+const { newAllocations, getSelectedS, minAllocation, minAllocation0Signal, customPOIs } = storeToRefs(newAllocationSetterStore);
 
 watch(getSelectedS, () => {
   newAllocationSetterStore.update();
