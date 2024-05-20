@@ -78,7 +78,20 @@
                       class="mx-3"
                   ></v-text-field>
                 </Transition>
-                
+                <v-checkbox
+                    v-model="newIndexerPOIQuery"
+                    label="Enable POI Query"
+                    class="mx-3"
+                >
+                </v-checkbox>
+                <Transition>
+                  <v-text-field
+                      v-if="newIndexerPOIQuery"
+                      v-model="newIndexerPOIEndpoint"
+                      label="POI Query Endpoint"
+                      class="mx-3"
+                  ></v-text-field>
+                </Transition>
               </v-card-text>
 
               <v-divider></v-divider>
@@ -88,7 +101,7 @@
                 <v-btn
                     color="primary"
                     text
-                    @click="accountStore.addAccount(newIndexerAddress, newIndexerName, newIndexerChain, newIndexerAgentConnect, newIndexerAgentEndpoint); clearForms();"
+                    @click="accountStore.addAccount(newIndexerAddress, newIndexerName, newIndexerChain, newIndexerAgentConnect, newIndexerAgentEndpoint, newIndexerPOIQuery, newIndexerPOIEndpoint); clearForms();"
 
                 >
                   Add
@@ -142,6 +155,8 @@ const newIndexerName = ref("");
 const newIndexerAddress = ref("");
 const newIndexerAgentConnect = ref(false);
 const newIndexerAgentEndpoint = ref("");
+const newIndexerPOIQuery = ref(false);
+const newIndexerPOIEndpoint = ref("");
 const newIndexerChain = ref(chainStore.getChainID);
 
 function clearForms(){

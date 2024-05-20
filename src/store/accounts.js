@@ -70,11 +70,11 @@ export const useAccountStore = defineStore('accountStore', {
         this.loading = false;
       });
     },
-    addAccount(address, name, chain, agentConnect, agentEndpoint){
+    addAccount(address, name, chain, agentConnect, agentEndpoint, poiQuery, poiEndpoint){
       let alreadyAdded = this.accounts.find(e => e.address == address.toLowerCase() && e.chain == chain);
   
       if(!alreadyAdded){
-        this.accounts.push({ address: address.toLowerCase(), name: name, active: false, chain: chain, agentConnect: agentConnect, agentEndpoint: agentEndpoint });
+        this.accounts.push({ address: address.toLowerCase(), name: name, active: false, chain: chain, agentConnect: agentConnect, agentEndpoint: agentEndpoint, poiQuery: poiQuery, poiQueryEndpoint: poiEndpoint  });
         this.switchAccount(address, chain);
       }
     },
