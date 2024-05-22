@@ -372,7 +372,7 @@ export const useSubgraphsStore = defineStore({
           let uniqueSubgraphs = []
           let subgraphs = [];
           for(let i = 0; i < data.subgraphs.length; i++){
-            if(!uniqueSubgraphs.includes(data.subgraphs[i].currentVersion.subgraphDeployment.ipfsHash)){
+            if(data.subgraphs[i].currentVersion?.subgraphDeployment?.ipfsHash && !uniqueSubgraphs.includes(data.subgraphs[i].currentVersion?.subgraphDeployment?.ipfsHash)){
               uniqueSubgraphs.push(data.subgraphs[i].currentVersion.subgraphDeployment.ipfsHash);
               subgraphs.push(data.subgraphs[i]);
             }
