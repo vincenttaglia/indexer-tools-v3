@@ -32,6 +32,8 @@ cp .env.example .env
 ```
 cp indexer-tools-config.json.example public/indexer-tools-config.json
 ```
+#### Docker
+Environment variables are set by default, and can be overwritten with container level environment variables using variable names from `indexer-tools-config.json.example`.
 
 ### Compiles and minifies for production
 
