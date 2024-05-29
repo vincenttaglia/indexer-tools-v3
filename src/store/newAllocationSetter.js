@@ -272,7 +272,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
           };
           if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
             if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash] == "0x0"){
-              allo.poi = "0x0000000000000000000000000000000000000000";
+              allo.poi = "0x0000000000000000000000000000000000000000000000000000000000000000";
             } else{
               allo.poi = state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]
             }
