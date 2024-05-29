@@ -35,6 +35,7 @@ export const useAllocationStore = defineStore('allocationStore', {
     loading: false,
     activateSynclist: false,
     activateBlacklist: false,
+    networkFilter: [],
   }),
   getters: {
     getDeploymentStatusesCall: () => {
@@ -114,6 +115,13 @@ export const useAllocationStore = defineStore('allocationStore', {
       if(state.activateSynclist) {
         allocations = allocations.filter((i) => {
           return subgraphSettingStore.settings.subgraphSynclist.includes(i.subgraphDeployment.ipfsHash);
+        });
+      }
+
+      // Network Filter
+      if(state.networkFilter.length) {
+        allocations = allocations.filter((i) => {
+          return i.subgraphDeployment.manifest.network && state.networkFilter.includes(i.subgraphDeployment.manifest.network);
         });
       }
 
@@ -281,6 +289,15 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
       return deploymentStatuses;
     },
+    getSubgraphNetworks: (state) => {
+      let networks = ["mainnet","arbitrum-one","matic"];
+      for(let i = 0; i < state.allocations.length; i++){
+        if(state.allocations[i]?.subgraphDeployment?.manifest?.network && !networks.includes(state.allocations[i].subgraphDeployment.manifest.network) && state.allocations[i].subgraphDeployment.manifest.network != 'polygon'){
+          networks.push(state.allocations[i].subgraphDeployment.manifest.network);
+        }
+      }
+      return networks;
+    },
     totalAllocatedStake: (state) => {
       let totalAllocatedStake = new BigNumber(0);
       if(state.allocations.length > 0){
@@ -428,6 +445,9 @@ export const useAllocationStore = defineStore('allocationStore', {
               signalledTokens
               queryFeesAmount
               deniedAt
+              manifest{
+                network
+              }
             }
             allocatedTokens
             effectiveAllocation
