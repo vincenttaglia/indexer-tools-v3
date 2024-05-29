@@ -1,7 +1,7 @@
 <template>
   <v-data-table
       :headers="headers"
-      :items="allocationStore.getSelectedFilteredAllocations"
+      :items="allocationStore.getSelectedAllocations"
       class="elevation-1"
       :custom-sort="customSort"
       loading-text="Loading... Please wait"
