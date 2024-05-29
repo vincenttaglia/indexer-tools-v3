@@ -264,7 +264,7 @@
         class="my-5 mx-3"
       >
         <download-csv
-          :data   = "allocationStore.getAllocations" 
+          :data   = "allocationStore.getFilteredAllocations" 
           :csv-title="'allocations'">
           Download Data
         </download-csv>

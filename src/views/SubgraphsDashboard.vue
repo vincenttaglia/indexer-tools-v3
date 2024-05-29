@@ -315,7 +315,7 @@
       class="my-5 mx-3"
   >
     <download-csv
-      :data   = "subgraphStore.getSubgraphs" 
+      :data   = "subgraphStore.getFilteredSubgraphs" 
       :csv-title="'subgraphs'">
       Download Data
     </download-csv>
