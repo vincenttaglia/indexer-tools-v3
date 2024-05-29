@@ -15,13 +15,25 @@
       hover
   >
     <template v-slot:top>
-      <v-select
-          v-model="subgraphSettingsStore.settings.statusFilter"
-          :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"
-          label="Status Filter"
-          class="d-inline-block mx-4 mt-5"
-          style="min-width:13rem;max-width: 15rem;"
-      ></v-select>
+      <div class="d-block">
+        <v-select
+            v-model="subgraphSettingsStore.settings.statusFilter"
+            :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"
+            label="Status Filter"
+            class="d-inline-block mx-4 mt-5"
+            style="min-width:13rem;max-width: 15rem;"
+        ></v-select>
+        <v-checkbox
+          v-model="allocationStore.activateBlacklist"
+          label="Blacklist"
+          class="d-inline-block mr-3"
+        ></v-checkbox>
+        <v-checkbox
+          v-model="allocationStore.activateSynclist"
+          label="Synclist"
+          class="d-inline-block"
+        ></v-checkbox>
+      </div>
     </template>
     <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <v-menu

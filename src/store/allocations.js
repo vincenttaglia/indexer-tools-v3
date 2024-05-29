@@ -33,6 +33,8 @@ export const useAllocationStore = defineStore('allocationStore', {
     selected: [],
     loaded: false,
     loading: false,
+    activateSynclist: false,
+    activateBlacklist: false,
   }),
   getters: {
     getDeploymentStatusesCall: () => {
@@ -98,6 +100,20 @@ export const useAllocationStore = defineStore('allocationStore', {
             if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == true)
               return true
           return false;
+        });
+      }
+
+      // Blacklist Filter
+      if(state.activateBlacklist) {
+        allocations = allocations.filter((i) => {
+          return !subgraphSettingStore.settings.subgraphBlacklist.includes(i.subgraphDeployment.ipfsHash);
+        });
+      }
+
+      // Synclist Filter
+      if(state.activateSynclist) {
+        allocations = allocations.filter((i) => {
+          return subgraphSettingStore.settings.subgraphSynclist.includes(i.subgraphDeployment.ipfsHash);
         });
       }
 
