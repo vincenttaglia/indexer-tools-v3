@@ -32,6 +32,20 @@
     :search="search"
     hover
   >
+    <template v-slot:no-data>
+      <p class="mt-4">
+        No data available
+      </p>
+      <br>
+      <v-btn
+        rounded
+        variant="text"
+        @click="resetFilters()"
+        class="mb-4 mt-2"
+      >
+        Reset Filters
+      </v-btn>
+    </template>
     <template v-slot:top>
       <div class="d-block">
         <v-text-field
@@ -414,6 +428,18 @@ function removeOffchainSync(ipfsHash){
 
 function copyToClipboard (copy) {
   navigator.clipboard.writeText(copy)
+}
+
+function resetFilters () {
+  search.value = "";
+  subgraphSettingStore.settings.minSignal = "";
+  subgraphSettingStore.settings.maxSignal = "";
+  subgraphSettingStore.settings.noRewardsFilter = 1;
+  subgraphSettingStore.settings.networkFilter = [];
+  subgraphSettingStore.settings.statusFilter = "none";
+  subgraphSettingStore.settings.activateBlacklist = false;
+  subgraphSettingStore.settings.activateSynclist = false;
+  subgraphSettingStore.settings.hideCurrentlyAllocated = false;
 }
 
 function customSort(items, index, isDesc) {

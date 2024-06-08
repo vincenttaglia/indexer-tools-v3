@@ -14,6 +14,20 @@
       :expanded="allocationStore.selected"
       :sort-by="[{ key: 'status', order: 'desc' }]"
   >
+    <template v-slot:no-data>
+      <p class="mt-4">
+        No data available
+      </p>
+      <br>
+      <v-btn
+        rounded
+        variant="text"
+        @click="resetFilters()"
+        class="mb-4 mt-2"
+      >
+        Reset Filters
+      </v-btn>
+    </template>
     <template v-slot:top>
       <div class="d-block">
         <v-select
@@ -316,6 +330,13 @@ defineProps({
 
 function copyToClipboard (copy) {
   navigator.clipboard.writeText(copy)
+}
+
+function resetFilters () {
+  subgraphSettingsStore.settings.statusFilter = "none";
+  allocationStore.networkFilter = [];
+  allocationStore.activateBlacklist = false;
+  allocationStore.activateSynclist = false;
 }
 
 const headers = ref([
