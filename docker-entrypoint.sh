@@ -10,8 +10,8 @@ JSON_STRING="{
   \"DEFAULT_RPC_ARBITRUM_SEPOLIA\": \"${DEFAULT_RPC_ARBITRUM_SEPOLIA:-https://arbitrum-sepolia.infura.io/v3/db92de7c459f4d83a2c2c21931a6bdf0}\",
   \"DEFAULT_SUBGRAPH_MAINNET\": \"${DEFAULT_SUBGRAPH_MAINNET:-https://gateway-arbitrum.network.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/9Co7EQe5PgW3ugCUJrJgRv4u9zdEuDJf8NvMWftNsBH8}\",
   \"DEFAULT_SUBGRAPH_ARBITRUM\": \"${DEFAULT_SUBGRAPH_ARBITRUM:-https://gateway-arbitrum.network.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp}\",
-  \"DEFAULT_SUBGRAPH_SEPOLIA\": \"${DEFAULT_SUBGRAPH_SEPOLIA:-https://api.thegraph.com/subgraphs/name/graphprotocol/graph-network-sepolia}\",
-  \"DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA\": \"${DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA:-https://api.thegraph.com/subgraphs/name/graphprotocol/graph-network-arbitrum-sepolia}\"
+  \"DEFAULT_SUBGRAPH_SEPOLIA\": \"${DEFAULT_SUBGRAPH_SEPOLIA:-https://gateway-arbitrum.network.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/8pVKDwHniAz87CHEQsiz2wgFXGZXrbMDkrxgauVVfMJC}\",
+  \"DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA\": \"${DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA:-https://gateway-arbitrum.network.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/3xQHhMudr1oh69ut36G2mbzpYmYxwqCeU6wwqyCDCnqV}\"
 }"
 
 echo $JSON_STRING > /app/public/indexer-tools-config.json
