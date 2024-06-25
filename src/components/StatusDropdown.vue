@@ -18,7 +18,7 @@
         >
           <v-avatar :color="ringColor" size="34">
             <v-avatar size="30">
-              <v-img :src="item.metadata.image" />
+              <v-img :src="metadata.image" />
             </v-avatar>
           </v-avatar>
         </v-badge>
@@ -49,7 +49,7 @@
               <template v-slot:default="{ isActive }">
                 <v-card title="Offchain Sync Subgraph">
                   <v-card-text>
-                    Add {{ item.metadata.displayName }} ({{ item.currentVersion.subgraphDeployment.ipfsHash }}) to list of offchain sync subgraphs?
+                    Add {{ metadata.displayName }} ({{ subgraph.ipfsHash }}) to list of offchain sync subgraphs?
                   </v-card-text>
 
                   <v-card-actions>
@@ -60,7 +60,7 @@
                     ></v-btn>
                     <v-btn
                       text="Start syncing"
-                      @click="offchainSync(item.currentVersion.subgraphDeployment.ipfsHash); isActive.value = false"
+                      @click="offchainSync(subgraph.ipfsHash); isActive.value = false"
                     ></v-btn>
                   </v-card-actions>
                 </v-card>
@@ -79,7 +79,7 @@
               <template v-slot:default="{ isActive }">
                 <v-card title="Remove Offchain Subgraph">
                   <v-card-text>
-                    Remove {{ item.metadata.displayName }} ({{  item.currentVersion.subgraphDeployment.ipfsHash }}) from list of offchain sync subgraphs?
+                    Remove {{ metadata.displayName }} ({{  subgraph.ipfsHash }}) from list of offchain sync subgraphs?
                   </v-card-text>
 
                   <v-card-actions>
@@ -90,7 +90,7 @@
                     ></v-btn>
                     <v-btn
                       text="Stop syncing"
-                      @click="removeOffchainSync(item.currentVersion.subgraphDeployment.ipfsHash); isActive.value = false"
+                      @click="removeOffchainSync(subgraph.ipfsHash); isActive.value = false"
 
                     ></v-btn>
                   </v-card-actions>
@@ -152,22 +152,26 @@ import { useAccountStore } from '@/store/accounts';
 import numeral from 'numeral';
 const accountStore = useAccountStore();
 
-const props = defineProps(['item']);
+const props = defineProps(['item', 'subgraph', 'metadata']);
 const item = props.item;
+const subgraph = props.subgraph || item.currentVersion.subgraphDeployment;
+const metadata = props.metadata || item.metadata;
 
-const isDenied = item.currentVersion.subgraphDeployment.deniedAt != '0';
+const isDenied = subgraph.deniedAt != '0';
 const isAllocated = ref(item.currentlyAllocated);
 
-const badge = ref(isDenied || isAllocated.value);
+const badge = ref(false);
 const badgeIcon = ref("");
 const badgeColor = ref("");
 
-if(isDenied){
-  badgeIcon.value = "mdi-currency-usd-off";
-  badgeColor.value = "error";
-} else if(isAllocated){
+if(isAllocated.value && item.currentVersion){
   badgeIcon.value = "mdi-exclamation-thick";
   badgeColor.value = "warning";
+  badge.value = true;
+} else if(isDenied){
+  badgeIcon.value = "mdi-currency-usd-off";
+  badgeColor.value = "error";
+  badge.value = true;
 }
 
 const hasFatalError = item.deploymentStatus?.health == 'failed' && item.deploymentStatus?.fatalError;
