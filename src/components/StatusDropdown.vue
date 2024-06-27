@@ -1,4 +1,21 @@
 <template>
+  <v-snackbar
+    v-model="snackbar"
+    variant="flat"
+    location="top"
+    style="margin-top:100px"
+  >
+    {{ text }}
+
+    <template v-slot:actions>
+      <v-btn
+        variant="text"
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
   <v-menu
     min-width="200px"
     rounded
@@ -149,9 +166,14 @@
 <script setup>
 import { ref } from 'vue';
 import { useAccountStore } from '@/store/accounts';
+import { useChainStore } from '@/store/chains';
 import numeral from 'numeral';
+import gql from 'graphql-tag';
 const accountStore = useAccountStore();
+const chainStore = useChainStore();
 
+const snackbar = ref(false);
+const text = ref("");
 const props = defineProps(['item', 'subgraph', 'metadata']);
 const item = props.item;
 const subgraph = props.subgraph || item.currentVersion.subgraphDeployment;

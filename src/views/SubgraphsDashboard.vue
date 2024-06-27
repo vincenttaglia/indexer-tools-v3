@@ -1,21 +1,4 @@
 <template>
-  <v-snackbar
-    v-model="snackbar"
-    variant="flat"
-    location="top"
-    style="margin-top:100px"
-  >
-    {{ text }}
-
-    <template v-slot:actions>
-      <v-btn
-        variant="text"
-        @click="snackbar = false"
-      >
-        Close
-      </v-btn>
-    </template>
-  </v-snackbar>
   <v-data-table
     :headers="headers"
     :items="subgraphStore.getFilteredSubgraphs"
@@ -184,24 +167,15 @@
   import numeral from 'numeral';
   import web3 from 'web3';
   import moment from 'moment';
-  import BigNumber from 'bignumber.js';
   import { storeToRefs } from 'pinia';
   import { useTableSettingStore } from "@/store/tableSettings";
-  import { useChainStore } from '@/store/chains';
-  import gql from 'graphql-tag';
-  import { useAccountStore } from '@/store/accounts';
   import StatusDropdownVue from '@/components/StatusDropdown.vue';
 
 
   const search = ref('');
-
-  const chainStore = useChainStore();
   const subgraphStore = useSubgraphsStore();
   const subgraphSettingStore = useSubgraphSettingStore();
   const tableSettingsStore = useTableSettingStore();
-  const accountStore = useAccountStore();
-  const snackbar = ref(false);
-  const text = ref("");
   subgraphStore.fetchData();
 
 
