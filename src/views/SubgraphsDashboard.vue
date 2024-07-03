@@ -170,16 +170,6 @@
       
     </template>
   </v-data-table>
-  <v-btn
-      text
-      class="my-5 mx-3"
-  >
-    <download-csv
-      :data   = "subgraphStore.getFilteredSubgraphs" 
-      :csv-title="'subgraphs'">
-      Download Data
-    </download-csv>
-  </v-btn>
   
 </template>
 

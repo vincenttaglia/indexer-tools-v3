@@ -209,18 +209,6 @@
       </tr>
     </template>
   </v-data-table>
-  <div>
-      <v-btn
-        text
-        class="my-5 mx-3"
-      >
-        <download-csv
-          :data   = "allocationStore.getFilteredAllocations" 
-          :csv-title="'allocations'">
-          Download Data
-        </download-csv>
-      </v-btn>
-  </div>
 </template>
 
 <script setup>
