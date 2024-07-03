@@ -19,6 +19,7 @@ accountStore.fetchData();
 const subgraphSettingStore = useSubgraphSettingStore();
 import BigNumber from "bignumber.js";
 import { calculateNewApr, calculateSubgraphDailyRewards, maxAllo, indexerCut } from '@/plugins/commonCalcs';
+import { upgradeIndexerClient } from '@/plugins/upgradeIndexerClient';
 
 const { getDeploymentStatuses } = storeToRefs(deploymentStatusStore);
 
@@ -28,6 +29,7 @@ export const useSubgraphsStore = defineStore({
     subgraphs: [],
     selected: [],
     loading: false,
+    upgradeIndexer: [],
   }),
   getters: {
     getDeploymentStatusesCall: () => {
@@ -157,6 +159,7 @@ export const useSubgraphsStore = defineStore({
           ...state.getMaxAllos[i],
           ...state.getCurrentlyAllocated[i],
           ...state.getDeploymentStatuses[i],
+          ...state.getUpgradeIndexer[i],
         };
       }
       return subgraphs;
@@ -314,9 +317,74 @@ export const useSubgraphsStore = defineStore({
         }
       }
       return networks;
-    }
+    },
+    getUpgradeIndexer: (state) => {
+      let upgradeIndexer = [];
+      for(let i = 0; i < state.upgradeIndexer.length; i++){
+        upgradeIndexer[i] = { upgradeIndexer: state.upgradeIndexer[i] }
+      }
+      return upgradeIndexer;
+    },
   },
   actions: {
+    async fetchNumEntities(subgraphId){
+      let subgraph = this.getSubgraphs.find(e => e.currentVersion?.subgraphDeployment?.ipfsHash == subgraphId);
+      if(subgraph?.upgradeIndexer && !subgraph?.upgradeIndexer?.loading && !subgraph?.upgradeIndexer?.loaded){
+        subgraph.upgradeIndexer.loading = true;
+
+        upgradeIndexerClient.query({
+          query: gql`query  indexingStatuses($subgraphs: String!){
+            indexingStatuses(subgraphs: [$subgraphs]){
+              subgraph
+              synced
+              health
+              entityCount
+              fatalError {
+                handler
+                message
+                deterministic
+                block {
+                  hash
+                  number
+                }
+              }
+              chains {
+                network
+                chainHeadBlock {
+                  number
+                  hash
+                }
+                earliestBlock {
+                  number
+                  hash
+                }
+                latestBlock {
+                  number
+                  hash
+                }
+                lastHealthyBlock {
+                  hash
+                  number
+                }
+              }
+              node
+            }
+          }`,
+          variables: {
+            subgraphs: subgraph.currentVersion?.subgraphDeployment?.ipfsHash,
+          }
+        })
+        .then((data) => {
+          console.log(data);
+          console.log(data.data?.indexingStatuses[0]?.entityCount);
+          if(data.data?.indexingStatuses[0]?.entityCount)
+            subgraph.upgradeIndexer.value = data.data.indexingStatuses[0].entityCount;
+          subgraph.upgradeIndexer.loaded = true;
+          subgraph.upgradeIndexer.loading = false;
+        });
+      }
+      
+    },
     async fetch(skip){
       console.log("Fetch " + skip);
       return chainStore.getNetworkSubgraphClient.query({
@@ -378,6 +446,10 @@ export const useSubgraphsStore = defineStore({
             }
           }
           this.subgraphs = subgraphs;
+          this.upgradeIndexer = Array(data.subgraphs.length).fill();
+          for(let i = 0; i < this.upgradeIndexer.length; i++){
+            this.upgradeIndexer[i] = { value: "0", loading: false, loaded: false };
+          }
           this.loading = false;
         })
       });

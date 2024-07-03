@@ -146,6 +146,29 @@
     <template v-slot:item.currentVersion.subgraphDeployment.manifest.network="{ item }">
       {{ item.currentVersion.subgraphDeployment.manifest.network ? item.currentVersion.subgraphDeployment.manifest.network : "null" }}
     </template> 
+    <template v-slot:item.upgradeIndexer="{ item }">
+      <span
+        v-if="!item.upgradeIndexer.loading && !item.upgradeIndexer.loaded"
+        >
+        <v-icon left @click="subgraphStore.fetchNumEntities(item.currentVersion.subgraphDeployment.ipfsHash);">
+          mdi-account-arrow-down
+        </v-icon>
+      </span>
+      <v-progress-circular
+          indeterminate
+          color="purple"
+          v-if="item.upgradeIndexer.loading && !item.upgradeIndexer.loaded"
+      ></v-progress-circular>
+      <div 
+       v-if="!item.upgradeIndexer.loading && item.upgradeIndexer.loaded"
+       class="d-flex"
+      >
+        <span>
+          {{ numeral(item.upgradeIndexer.value).format('0,0') }} Entities
+        </span>
+      </div>
+      
+    </template>
   </v-data-table>
   <v-btn
       text
@@ -177,7 +200,6 @@
   const subgraphSettingStore = useSubgraphSettingStore();
   const tableSettingsStore = useTableSettingStore();
   subgraphStore.fetchData();
-
 
   const { selected } = storeToRefs(subgraphStore);
 
@@ -249,6 +271,7 @@ function customSort(items, index, isDesc) {
     { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
     { title: 'Est Daily Rewards (After Cut)', key: 'dailyRewardsCut'},
     { title: 'Current Signal', key: 'currentSignalledTokens'},
+    { title: 'Entities', key: 'upgradeIndexer'},
     { title: 'Current Proportion', key: 'proportion'},
     { title: 'Current Allocations', key: 'currentVersion.subgraphDeployment.stakedTokens'},
     { title: 'Total Query Fees', key: 'currentVersion.subgraphDeployment.queryFeesAmount'},
