@@ -38,7 +38,7 @@ const qosData = ref([]);
 console.log("QOS DATA");
 qosSubgraphClient.query({
   query: gql`query{
-    queryDailyDataPoints(orderBy: dayNumber, first: 1) {
+    queryDailyDataPoints(orderBy: dayNumber, first: 1, orderDirection: desc) {
       dayNumber
     }
   }`,
@@ -58,9 +58,11 @@ qosSubgraphClient.query({
         avg_query_fee
         avg_gateway_latency_ms
         gateway_query_success_rate
-        id
         query_count
         total_query_fees
+        subgraphDeployment {
+          id
+        }
       }
     }`,
     variables: {
@@ -78,7 +80,7 @@ function resetFilters () {
 }
 
 const headers = ref([
-  { title: 'ID', key: 'id' },
+  { title: 'ID', key: 'subgraphDeployment.id' },
   //{ title: 'Chain ID', key: 'chain_id'},
   { title: 'Query Count', key: 'query_count' },
   { title: 'Query Fees (1d)', key: 'total_query_fees'},
