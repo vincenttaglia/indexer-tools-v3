@@ -51,20 +51,42 @@
             class="d-inline-block mx-4"
             style="max-width:15rem"
         ></v-text-field>
-        <v-text-field
-            v-model="subgraphSettingStore.settings.newAllocation"
-            type="number"
-            label="New Allocation"
-            class="d-inline-block mx-4"
-            style="max-width:15rem"
-        ></v-text-field>
-        <v-text-field
-            v-model="subgraphSettingStore.settings.targetApr"
-            type="number"
-            label="Target APR"
-            class="d-inline-block mx-4"
-            style="max-width:15rem"
-        ></v-text-field>
+        <v-confirm-edit v-model="subgraphSettingStore.settings.newAllocation">
+          <template v-slot:default="{ model: proxyModel, save, cancel, isPristine, actions}">
+            <v-text-field
+              v-model="proxyModel.value"
+              type="number"
+              label="New Allocation"
+              class="d-inline-block mx-4"
+              style="max-width:15rem"
+              :append-inner-icon="isPristine ? '' : 'mdi-check'"
+              :clear-icon="isPristine ? '' : 'mdi-close-circle'"
+              @click:append-inner="save"
+              @click:clear="cancel"
+              clearable
+              hide-spin-buttons
+            ></v-text-field>
+            <component :is="actions" v-if="false"></component>
+          </template>
+        </v-confirm-edit>
+        <v-confirm-edit v-model="subgraphSettingStore.settings.targetApr">
+          <template v-slot:default="{ model: proxyModel, save, cancel, isPristine, actions}">
+            <v-text-field
+              v-model="proxyModel.value"
+              type="number"
+              label="Target APR"
+              class="d-inline-block mx-4"
+              style="max-width:15rem"
+              :append-inner-icon="isPristine ? '' : 'mdi-check'"
+              :clear-icon="isPristine ? '' : 'mdi-close-circle'"
+              @click:append-inner="save"
+              @click:clear="cancel"
+              clearable
+              hide-spin-buttons
+            ></v-text-field>
+            <component :is="actions" v-if="false"></component>
+          </template>
+        </v-confirm-edit>
         <v-select
             v-model="subgraphSettingStore.settings.noRewardsFilter"
             :items="[{text: 'Exclude Denied', action: 0}, {text:'Include Denied', action: 1}, {text: 'Only Denied', action: 2}]"
