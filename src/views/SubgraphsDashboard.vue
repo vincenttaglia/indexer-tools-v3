@@ -63,6 +63,7 @@
               :clear-icon="isPristine ? '' : 'mdi-close-circle'"
               @click:append-inner="save"
               @click:clear="cancel"
+              @keydown.enter="save"
               clearable
               hide-spin-buttons
             ></v-text-field>
@@ -81,6 +82,7 @@
               :clear-icon="isPristine ? '' : 'mdi-close-circle'"
               @click:append-inner="save"
               @click:clear="cancel"
+              @keydown.enter="save"
               clearable
               hide-spin-buttons
             ></v-text-field>
