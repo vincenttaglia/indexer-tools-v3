@@ -78,6 +78,13 @@
           </v-card-text>
         </v-card>
 
+        <v-card>
+          <v-card-text>
+            Selected Max Allos:
+            <h1 class="pt-2">{{ numeral(newAllocationSetterStore.calculatedSelectedMaxAllos.integerValue(BigNumber.ROUND_DOWN)).format("0,0") }}</h1>
+          </v-card-text>
+        </v-card>
+
       </v-card>
     </v-footer>
   </div>
@@ -86,6 +93,7 @@
 <script setup>
 import numeral from "numeral";
 import Web3 from "web3";
+import BigNumber from "bignumber.js";
 import AllocationsDashboard from "./AllocationsDashboard.vue";
 import SubgraphsDashboard from "./SubgraphsDashboard.vue";
 import AllocationSetter from "@/components/AllocationSetter.vue";

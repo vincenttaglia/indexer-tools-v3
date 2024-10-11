@@ -74,7 +74,7 @@
             style="max-width: 15rem;"
             class="d-inline-block mx-4"
         ></v-select>
-        <v-select
+        <v-combobox
             v-model="subgraphSettingStore.settings.networkFilter"
             :items="subgraphStore.getSubgraphNetworks"
             label="Subgraph Networks"
@@ -82,7 +82,7 @@
             chips
             class="d-inline-block mx-4"
             style="min-width:13rem;max-width: 15rem;top: -5px"
-        ></v-select>
+        ></v-combobox>
         <v-select
             v-model="subgraphSettingStore.settings.statusFilter"
             :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"
@@ -123,7 +123,8 @@
         {{ numeral(item.newApr).format('0,0.00') }}%
       </template>
     <template v-slot:item.maxAllo="{ item }">
-      {{ numeral(item.maxAllo).format('0,0') }} GRT
+      <span v-if="item.maxAllo != Number.MIN_SAFE_INTEGER">{{ numeral(item.maxAllo).format('0,0') }} GRT</span>
+      <span v-if="item.maxAllo == Number.MIN_SAFE_INTEGER">-</span>
     </template>
     <template v-slot:item.dailyRewards="{ item }">
       {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.dailyRewards))).format('0,0') }} GRT

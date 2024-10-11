@@ -174,6 +174,17 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
 
       return simulatedTotalRewardsPerYear.dividedBy(simulatedTotalStake);
     },
+    calculatedSelectedMaxAllos: (state) => {
+      let selectedMaxAllos = new BigNumber(0);
+      if(state.getSelectedSubgraphs.length > 0) {
+        for (const i in state.getSelectedSubgraphs) {
+          if(!state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.deniedAt && state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.signalledTokens > 0){
+            selectedMaxAllos = selectedMaxAllos.plus(BigNumber(state.getSelectedSubgraphs[i].maxAllo));
+          }
+        }
+      }
+      return selectedMaxAllos;
+    },
     buildCommands: (state) => {
       let commands = "";
       for(const i in allocationStore.getSelectedAllocations){
@@ -322,6 +333,17 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     },
     async setAllMinimums(){
       return new Promise([this.setMinimums(), this.setMinimums0Signal()]);
+    },
+    async setAllMaxAllos(){
+      for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
+        if(this.getSelectedSubgraphs[i].maxAllo != Number.MIN_SAFE_INTEGER && Math.floor(this.getSelectedSubgraphs[i].maxAllo) > 0)
+          this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] = Math.floor(this.getSelectedSubgraphs[i].maxAllo);
+      }
+    },
+    async resetAllos(){
+      for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
+      this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] = 0;
+      }
     },
   },
 })
