@@ -17,6 +17,12 @@
   >
     Set Max Allos
   </v-btn>
+  <v-btn
+      class="d-inline-block mx-2 my-1"
+      @click="newAllocationSetterStore.resetAllos()"
+  >
+    Reset Allos
+  </v-btn>
   <v-data-table
       :headers="headers"
       :items="newAllocationSetterStore.getSelectedSubgraphs"

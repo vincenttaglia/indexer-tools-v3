@@ -339,6 +339,11 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
         if(this.getSelectedSubgraphs[i].maxAllo != Number.MIN_SAFE_INTEGER && Math.floor(this.getSelectedSubgraphs[i].maxAllo) > 0)
           this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] = Math.floor(this.getSelectedSubgraphs[i].maxAllo);
       }
-    }
+    },
+    async resetAllos(){
+      for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
+      this.newAllocations[this.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.ipfsHash] = 0;
+      }
+    },
   },
 })
