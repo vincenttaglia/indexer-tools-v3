@@ -174,6 +174,17 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
 
       return simulatedTotalRewardsPerYear.dividedBy(simulatedTotalStake);
     },
+    calculatedSelectedMaxAllos: (state) => {
+      let selectedMaxAllos = new BigNumber(0);
+      if(state.getSelectedSubgraphs.length > 0) {
+        for (const i in state.getSelectedSubgraphs) {
+          if(!state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.deniedAt && state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.signalledTokens > 0){
+            selectedMaxAllos = selectedMaxAllos.plus(BigNumber(state.getSelectedSubgraphs[i].maxAllo));
+          }
+        }
+      }
+      return selectedMaxAllos;
+    },
     buildCommands: (state) => {
       let commands = "";
       for(const i in allocationStore.getSelectedAllocations){
