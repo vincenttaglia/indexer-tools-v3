@@ -161,6 +161,26 @@
       </v-card-text>
     </v-card>
   </v-menu>
+  <v-dialog
+      v-model="copyDialog"
+      width="auto"
+    >
+      <v-card
+        max-width="400"
+        prepend-icon="mdi-clipboard"
+        text="Copying to clipboard not supported with HTTP. Please copy from below:"
+        title="Copy Error"
+      >
+        <v-textarea v-model="copyText" readonly="true" autofocus="true" @focus="$event.target.select()"></v-textarea>
+        <template v-slot:actions>
+          <v-btn
+            class="ms-auto"
+            text="Close"
+            @click="copyDialog = false"
+          ></v-btn>
+        </template>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -185,6 +205,8 @@ const isAllocated = ref(item.currentlyAllocated);
 const badge = ref(false);
 const badgeIcon = ref("");
 const badgeColor = ref("");
+const copyDialog = ref(false);
+const copyText = ref("");
 
 if(isAllocated.value && item.currentVersion){
   badgeIcon.value = "mdi-exclamation-thick";
@@ -267,11 +289,12 @@ function removeOffchainSync(ipfsHash){
 }
 
 function copyToClipboard (copy) {
-  navigator.clipboard.writeText(copy).then(() => {
-    alert("successfully copied");
-  })
-  .catch(() => {
-    alert("something went wrong");
-  });
+  if(window.location.protocol == "https:"){
+    navigator.clipboard.writeText(copy);
+  }else{
+    copyText.value = copy;
+    copyDialog.value = true;
+  }
+  
 }
 </script>
