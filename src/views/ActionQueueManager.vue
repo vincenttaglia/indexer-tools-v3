@@ -222,6 +222,23 @@
       </template>
     </v-dialog>
   </div>
+  <div class="d-flex my-10">
+    <v-expansion-panels>
+      <v-expansion-panel
+        :title="`Errors (${ actionErrors.length })`"
+      >
+        <v-expansion-panel-text>
+          <v-card
+            v-for="(error, i) in actionErrors"
+            :key="i"
+            class="my-1 px-5 py-2"
+          >
+            {{ error }}
+          </v-card>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
+  </div>
   
 </template>
 
@@ -254,6 +271,7 @@ const loading = ref(accountStore.getAgentConnectStatus);
 const snackbar = ref(false);
 const text = ref("");
 const sortBy = ref([{ key: 'id', order: 'desc' }]);
+const actionErrors = ref([]);
 const filteredActions = computed(() => {
   let fActions = actions.value;
   
@@ -300,17 +318,20 @@ function sendActionsToAgent(){
       }
     }`,
     variables: { actions: newAllocationSetterStore.actionsQueueBuildAPIObject }
+  }).catch((errors) => {
+    console.log("Action Queue Errors:")
+    for(let i in errors){
+      console.log(errors[i]);
+    }
+    actionErrors.value = actionErrors.value.concat(errors);
+    text.value = 'Indexer Agent error. Check errors for details.'
+    snackbar.value = true;
   }).then((data) => {
     console.log("AGENT CONNECT SEND ACTIONS DATA");
     console.log(data);
-    if(!data.data.errors){
-      text.value = `Queued ${data.data.queueActions.length} actions`;
-      snackbar.value = true;
-      queryActions();
-    }else{
-      text.value = 'Indexer Agent error. Check console for details.'
-      snackbar.value = true;
-    }
+    text.value = `Queued ${data.data.queueActions.length} actions`;
+    snackbar.value = true;
+    queryActions();
   });
 }
 
@@ -337,20 +358,23 @@ async function approveActions(){
       }
     }`,
     variables: { actionIDs: selected.value.map(String) },
-  }).then((data) => {
-    console.log(data);
-    if(!data.data.errors){
-      selected.value = [];
-      for(let i = 0; i < data.data.approveActions.length; i++){
-        let actionI = actions.value.findIndex((e) => e.id == data.data.approveActions[i].id);
-        actions.value[actionI] = data.data.approveActions[i];
-      }
-      text.value = `Approved ${data.data.approveActions.length} actions`
-      snackbar.value = true;
-    }else{
-      text.value = 'Indexer Agent error. Check console for details.'
-      snackbar.value = true;
+  }).catch((errors) => {
+    console.log("Approve Action Errors:")
+    for(let i in errors){
+      console.log(errors[i]);
     }
+    actionErrors.value = actionErrors.value.concat(errors);
+    text.value = 'Indexer Agent error. Check errors for details.'
+    snackbar.value = true;
+  }).then((data) => {
+    console.log("Approve Action Data")
+    console.log(data);
+    selected.value = [];
+    for(let i = 0; i < data.data.approveActions.length; i++)
+      actions.value = actions.value.map((e) => e.id == data.data.approveActions[i].id ? data.data.approveActions[i] : e);
+
+    text.value = `Approved ${data.data.approveActions.length} actions`
+    snackbar.value = true;
     return data.data.approveActions;
   });
 }
@@ -378,19 +402,22 @@ async function deleteActions(){
       }
     }`,
     variables: { actionIDs: selected.value.map(String) }
+  }).catch((errors) => {
+    console.log("Delete Action Errors:")
+    for(let i in errors){
+      console.log(errors[i]);
+    }
+    actionErrors.value = actionErrors.value.concat(errors);
+    text.value = 'Indexer Agent error. Check errors for details.'
+    snackbar.value = true;
   }).then((data) => {
     console.log(data);
-    if(!data.data.errors){
-      for(let i = 0; i < selected.value.length; i++){
-        actions.value = actions.value.filter((e) =>  e.id != selected.value[i]);
-      }
-      text.value = `Deleted ${data.data.deleteActions} actions`
-      snackbar.value = true;
-      selected.value = [];
-    }else{
-      text.value = 'Indexer Agent error. Check console for details.'
-      snackbar.value = true;
+    for(let i = 0; i < selected.value.length; i++){
+      actions.value = actions.value.filter((e) =>  e.id != selected.value[i]);
     }
+    text.value = `Deleted ${data.data.deleteActions} actions`
+    snackbar.value = true;
+    selected.value = [];
     return data;
   });
 }
@@ -418,20 +445,22 @@ async function cancelActions(){
       }
     }`,
     variables: { actionIDs: selected.value.map(String) }
+  }).catch((errors) => {
+    console.log("Cancel Action Errors:")
+    for(let i in errors){
+      console.log(errors[i]);
+    }
+    actionErrors.value = actionErrors.value.concat(errors);
+    text.value = 'Indexer Agent error. Check errors for details.'
+    snackbar.value = true;
   }).then((data) => {
     console.log(data);
-    if(!data.data.errors){
-      selected.value = [];
-      for(let i = 0; i < data.data.cancelActions.length; i++){
-        let actionI = actions.value.findIndex((e) => e.id == data.data.cancelActions[i].id);
-        actions.value[actionI] = data.data.cancelActions[i];
-      }
-      text.value = `Cancelled ${data.data.cancelActions.length} actions`
-      snackbar.value = true;
-    }else{
-      text.value = 'Indexer Agent error. Check console for details.'
-      snackbar.value = true;
-    }
+    selected.value = [];
+    for(let i = 0; i < data.data.cancelActions.length; i++)
+      actions.value = actions.value.map((e) => e.id == data.data.cancelActions[i].id ? data.data.cancelActions[i] : e);
+    
+    text.value = `Cancelled ${data.data.cancelActions.length} actions`
+    snackbar.value = true;
     return data.data.cancelActions;
   });
 }
@@ -487,40 +516,31 @@ async function executeApprovedActions(){
         failureReason
         priority
         protocolNetwork
+        status
       }
     }`,
+  }).catch((errors) => {
+    console.log("Execute Action Errors:")
+    for(let i in errors){
+      console.log(errors[i]);
+    }
+    actionErrors.value = actionErrors.value.concat(errors);
+    text.value = 'Indexer Agent error. Check errors for details.'
+    snackbar.value = true;
   }).then((data) => {
     console.log(data);
-    if(!data.data.errors){
-      selected.value = [];
-      for(let i = 0; i < data.data.executeApprovedActions.length; i++){
-        let actionI = actions.value.findIndex((e) => e.id == data.data.executeApprovedActions[i].id);
-        actions.value[actionI] = data.data.executeApprovedActions[i];
-        if(!data.data.executeApprovedActions[i].failureReason){
-          actions.value[actionI].status = 'success';
-        }else{
-          actions.value[actionI].status = 'failed';
-        }
-        
-      }
-      text.value = `Executed ${data.data.executeApprovedActions.length} actions`
-      snackbar.value = true;
-    }else{
-      text.value = 'Indexer Agent error. Check console for details.'
-      snackbar.value = true;
-    }
+    selected.value = [];
+    for(let i = 0; i < data.data.executeApprovedActions.length; i++)
+      actions.value = actions.value.map((e) => e.id == data.data.executeApprovedActions[i].id ? data.data.executeApprovedActions[i] : e);
+    
+    text.value = `Executed ${data.data.executeApprovedActions.length} actions`
+    snackbar.value = true;
     return data.data.executeApprovedActions;
   });
 }
 
 const headers = ref([
         { title: 'ID', key: 'id'},
-        // {
-        //   title: 'Img',
-        //   sortable: false,
-        //   key: 'image',
-        // },
-        //{ title: 'Name', key: 'displayName' },
         { title: 'Status', key: 'status' },
         { title: 'Priority', key: 'priority'},
         { title: 'Type', key: 'type' },
@@ -530,55 +550,8 @@ const headers = ref([
         { title: 'Transaction', key: 'transaction' },
         { title: 'Failure Reason', key: 'failureReason' }, 
         { title: 'Source', key: 'source'},
-
-        
-        // { title: 'Current APR', key: 'apr'},
-        // { title: 'New APR', key: 'newApr'},
-        // { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
-        // { title: 'Est Daily Rewards (After Cut)', key: 'dailyRewardsCut'},
-        // { title: 'Current Proportion', key: 'proportion'},
-        // { title: 'New Proportion', key: 'newProportion'},
-
-
         { title: 'Deployment ID', key: 'deploymentID', sortable: false },
         { title: 'Allocation ID', key: 'allocationID', sortable: false },
       ]);
 
-function customSort(items, index, isDesc) {
-  items.sort((a, b) => {
-    if (index[0] == 'currentVersion.subgraphDeployment.createdAt'
-        || index[0] == 'currentSignalledTokens'
-        || index[0] == 'currentVersion.subgraphDeployment.stakedTokens'
-        || index[0] == 'currentVersion.subgraphDeployment.indexingRewardAmount'
-        || index[0] == 'currentVersion.subgraphDeployment.queryFeesAmount'
-        || index[0] == 'proportion'
-        || index[0] == 'apr'
-        || index[0] == 'newApr'
-        || index[0] == 'dailyRewards'
-        || index[0] == 'dailyRewardsCut'
-        || index[0] == 'maxAllo'
-    ) {
-      if (!isDesc[0]) {
-        return t(a, index[0]).safeObject - t(b, index[0]).safeObject;
-      } else {
-        return t(b, index[0]).safeObject - t(a, index[0]).safeObject;
-      }
-    } else {
-      if(typeof t(a, index[0]) !== 'undefined'){
-        let objA = t(a, index[0]).safeObject;
-        let objB = t(b, index[0]).safeObject;
-        if(objA == null || objB == null)
-          return objA != null && !isDesc[0];
-
-        if (!isDesc[0]) {
-          return objA.toString().toLowerCase().localeCompare(objB.toString().toLowerCase());
-        } else {
-          return objB.toString().toLowerCase().localeCompare(objA.toString().toLowerCase());
-        }
-      }
-    }
-
-  });
-  return items;
-}
 </script>
