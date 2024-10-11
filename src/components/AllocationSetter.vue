@@ -13,9 +13,9 @@
   ></v-text-field>
   <v-btn
       class="d-inline-block mx-2 my-1"
-      @click="newAllocationSetterStore.setAllMinimums()"
+      @click="newAllocationSetterStore.setAllMaxAllos()"
   >
-    Set Minimums
+    Set Max Allos
   </v-btn>
   <v-data-table
       :headers="headers"
