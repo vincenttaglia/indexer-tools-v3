@@ -286,7 +286,7 @@ export const useSubgraphsStore = defineStore({
         if(subgraph.currentSignalledTokens > 0) {
           maxAllos[i] = { maxAllo: maxAllo(subgraphSettingStore.settings.targetApr, subgraph.currentSignalledTokens, networkStore, state.getFutureStakedTokens[i].futureStakedTokens) }
         }else{
-          maxAllos[i] = { maxAllo: 0 }
+          maxAllos[i] = { maxAllo: Number.MIN_SAFE_INTEGER }
         }
       }
       return maxAllos;

@@ -123,7 +123,8 @@
         {{ numeral(item.newApr).format('0,0.00') }}%
       </template>
     <template v-slot:item.maxAllo="{ item }">
-      {{ numeral(item.maxAllo).format('0,0') }} GRT
+      <span v-if="item.maxAllo != Number.MIN_SAFE_INTEGER">{{ numeral(item.maxAllo).format('0,0') }} GRT</span>
+      <span v-if="item.maxAllo == Number.MIN_SAFE_INTEGER">-</span>
     </template>
     <template v-slot:item.dailyRewards="{ item }">
       {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.dailyRewards))).format('0,0') }} GRT
