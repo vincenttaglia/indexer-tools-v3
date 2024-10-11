@@ -375,6 +375,10 @@ async function approveActions(){
 
     text.value = `Approved ${data.data.approveActions.length} actions`
     snackbar.value = true;
+    
+    if(data.data.approveActions.length == 0)
+      queryActions();
+
     return data.data.approveActions;
   });
 }
@@ -418,6 +422,10 @@ async function deleteActions(){
     text.value = `Deleted ${data.data.deleteActions} actions`
     snackbar.value = true;
     selected.value = [];
+
+    if(data.data.deleteActions.length == 0)
+      queryActions();
+
     return data;
   });
 }
@@ -461,6 +469,10 @@ async function cancelActions(){
     
     text.value = `Cancelled ${data.data.cancelActions.length} actions`
     snackbar.value = true;
+
+    if(data.data.cancelActions.length == 0)
+      queryActions();
+
     return data.data.cancelActions;
   });
 }
@@ -535,6 +547,10 @@ async function executeApprovedActions(){
     
     text.value = `Executed ${data.data.executeApprovedActions.length} actions`
     snackbar.value = true;
+
+    if(data.data.executeApprovedActions.length == 0)
+      queryActions();
+
     return data.data.executeApprovedActions;
   });
 }
