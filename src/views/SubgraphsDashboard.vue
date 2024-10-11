@@ -74,7 +74,7 @@
             style="max-width: 15rem;"
             class="d-inline-block mx-4"
         ></v-select>
-        <v-select
+        <v-combobox
             v-model="subgraphSettingStore.settings.networkFilter"
             :items="subgraphStore.getSubgraphNetworks"
             label="Subgraph Networks"
@@ -82,7 +82,7 @@
             chips
             class="d-inline-block mx-4"
             style="min-width:13rem;max-width: 15rem;top: -5px"
-        ></v-select>
+        ></v-combobox>
         <v-select
             v-model="subgraphSettingStore.settings.statusFilter"
             :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"

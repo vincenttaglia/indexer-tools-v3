@@ -38,7 +38,7 @@
             class="d-inline-block mx-4 mt-5"
             style="min-width:13rem;max-width: 15rem;"
         ></v-select>
-        <v-select
+        <v-combobox
           v-model="allocationStore.networkFilter"
           :items="allocationStore.getSubgraphNetworks"
           label="Subgraph Networks"
@@ -46,7 +46,7 @@
           chips
           class="d-inline-block mx-4"
           style="min-width:13rem;max-width: 15rem;top: -5px"
-        ></v-select>
+        ></v-combobox>
         <v-checkbox
           v-model="allocationStore.activateBlacklist"
           label="Blacklist"
