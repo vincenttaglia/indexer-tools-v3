@@ -235,7 +235,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       let skip = [];
       for(const i in allocationStore.getSelectedAllocations){
         let allo = {};
-        if(Object.keys(state.newAllocations).includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash)){
+        if(subgraphStore.selected.includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash)){
           //console.log("CHECK");
           //console.log(BigNumber(allocationStore.getSelectedAllocations[i].allocatedTokens).dividedBy(10**18).toString());
           //console.log(state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]);
