@@ -83,7 +83,7 @@ qosSubgraphClient.query({
       }
     }`,
     variables: {
-      dayNumber: data.queryDailyDataPoints[0].dayNumber
+      dayNumber: data.queryDailyDataPoints[0].dayNumber - 1
     }
   }).then(({ data }) => {
     console.log("QUERY DAILY DATA POINTS");
