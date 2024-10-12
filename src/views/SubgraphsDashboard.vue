@@ -30,6 +30,30 @@
       </v-btn>
     </template>
     <template v-slot:top>
+      <v-expansion-panels>
+        <v-expansion-panel
+          title="Subgraph Query Filters"
+        >
+          <v-expansion-panel-text>
+            <v-text-field
+                v-model="subgraphSettingStore.settings.queryFilters.minSignal"
+                type="number"
+                label="Min Signal"
+                class="d-inline-block mx-4"
+                style="max-width:15rem"
+            ></v-text-field>
+            <v-combobox
+                v-model="subgraphSettingStore.settings.queryFilters.networkFilter"
+                :items="subgraphStore.getSubgraphNetworks"
+                label="Subgraph Networks"
+                multiple
+                chips
+                class="d-inline-block mx-4"
+                style="min-width:13rem;max-width: 15rem;top: -5px"
+            ></v-combobox>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
       <div class="d-block">
         <v-text-field
             v-model="search"

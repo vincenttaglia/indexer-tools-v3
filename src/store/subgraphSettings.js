@@ -24,6 +24,10 @@ export const useSubgraphSettingStore = defineStore('subgraphSetting', {
         arbitrumSepolia: "",
       },
       hideCurrentlyAllocated: false,
+      queryFilters: {
+        minSignal: '',
+        networkFilter: [],
+      },
     },
   }),
   getters: {
