@@ -178,7 +178,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       let selectedMaxAllos = new BigNumber(0);
       if(state.getSelectedSubgraphs.length > 0) {
         for (const i in state.getSelectedSubgraphs) {
-          if(!state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.deniedAt && state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.signalledTokens > 0){
+          if(!state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.deniedAt && state.getSelectedSubgraphs[i].currentVersion.subgraphDeployment.signalledTokens > 0 && state.getSelectedSubgraphs[i].maxAllo > 0){
             selectedMaxAllos = selectedMaxAllos.plus(BigNumber(state.getSelectedSubgraphs[i].maxAllo));
           }
         }
