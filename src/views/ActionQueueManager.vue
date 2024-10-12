@@ -19,18 +19,37 @@
   </v-snackbar>
   <h3 v-if="!accountStore.getAgentConnectStatus" class="mx-3 my-5">Set Agent Conenct settings in account settings.</h3>
   <br>
-  <div class="d-flex">
-    <v-btn text="Refresh actions" prepend-icon="mdi-refresh" @click="queryActions()" class="mx-5 my-6" v-if="accountStore.getAgentConnectStatus" stacked></v-btn>
-    <v-select
-        v-model="managerSettingStore.settings.statusFilter"
-        :items="[{title: 'Queued', value: 'queued'}, {title:'Approved', value: 'approved'}, {title: 'Pending', value: 'pending'}, {title: 'Success', value: 'success'}, {title: 'Failed', value: 'failed'}, {title: 'Canceled', value: 'canceled'}]"
-        label="Status Filter"
-        class="d-inline-block mx-5 my-6"
-        multiple
-        clearable
-        chips
-        style="min-width:150px;max-width:200px;"
-    ></v-select>
+  <div class="d-flex justify-space-between">
+    <div class="d-flex mr-auto flex-1-1-0 align-center">
+      <v-btn text="Refresh actions" prepend-icon="mdi-refresh" @click="queryActions()" class="mx-5 my-6 d-inline-block align-self-center justify-center" v-if="accountStore.getAgentConnectStatus" stacked></v-btn>
+      <v-select
+          v-model="managerSettingStore.settings.statusFilter"
+          :items="[{title: 'Queued', value: 'queued'}, {title:'Approved', value: 'approved'}, {title: 'Pending', value: 'pending'}, {title: 'Success', value: 'success'}, {title: 'Failed', value: 'failed'}, {title: 'Canceled', value: 'canceled'}]"
+          label="Status Filter"
+          class="d-inline-block mx-5 mt-6 flex-0-1"
+          multiple
+          clearable
+          chips
+          style="min-width: 150px;"
+      ></v-select>
+    </div>
+    <div class="d-flex text-center flex-row ml-auto mr-auto align-stretch">
+      <v-card style="min-width: 150px" variant="tonal" class="mx-1">
+        <v-card-text>
+          Succeeded:
+          <h1 class="pt-2">{{ actionSuccesses }}</h1>
+        </v-card-text>
+      </v-card>
+      <v-card style="min-width: 150px" variant="tonal" class="mx-1">
+        <v-card-text>
+          Failed:
+          <h1 class="pt-2">{{ actionFailures }}</h1>
+        </v-card-text>
+      </v-card>
+    </div>
+    <div class="ml-auto flex-1-1-0">
+      &nbsp;
+    </div>
   </div>
   
   <v-data-table
@@ -272,6 +291,8 @@ const snackbar = ref(false);
 const text = ref("");
 const sortBy = ref([{ key: 'id', order: 'desc' }]);
 const actionErrors = ref([]);
+const actionFailures = ref(0);
+const actionSuccesses = ref(0);
 const filteredActions = computed(() => {
   let fActions = actions.value;
   
@@ -542,9 +563,14 @@ async function executeApprovedActions(){
   }).then((data) => {
     console.log(data);
     selected.value = [];
-    for(let i = 0; i < data.data.executeApprovedActions.length; i++)
+    for(let i = 0; i < data.data.executeApprovedActions.length; i++){
       actions.value = actions.value.map((e) => e.id == data.data.executeApprovedActions[i].id ? data.data.executeApprovedActions[i] : e);
-    
+      if(data.data.executeApprovedActions[i].status == "failed"){
+        actionFailures.value += 1;
+      } else if(data.data.executeApprovedActions[i].status == "success"){
+        actionSuccesses.value += 1;
+      }
+    }
     text.value = `Executed ${data.data.executeApprovedActions.length} actions`
     snackbar.value = true;
 
