@@ -1,28 +1,32 @@
 <template>
-  <v-text-field
-      class="mx-2 my-1 d-inline-block"
-      type="number"
-      v-model="newAllocationSetterStore.minAllocation"
-      label="Minimum Allocation"
-  ></v-text-field>
-  <v-text-field
-      class="mx-2 my-1 d-inline-block"
-      type="number"
-      v-model="newAllocationSetterStore.minAllocation0Signal"
-      label="Minimum Allocation (0 Signal)"
-  ></v-text-field>
-  <v-btn
-      class="d-inline-block mx-2 my-1"
-      @click="newAllocationSetterStore.setAllMaxAllos()"
-  >
-    Set Max Allos
-  </v-btn>
-  <v-btn
-      class="d-inline-block mx-2 my-1"
-      @click="newAllocationSetterStore.resetAllos()"
-  >
-    Reset Allos
-  </v-btn>
+  <div class="d-flex">
+    <div class="d-flex">
+      <v-text-field
+        class="mt-5 mx-2"
+        type="number"
+        v-model="newAllocationSetterStore.minAllocation"
+        label="Minimum Allocation"
+      ></v-text-field>
+      <v-text-field
+          class="mt-5 mx-2"
+          type="number"
+          v-model="newAllocationSetterStore.minAllocation0Signal"
+          label="Minimum Allocation (0 Signal)"
+      ></v-text-field>
+    </div>
+    <v-btn
+        class="d-inline-block mx-2 my-1 align-self-center"
+        @click="newAllocationSetterStore.setAllMaxAllos()"
+    >
+      Set Max Allos
+    </v-btn>
+    <v-btn
+        class="d-inline-block mx-2 my-1 align-self-center"
+        @click="newAllocationSetterStore.resetAllos()"
+    >
+      Reset Allos
+    </v-btn>
+  </div>
   <v-data-table
       :headers="headers"
       :items="newAllocationSetterStore.getSelectedSubgraphs"
