@@ -23,6 +23,78 @@ import { upgradeIndexerClient } from '@/plugins/upgradeIndexerClient';
 
 const { getDeploymentStatuses } = storeToRefs(deploymentStatusStore);
 
+const SUBGRAPH_QUERY = gql`query subgraphDeploymentManifests($skip: Int!, $minSignal: Int!, $networks: [String]){
+  subgraphDeploymentManifests(
+    skip: $skip,
+    first: 1000,
+    where: {deployment_: {signalledTokens_gt: $minSignal}, network_in: $networks}
+  ) {
+    deployment {
+      id
+      deniedAt
+      createdAt
+      indexingRewardAmount
+      ipfsHash
+      queryFeesAmount
+      signalledTokens
+      stakedTokens
+      manifest {
+        network
+        poweredBySubstreams
+      }
+      versions(first: 1, orderBy: version, orderDirection: desc) {
+        metadata {
+          subgraphVersion {
+            subgraph {
+              metadata {
+                displayName
+                image
+                description
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`;
+
+const SUBGRAPH_QUERY_NO_NETWORK_FILTER = gql`query subgraphDeploymentManifests($skip: Int!, $minSignal: Int!){
+  subgraphDeploymentManifests(
+    skip: $skip,
+    first: 1000,
+    where: {deployment_: {signalledTokens_gt: $minSignal}}
+  ) {
+    deployment {
+      id
+      deniedAt
+      createdAt
+      indexingRewardAmount
+      ipfsHash
+      queryFeesAmount
+      signalledTokens
+      stakedTokens
+      manifest {
+        network
+        poweredBySubstreams
+      }
+      versions(first: 1, orderBy: version, orderDirection: desc) {
+        metadata {
+          subgraphVersion {
+            subgraph {
+              metadata {
+                displayName
+                image
+                description
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`;
+
 export const useSubgraphsStore = defineStore({
   id: 'subgraphs',
   state: () => ({
@@ -310,7 +382,7 @@ export const useSubgraphsStore = defineStore({
       return currentlyAllocated;
     },
     getSubgraphNetworks: (state) => {
-      let networks = ["mainnet","arbitrum-one","matic"];
+      let networks = [];
       for(let i = 0; i < state.subgraphs.length; i++){
         if(state.subgraphs[i]?.deployment?.manifest?.network && !networks.includes(state.subgraphs[i].deployment.manifest.network) && state.subgraphs[i].deployment.manifest.network != 'polygon'){
           networks.push(state.subgraphs[i].deployment.manifest.network);
@@ -388,43 +460,11 @@ export const useSubgraphsStore = defineStore({
     async fetch(skip){
       console.log("Fetch " + skip);
       return chainStore.getNetworkSubgraphClient.query({
-        query: gql`query subgraphDeploymentManifests($skip: Int!){
-          subgraphDeploymentManifests(
-            skip: $skip,
-            first: 1000,
-            where: {deployment_: {signalledTokens_gt: 5000}, network_in: ["matic", "mainnet"]}
-          ) {
-            deployment {
-              id
-              deniedAt
-              createdAt
-              indexingRewardAmount
-              ipfsHash
-              queryFeesAmount
-              signalledTokens
-              stakedTokens
-              manifest {
-                network
-                poweredBySubstreams
-              }
-              versions(first: 1, orderBy: version, orderDirection: desc) {
-                metadata {
-                  subgraphVersion {
-                    subgraph {
-                      metadata {
-                        displayName
-                        image
-                        description
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }`,
+        query: subgraphSettingStore.settings.queryFilters.networkFilter.length == 0 ? SUBGRAPH_QUERY_NO_NETWORK_FILTER : SUBGRAPH_QUERY,
         variables: {
-          skip: skip
+          skip: skip,
+          minSignal: Number.parseInt(subgraphSettingStore.settings.queryFilters.minSignal) || 0,
+          networks: subgraphSettingStore.settings.queryFilters.networkFilter,
         },
       })
       .then(({ data, networkStatus }) => {
