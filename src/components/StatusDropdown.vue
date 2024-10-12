@@ -196,8 +196,8 @@ const snackbar = ref(false);
 const text = ref("");
 const props = defineProps(['item', 'subgraph', 'metadata']);
 const item = props.item;
-const subgraph = props.subgraph || item.currentVersion.subgraphDeployment;
-const metadata = props.metadata || item.metadata;
+const subgraph = props.subgraph || item.deployment;
+const metadata = props.metadata || item.deployment.versions[0].metadata.subgraphVersion.subgraph.metadata;
 
 const isDenied = subgraph.deniedAt != '0';
 const isAllocated = ref(item.currentlyAllocated);
@@ -208,7 +208,7 @@ const badgeColor = ref("");
 const copyDialog = ref(false);
 const copyText = ref("");
 
-if(isAllocated.value && item.currentVersion){
+if(isAllocated.value && item.deployment){
   badgeIcon.value = "mdi-exclamation-thick";
   badgeColor.value = "warning";
   badge.value = true;

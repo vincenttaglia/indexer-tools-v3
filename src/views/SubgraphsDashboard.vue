@@ -2,7 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="subgraphStore.getFilteredSubgraphs"
-    item-key="currentVersion.subgraphDeployment.ipfsHash"
+    item-key="deployment.ipfsHash"
     class="elevation-1"
     :custom-sort="customSort"
     loading-text="Loading... Please wait"
@@ -134,8 +134,8 @@
     <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <StatusDropdownVue :item='item' />
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
-      <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ moment(item.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
+    <template v-slot:item.deployment.createdAt="{ item }">
+      <span :timestamp="item.deployment.createdAt">{{ moment(item.deployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
     <template v-slot:item.proportion="{ item }">
       {{ numeral(item.proportion).format('0,0.0000') }}
@@ -156,26 +156,26 @@
     <template v-slot:item.dailyRewardsCut="{ item }">
       {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.dailyRewardsCut))).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentSignalledTokens="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentSignalledTokens.toString())).format('0,0') }} GRT
+    <template v-slot:item.deployment.signalledTokens="{ item }">
+      {{ numeral(web3.utils.fromWei(item.deployment.signalledTokens.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.indexingRewardAmount="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.indexingRewardAmount.toString())).format('0,0') }} GRT
+    <template v-slot:item.deployment.indexingRewardAmount="{ item }">
+      {{ numeral(web3.utils.fromWei(item.deployment.indexingRewardAmount.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.queryFeesAmount="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.queryFeesAmount.toString())).format('0,0') }} GRT
+    <template v-slot:item.deployment.queryFeesAmount="{ item }">
+      {{ numeral(web3.utils.fromWei(item.deployment.queryFeesAmount.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.stakedTokens="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
+    <template v-slot:item.deployment.stakedTokens="{ item }">
+      {{ numeral(web3.utils.fromWei(item.deployment.stakedTokens.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.manifest.network="{ item }">
-      {{ item.currentVersion.subgraphDeployment.manifest.network ? item.currentVersion.subgraphDeployment.manifest.network : "null" }}
+    <template v-slot:item.deployment.manifest.network="{ item }">
+      {{ item.deployment.manifest.network ? item.deployment.manifest.network : "null" }}
     </template> 
     <template v-slot:item.upgradeIndexer="{ item }">
       <span
         v-if="!item.upgradeIndexer.loading && !item.upgradeIndexer.loaded"
         >
-        <v-icon left @click="subgraphStore.fetchNumEntities(item.currentVersion.subgraphDeployment.ipfsHash);">
+        <v-icon left @click="subgraphStore.fetchNumEntities(item.deployment.ipfsHash);">
           mdi-account-arrow-down
         </v-icon>
       </span>
@@ -239,11 +239,11 @@ function resetFilters () {
 
 function customSort(items, index, isDesc) {
   items.sort((a, b) => {
-    if (index[0] == 'currentVersion.subgraphDeployment.createdAt'
-        || index[0] == 'currentSignalledTokens'
-        || index[0] == 'currentVersion.subgraphDeployment.stakedTokens'
-        || index[0] == 'currentVersion.subgraphDeployment.indexingRewardAmount'
-        || index[0] == 'currentVersion.subgraphDeployment.queryFeesAmount'
+    if (index[0] == 'deployment.createdAt'
+        || index[0] == 'deployment.signalledTokens'
+        || index[0] == 'deployment.stakedTokens'
+        || index[0] == 'deployment.indexingRewardAmount'
+        || index[0] == 'deployment.queryFeesAmount'
         || index[0] == 'proportion'
         || index[0] == 'apr'
         || index[0] == 'newApr'
@@ -277,21 +277,21 @@ function customSort(items, index, isDesc) {
 
   const headers = ref([
     { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },
-    { title: 'Name', key: 'metadata.displayName' },
-    { title: 'Network', key: 'currentVersion.subgraphDeployment.manifest.network'},
-    { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
+    { title: 'Name', key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.displayName' },
+    { title: 'Network', key: 'deployment.manifest.network'},
+    { title: 'Created', key: 'deployment.createdAt' },
     { title: 'Current APR', key: 'apr'},
     { title: 'New APR', key: 'newApr'},
     { title: 'Max Allocation', key: 'maxAllo'},
     { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
     { title: 'Est Daily Rewards (After Cut)', key: 'dailyRewardsCut'},
-    { title: 'Current Signal', key: 'currentSignalledTokens'},
+    { title: 'Current Signal', key: 'deployment.signalledTokens'},
     { title: 'Entities', key: 'upgradeIndexer'},
     { title: 'Current Proportion', key: 'proportion'},
-    { title: 'Current Allocations', key: 'currentVersion.subgraphDeployment.stakedTokens'},
-    { title: 'Total Query Fees', key: 'currentVersion.subgraphDeployment.queryFeesAmount'},
-    { title: 'Total Indexing Rewards', key: 'currentVersion.subgraphDeployment.indexingRewardAmount'},
-    { title: 'Deployment ID', key: 'currentVersion.subgraphDeployment.ipfsHash', sortable: false },
+    { title: 'Current Allocations', key: 'deployment.stakedTokens'},
+    { title: 'Total Query Fees', key: 'deployment.queryFeesAmount'},
+    { title: 'Total Indexing Rewards', key: 'deployment.indexingRewardAmount'},
+    { title: 'Deployment ID', key: 'deployment.ipfsHash', sortable: false },
   ]);
 
 

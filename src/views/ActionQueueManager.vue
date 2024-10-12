@@ -84,7 +84,7 @@
     </template>
     <template v-slot:item.metadata.image="{ item }">
       <v-badge
-          :model-value="item.currentVersion.subgraphDeployment && item.currentVersion.subgraphDeployment.deniedAt != '0'"
+          :model-value="item.deployment && item.deployment.deniedAt != '0'"
           bordered
           color="error"
           icon="mdi-currency-usd-off"
@@ -96,20 +96,20 @@
         </v-avatar>
       </v-badge>
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
-      <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ moment(item.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
+    <template v-slot:item.deployment.createdAt="{ item }">
+      <span :timestamp="item.deployment.createdAt">{{ moment(item.deployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
     <template v-slot:item.currentSignalledTokens="{ item }">
       {{ numeral(Web3.utils.fromWei(item.currentSignalledTokens)).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.indexingRewardAmount="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.currentVersion.subgraphDeployment.indexingRewardAmount)).format('0,0') }} GRT
+    <template v-slot:item.deployment.indexingRewardAmount="{ item }">
+      {{ numeral(Web3.utils.fromWei(item.deployment.indexingRewardAmount)).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.queryFeesAmount="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.currentVersion.subgraphDeployment.queryFeesAmount)).format('0,0') }} GRT
+    <template v-slot:item.deployment.queryFeesAmount="{ item }">
+      {{ numeral(Web3.utils.fromWei(item.deployment.queryFeesAmount)).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.stakedTokens="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.currentVersion.subgraphDeployment.stakedTokens)).format('0,0') }} GRT
+    <template v-slot:item.deployment.stakedTokens="{ item }">
+      {{ numeral(Web3.utils.fromWei(item.deployment.stakedTokens)).format('0,0') }} GRT
     </template>
     <template v-slot:item.proportion="{ item }">
       {{ numeral(item.proportion).format('0,0.000%') }}

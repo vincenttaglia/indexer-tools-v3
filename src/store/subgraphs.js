@@ -40,53 +40,53 @@ export const useSubgraphsStore = defineStore({
       
       if(subgraphSettingStore.settings.noRewardsFilter === 0){
         subgraphs = subgraphs.filter((i) => {
-          return !i.currentVersion.subgraphDeployment.deniedAt;
+          return !i.deployment.deniedAt;
         });
       } else if(subgraphSettingStore.settings.noRewardsFilter === 2){
         subgraphs = subgraphs.filter((i) => {
-          return i.currentVersion.subgraphDeployment.deniedAt;
+          return i.deployment.deniedAt;
         });
       }
 
       if(subgraphSettingStore.settings.networkFilter.length) {
         subgraphs = subgraphs.filter((i) => {
-          return i.currentVersion.subgraphDeployment.manifest.network && subgraphSettingStore.settings.networkFilter.includes(i.currentVersion.subgraphDeployment.manifest.network);
+          return i.deployment.manifest.network && subgraphSettingStore.settings.networkFilter.includes(i.deployment.manifest.network);
         });
       }
 
       if(subgraphSettingStore.settings.activateBlacklist) {
         subgraphs = subgraphs.filter((i) => {
-          return !subgraphSettingStore.settings.subgraphBlacklist.includes(i.currentVersion.subgraphDeployment.ipfsHash);
+          return !subgraphSettingStore.settings.subgraphBlacklist.includes(i.deployment.ipfsHash);
         });
       }
 
       if(subgraphSettingStore.settings.activateSynclist) {
         subgraphs = subgraphs.filter((i) => {
-          return subgraphSettingStore.settings.subgraphSynclist.includes(i.currentVersion.subgraphDeployment.ipfsHash);
+          return subgraphSettingStore.settings.subgraphSynclist.includes(i.deployment.ipfsHash);
         });
       }
 
       if(parseInt(subgraphSettingStore.settings.maxSignal)){
         subgraphs = subgraphs.filter((i) => {
-          return BigNumber(i.currentSignalledTokens).isLessThanOrEqualTo(new BigNumber(Web3.utils.toWei(subgraphSettingStore.settings.maxSignal)));
+          return BigNumber(i.deployment.signalledTokens).isLessThanOrEqualTo(new BigNumber(Web3.utils.toWei(subgraphSettingStore.settings.maxSignal)));
         });
       }
 
       if(parseInt(subgraphSettingStore.settings.minSignal)){
         subgraphs = subgraphs.filter((i) => {
-          return BigNumber(i.currentSignalledTokens).isGreaterThanOrEqualTo(new BigNumber(Web3.utils.toWei(subgraphSettingStore.settings.minSignal)));
+          return BigNumber(i.deployment.signalledTokens).isGreaterThanOrEqualTo(new BigNumber(Web3.utils.toWei(subgraphSettingStore.settings.minSignal)));
         });
       }
 
       if(subgraphSettingStore.settings.statusFilter == 'all'){
         subgraphs = subgraphs.filter((i) => {
-          return deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash) != undefined;
+          return deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.deployment.ipfsHash) != undefined;
         });
       }
 
       if(subgraphSettingStore.settings.statusFilter == 'closable'){
         subgraphs = subgraphs.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.deployment.ipfsHash);
             if(status != undefined && status.synced == true && (status.fatalError == undefined || status.fatalError.deterministic == true))
               return true
           return false;
@@ -95,7 +95,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'healthy-synced'){
         subgraphs = subgraphs.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.deployment.ipfsHash);
             if(status != undefined && status.health == 'healthy' && status.synced == true)
               return true
           return false;
@@ -104,7 +104,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'syncing'){
         subgraphs = subgraphs.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.deployment.ipfsHash);
             if(status != undefined && status.health == 'healthy' && status.synced == false)
               return true
           return false;
@@ -113,7 +113,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'failed'){
         subgraphs = subgraphs.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.deployment.ipfsHash);
             if(status != undefined && status.health == 'failed')
               return true
           return false;
@@ -122,7 +122,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'non-deterministic'){
         subgraphs = subgraphs.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.deployment.ipfsHash);
             if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == false)
               return true
           return false;
@@ -131,7 +131,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'deterministic'){
         subgraphs = subgraphs.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.currentVersion.subgraphDeployment.ipfsHash);
+          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.deployment.ipfsHash);
             if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == true)
               return true
           return false;
@@ -181,7 +181,7 @@ export const useSubgraphsStore = defineStore({
     getDeploymentStatuses: (state) => {
       let deploymentStatuses = [];
       for(let i = 0; i < state.subgraphs.length; i++){
-        let deploymentStatus = state.getDeploymentStatusesCall.find((e) => e.subgraph == state.subgraphs[i].currentVersion.subgraphDeployment.ipfsHash);
+        let deploymentStatus = state.getDeploymentStatusesCall.find((e) => e.subgraph == state.subgraphs[i].deployment.ipfsHash);
         if(deploymentStatus != undefined){
           if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError && deploymentStatus.fatalError.deterministic == false){
             deploymentStatus.icon = 'mdi-refresh';
@@ -211,8 +211,8 @@ export const useSubgraphsStore = defineStore({
       let proportions = [];
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
-        if(subgraph.currentVersion.subgraphDeployment.stakedTokens > 0)
-            proportions[i] = { proportion: ( subgraph.currentVersion.subgraphDeployment.signalledTokens / networkStore.getTotalTokensSignalled ) / ( subgraph.currentVersion.subgraphDeployment.stakedTokens / networkStore.getTotalTokensAllocated ) };
+        if(subgraph.deployment.stakedTokens > 0)
+            proportions[i] = { proportion: ( subgraph.deployment.signalledTokens / networkStore.getTotalTokensSignalled ) / ( subgraph.deployment.stakedTokens / networkStore.getTotalTokensAllocated ) };
           else
             proportions[i] = { proportion: 0 };
       }
@@ -222,8 +222,8 @@ export const useSubgraphsStore = defineStore({
       let aprs = [];
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
-        if(subgraph.currentSignalledTokens > 0) {
-          aprs[i] = { apr: calculateNewApr(subgraph.currentSignalledTokens, subgraph.currentVersion.subgraphDeployment.stakedTokens, networkStore, "0") }
+        if(subgraph.deployment.signalledTokens > 0) {
+          aprs[i] = { apr: calculateNewApr(subgraph.deployment.signalledTokens, subgraph.deployment.stakedTokens, networkStore, "0") }
         }else{
           aprs[i] = { apr: 0 }
         }
@@ -234,11 +234,11 @@ export const useSubgraphsStore = defineStore({
       let futureStakedTokens = [];
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
-        let associatedAllocation = allocationStore.getSelectedAllocations.find((e) => e.subgraphDeployment.ipfsHash == subgraph.currentVersion.subgraphDeployment.ipfsHash);
+        let associatedAllocation = allocationStore.getSelectedAllocations.find((e) => e.subgraphDeployment.ipfsHash == subgraph.deployment.ipfsHash);
         if(associatedAllocation){
-          futureStakedTokens[i] = { futureStakedTokens: new BigNumber(subgraph.currentVersion.subgraphDeployment.stakedTokens).minus(associatedAllocation.allocatedTokens) };
+          futureStakedTokens[i] = { futureStakedTokens: new BigNumber(subgraph.deployment.stakedTokens).minus(associatedAllocation.allocatedTokens) };
         }else{
-          futureStakedTokens[i] = { futureStakedTokens: new BigNumber(subgraph.currentVersion.subgraphDeployment.stakedTokens) };
+          futureStakedTokens[i] = { futureStakedTokens: new BigNumber(subgraph.deployment.stakedTokens) };
         }
       }
       return futureStakedTokens;
@@ -247,8 +247,8 @@ export const useSubgraphsStore = defineStore({
       let newAprs = [];
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
-        if(subgraph.currentSignalledTokens > 0) {
-          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.settings.newAllocation)};
+        if(subgraph.deployment.signalledTokens > 0) {
+          newAprs[i] = { newApr: calculateNewApr(subgraph.deployment.signalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.settings.newAllocation)};
         }else{
           newAprs[i] = { newApr: 0 };
         }
@@ -259,8 +259,8 @@ export const useSubgraphsStore = defineStore({
       let dailyRewards = [];
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
-        if(subgraph.currentSignalledTokens > 0) {
-          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.settings.newAllocation) }
+        if(subgraph.deployment.signalledTokens > 0) {
+          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.deployment.signalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.settings.newAllocation) }
         }else{
           dailyRewards[i] = { dailyRewards: 0 }
         }
@@ -271,7 +271,7 @@ export const useSubgraphsStore = defineStore({
       let dailyRewardsCuts = [];
       for(let i = 0; i < this.subgraphs.length; i++){
         let subgraph = this.subgraphs[i];
-        if (subgraph.currentVersion.subgraphDeployment.stakedTokens > 0 && !accountStore.loading){
+        if (subgraph.deployment.stakedTokens > 0 && !accountStore.loading){
           dailyRewardsCuts[i] = { dailyRewardsCut: indexerCut(this.getDailyRewards[i].dailyRewards, accountStore.cut) };
         }else{
           dailyRewardsCuts[i] = { dailyRewardsCut: 0 };
@@ -283,8 +283,8 @@ export const useSubgraphsStore = defineStore({
       let maxAllos = [];
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
-        if(subgraph.currentSignalledTokens > 0) {
-          maxAllos[i] = { maxAllo: maxAllo(subgraphSettingStore.settings.targetApr, subgraph.currentSignalledTokens, networkStore, state.getFutureStakedTokens[i].futureStakedTokens) }
+        if(subgraph.deployment.signalledTokens > 0) {
+          maxAllos[i] = { maxAllo: maxAllo(subgraphSettingStore.settings.targetApr, subgraph.deployment.signalledTokens, networkStore, state.getFutureStakedTokens[i].futureStakedTokens) }
         }else{
           maxAllos[i] = { maxAllo: Number.MIN_SAFE_INTEGER }
         }
@@ -296,10 +296,10 @@ export const useSubgraphsStore = defineStore({
       for(let i = 0; i < state.subgraphs.length; i++){
         let subgraph = state.subgraphs[i];
         let allo = allocationStore.getAllocations.find(e => {
-          return e.subgraphDeployment.ipfsHash === subgraph.currentVersion.subgraphDeployment.ipfsHash;
+          return e.subgraphDeployment.ipfsHash === subgraph.deployment.ipfsHash;
         });
         let unallo = allocationStore.getSelectedAllocations.find(e => {
-          return e.subgraphDeployment.ipfsHash === subgraph.currentVersion.subgraphDeployment.ipfsHash;
+          return e.subgraphDeployment.ipfsHash === subgraph.deployment.ipfsHash;
         });
         if(allo && !unallo) {
           currentlyAllocated[i] = { currentlyAllocated: true }
@@ -312,8 +312,8 @@ export const useSubgraphsStore = defineStore({
     getSubgraphNetworks: (state) => {
       let networks = ["mainnet","arbitrum-one","matic"];
       for(let i = 0; i < state.subgraphs.length; i++){
-        if(state.subgraphs[i]?.currentVersion?.subgraphDeployment?.manifest?.network && !networks.includes(state.subgraphs[i].currentVersion.subgraphDeployment.manifest.network) && state.subgraphs[i].currentVersion.subgraphDeployment.manifest.network != 'polygon'){
-          networks.push(state.subgraphs[i].currentVersion.subgraphDeployment.manifest.network);
+        if(state.subgraphs[i]?.deployment?.manifest?.network && !networks.includes(state.subgraphs[i].deployment.manifest.network) && state.subgraphs[i].deployment.manifest.network != 'polygon'){
+          networks.push(state.subgraphs[i].deployment.manifest.network);
         }
       }
       return networks;
@@ -328,7 +328,7 @@ export const useSubgraphsStore = defineStore({
   },
   actions: {
     async fetchNumEntities(subgraphId){
-      let subgraph = this.getSubgraphs.find(e => e.currentVersion?.subgraphDeployment?.ipfsHash == subgraphId);
+      let subgraph = this.getSubgraphs.find(e => e.deployment?.ipfsHash == subgraphId);
       if(subgraph?.upgradeIndexer && !subgraph?.upgradeIndexer?.loading && !subgraph?.upgradeIndexer?.loaded){
         subgraph.upgradeIndexer.loading = true;
 
@@ -371,7 +371,7 @@ export const useSubgraphsStore = defineStore({
             }
           }`,
           variables: {
-            subgraphs: subgraph.currentVersion?.subgraphDeployment?.ipfsHash,
+            subgraphs: subgraph.deployment?.ipfsHash,
           }
         })
         .then((data) => {
@@ -388,26 +388,36 @@ export const useSubgraphsStore = defineStore({
     async fetch(skip){
       console.log("Fetch " + skip);
       return chainStore.getNetworkSubgraphClient.query({
-        query: gql`query subgraphs($skip: Int!){
-          subgraphs (skip: $skip, first: 1000){
-            id
-            metadata{
-              displayName
-              image
-            }
-            createdAt
-            currentSignalledTokens
-            currentVersion{
-              subgraphDeployment{
-                ipfsHash
-                indexingRewardAmount
-                queryFeesAmount
-                stakedTokens
-                signalledTokens
-                createdAt
-                deniedAt
-                manifest{
-                  network
+        query: gql`query subgraphDeploymentManifests($skip: Int!){
+          subgraphDeploymentManifests(
+            skip: $skip,
+            first: 1000,
+            where: {deployment_: {signalledTokens_gt: 5000}, network_in: ["matic", "mainnet"]}
+          ) {
+            deployment {
+              id
+              deniedAt
+              createdAt
+              indexingRewardAmount
+              ipfsHash
+              queryFeesAmount
+              signalledTokens
+              stakedTokens
+              manifest {
+                network
+                poweredBySubstreams
+              }
+              versions(first: 1, orderBy: version, orderDirection: desc) {
+                metadata {
+                  subgraphVersion {
+                    subgraph {
+                      metadata {
+                        displayName
+                        image
+                        description
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -418,12 +428,13 @@ export const useSubgraphsStore = defineStore({
         },
       })
       .then(({ data, networkStatus }) => {
-        if(networkStatus == 7 && data.subgraphs.length == 1000){
-          return this.fetch(skip + data.subgraphs.length)
+        console.log(data);
+        if(networkStatus == 7 && data.subgraphDeploymentManifests.length == 1000){
+          return this.fetch(skip + data.subgraphDeploymentManifests.length)
           .then((data1) => {
             let concatData = {};
-            if(typeof data.subgraphs == "object" && typeof data1.subgraphs == "object")
-            concatData.subgraphs = data.subgraphs.concat(data1.subgraphs).filter((s) => s.currentVersion);
+            if(typeof data.subgraphDeploymentManifests == "object" && typeof data1.subgraphDeploymentManifests == "object")
+            concatData.subgraphDeploymentManifests = data.subgraphDeploymentManifests.concat(data1.subgraphDeploymentManifests);
             
             return concatData;
           })
@@ -437,16 +448,16 @@ export const useSubgraphsStore = defineStore({
         this.loading = true;
         this.fetch(0)
         .then((data) => {
-          let uniqueSubgraphs = []
-          let subgraphs = [];
-          for(let i = 0; i < data.subgraphs.length; i++){
-            if(data.subgraphs[i].currentVersion?.subgraphDeployment?.ipfsHash && !uniqueSubgraphs.includes(data.subgraphs[i].currentVersion?.subgraphDeployment?.ipfsHash)){
-              uniqueSubgraphs.push(data.subgraphs[i].currentVersion.subgraphDeployment.ipfsHash);
-              subgraphs.push(data.subgraphs[i]);
-            }
-          }
-          this.subgraphs = subgraphs;
-          this.upgradeIndexer = Array(data.subgraphs.length).fill();
+          // let uniqueSubgraphs = []
+          // let subgraphs = [];
+          // for(let i = 0; i < data.subgraphDeploymentManifests.length; i++){
+          //   if(data.subgraphDeploymentManifests[i].deployment?.ipfsHash && !uniqueSubgraphs.includes(data.subgraphDeploymentManifests[i].deployment?.ipfsHash)){
+          //     uniqueSubgraphs.push(data.subgraphDeploymentManifests[i].deployment.ipfsHash);
+          //     subgraphs.push(data.subgraphDeploymentManifests[i]);
+          //   }
+          // }
+          this.subgraphs = data.subgraphDeploymentManifests;
+          this.upgradeIndexer = Array(data.subgraphDeploymentManifests.length).fill();
           for(let i = 0; i < this.upgradeIndexer.length; i++){
             this.upgradeIndexer[i] = { value: "0", loading: false, loaded: false };
           }
