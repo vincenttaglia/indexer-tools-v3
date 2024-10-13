@@ -1,32 +1,36 @@
 <template>
-  <v-text-field
-      class="mx-2 my-1 d-inline-block"
-      type="number"
-      v-model="newAllocationSetterStore.minAllocation"
-      label="Minimum Allocation"
-  ></v-text-field>
-  <v-text-field
-      class="mx-2 my-1 d-inline-block"
-      type="number"
-      v-model="newAllocationSetterStore.minAllocation0Signal"
-      label="Minimum Allocation (0 Signal)"
-  ></v-text-field>
-  <v-btn
-      class="d-inline-block mx-2 my-1"
-      @click="newAllocationSetterStore.setAllMaxAllos()"
-  >
-    Set Max Allos
-  </v-btn>
-  <v-btn
-      class="d-inline-block mx-2 my-1"
-      @click="newAllocationSetterStore.resetAllos()"
-  >
-    Reset Allos
-  </v-btn>
+  <div class="d-flex">
+    <div class="d-flex">
+      <v-text-field
+        class="mt-5 mx-2"
+        type="number"
+        v-model="newAllocationSetterStore.minAllocation"
+        label="Minimum Allocation"
+      ></v-text-field>
+      <v-text-field
+          class="mt-5 mx-2"
+          type="number"
+          v-model="newAllocationSetterStore.minAllocation0Signal"
+          label="Minimum Allocation (0 Signal)"
+      ></v-text-field>
+    </div>
+    <v-btn
+        class="d-inline-block mx-2 my-1 align-self-center"
+        @click="newAllocationSetterStore.setAllMaxAllos()"
+    >
+      Set Max Allos
+    </v-btn>
+    <v-btn
+        class="d-inline-block mx-2 my-1 align-self-center"
+        @click="newAllocationSetterStore.resetAllos()"
+    >
+      Reset Allos
+    </v-btn>
+  </div>
   <v-data-table
       :headers="headers"
       :items="newAllocationSetterStore.getSelectedSubgraphs"
-      item-key="currentVersion.subgraphDeployment.ipfsHash"
+      item-value="deployment.ipfsHash"
       class="elevation-1"
       :custom-sort="customSort"
       :footer-props="{
@@ -36,9 +40,9 @@
       show-expand
       :expanded="subgraphStore.selected"
   >
-    <template v-slot:item.metadata.image="{ item }">
+    <template v-slot:item.deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.image="{ item }">
       <v-badge
-          :model-value="item.currentVersion.subgraphDeployment && item.currentVersion.subgraphDeployment.deniedAt != '0'"
+          :model-value="item.deployment && item.deployment.deniedAt != '0'"
           bordered
           color="error"
           icon="mdi-currency-usd-off"
@@ -46,24 +50,24 @@
           avatar
       >
         <v-avatar size="30">
-          <v-img :src="item.metadata.image" />
+          <v-img :src="item.deployment.versions[0].metadata.subgraphVersion.subgraph.metadata?.image ? item.deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.image : 'https://api.thegraph.com/ipfs/api/v0/cat?arg=QmdSeSQ3APFjLktQY3aNVu3M5QXPfE9ZRK5LqgghRgB7L9'" />
         </v-avatar>
       </v-badge>
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
-      <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ moment(item.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
+    <template v-slot:item.deployment.createdAt="{ item }">
+      <span :timestamp="item.deployment.createdAt">{{ moment(item.deployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
-    <template v-slot:item.currentSignalledTokens="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.currentSignalledTokens)).format('0,0') }} GRT
+    <template v-slot:item.deployment.signalledTokens="{ item }">
+      {{ numeral(Web3.utils.fromWei(item.deployment.signalledTokens)).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.indexingRewardAmount="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.currentVersion.subgraphDeployment.indexingRewardAmount)).format('0,0') }} GRT
+    <template v-slot:item.deployment.indexingRewardAmount="{ item }">
+      {{ numeral(Web3.utils.fromWei(item.deployment.indexingRewardAmount)).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.queryFeesAmount="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.currentVersion.subgraphDeployment.queryFeesAmount)).format('0,0') }} GRT
+    <template v-slot:item.deployment.queryFeesAmount="{ item }">
+      {{ numeral(Web3.utils.fromWei(item.deployment.queryFeesAmount)).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.stakedTokens="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.currentVersion.subgraphDeployment.stakedTokens)).format('0,0') }} GRT
+    <template v-slot:item.deployment.stakedTokens="{ item }">
+      {{ numeral(Web3.utils.fromWei(item.deployment.stakedTokens)).format('0,0') }} GRT
     </template>
     <template v-slot:item.proportion="{ item }">
       {{ numeral(item.proportion).format('0,0.0000') }}
@@ -89,12 +93,12 @@
     <template v-slot:expanded-row="{ item }">
       <tr>
         <td :colspan="5">
-            <!-- :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(calculatedAvailableStake))) + (newAllocationSizes[item.currentVersion.subgraphDeployment.ipfsHash] ? newAllocationSizes[item.currentVersion.subgraphDeployment.ipfsHash] : 0)" -->
+            <!-- :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(calculatedAvailableStake))) + (newAllocationSizes[item.deployment.ipfsHash] ? newAllocationSizes[item.deployment.ipfsHash] : 0)" -->
 
           <v-slider
               min="0"
-              :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(newAllocationSetterStore.calculatedAvailableStake))) + parseFloat(newAllocations[item.currentVersion.subgraphDeployment.ipfsHash])"
-              v-model="newAllocations[item.currentVersion.subgraphDeployment.ipfsHash]"
+              :max="parseInt(Web3.utils.fromWei(Web3.utils.toBN(newAllocationSetterStore.calculatedAvailableStake))) + parseFloat(newAllocations[item.deployment.ipfsHash])"
+              v-model="newAllocations[item.deployment.ipfsHash]"
               style="max-width: 500px; min-width:100px;"
               class="mt-4"
               step="1"
@@ -104,7 +108,7 @@
                   class="mt-0 pt-0"
                   type="number"
                   style="width: 125px"
-                  v-model="newAllocations[item.currentVersion.subgraphDeployment.ipfsHash]"
+                  v-model="newAllocations[item.deployment.ipfsHash]"
               ></v-text-field>
             </template>
           </v-slider>
@@ -113,7 +117,7 @@
           <v-text-field 
               class="mt-0 pt-0"
               style="width: 125px"
-              v-model="customPOIs[item.currentVersion.subgraphDeployment.ipfsHash]"
+              v-model="customPOIs[item.deployment.ipfsHash]"
               hint="Manual POI"
           ></v-text-field>
         </td> -->
@@ -155,9 +159,9 @@ const headers = ref([
           title: 'Img',
           align: 'start',
           sortable: false,
-          key: 'metadata.image',
+          key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.image',
         },
-        { title: 'Name', key: 'metadata.displayName' },
+        { title: 'Name', key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.displayName' },
         { title: 'Current APR', key: 'apr'},
         { title: 'New APR', key: 'newApr'},
         { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
@@ -166,22 +170,22 @@ const headers = ref([
         { title: 'New Proportion', key: 'newProportion'},
         {
           title: 'Current Signal',
-          key: 'currentSignalledTokens',
+          key: 'deployment.signalledTokens',
         },
-        { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
-        { title: 'Current Allocations', key: 'currentVersion.subgraphDeployment.stakedTokens'},
-        { title: 'Total Query Fees', key: 'currentVersion.subgraphDeployment.queryFeesAmount'},
-        { title: 'Total Indexing Rewards', key: 'currentVersion.subgraphDeployment.indexingRewardAmount'},
-        { title: 'Deployment ID', key: 'currentVersion.subgraphDeployment.ipfsHash', sortable: false },
+        { title: 'Created', key: 'deployment.createdAt' },
+        { title: 'Current Allocations', key: 'deployment.stakedTokens'},
+        { title: 'Total Query Fees', key: 'deployment.queryFeesAmount'},
+        { title: 'Total Indexing Rewards', key: 'deployment.indexingRewardAmount'},
+        { title: 'Deployment ID', key: 'deployment.ipfsHash', sortable: false },
       ]);
 
 function customSort(items, index, isDesc) {
   items.sort((a, b) => {
-    if (index[0] == 'currentVersion.subgraphDeployment.createdAt'
-        || index[0] == 'currentSignalledTokens'
-        || index[0] == 'currentVersion.subgraphDeployment.stakedTokens'
-        || index[0] == 'currentVersion.subgraphDeployment.indexingRewardAmount'
-        || index[0] == 'currentVersion.subgraphDeployment.queryFeesAmount'
+    if (index[0] == 'deployment.createdAt'
+        || index[0] == 'deployment.signalledTokens'
+        || index[0] == 'deployment.stakedTokens'
+        || index[0] == 'deployment.indexingRewardAmount'
+        || index[0] == 'deployment.queryFeesAmount'
         || index[0] == 'proportion'
         || index[0] == 'apr'
         || index[0] == 'newApr'

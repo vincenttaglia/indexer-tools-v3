@@ -1,6 +1,6 @@
 {
   "name": "indexer-tools-v3",
-  "version": "3.3.2",
+  "version": "3.3.4",
   "engines": {
     "node": "16.x"
   },
@@ -13,7 +13,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.9",
+    "@apollo/client": "^3.11.8",
     "@mdi/font": "7.0.96",
     "bignumber.js": "^9.1.1",
     "connect-history-api-fallback": "^2.0.0",
@@ -22,11 +22,11 @@
     "graphql-tag": "^2.12.6",
     "moment": "^2.29.4",
     "numeral": "^2.0.6",
-    "pinia": "^2.1.4",
+    "pinia": "^2.2.4",
     "roboto-fontface": "*",
-    "vue": "3.4.3",
-    "vue-router": "^4.2.4",
-    "vuetify": "3.4.9",
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5",
+    "vuetify": "^3.7.2",
     "web3": "^1.8.2",
     "webfontloader": "^1.0.0"
   },

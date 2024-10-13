@@ -12,7 +12,7 @@ const chainStore = useChainStore();
 
 export const useAccountStore = defineStore('accountStore', {
   state: () => ({
-    accounts: localStorage.accounts ? JSON.parse(localStorage.accounts) : defaultsConfig.accounts,
+    accounts: (localStorage.accounts ? JSON.parse(localStorage.accounts) : defaultsConfig.accounts).map((e) => Object.assign(e,{ address:e.address.toLowerCase() })),
     loading: true,
     cut: '0',
     url: '',

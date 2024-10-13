@@ -2,9 +2,8 @@
   <v-data-table
     :headers="headers"
     :items="subgraphStore.getFilteredSubgraphs"
-    item-key="currentVersion.subgraphDeployment.ipfsHash"
+    item-value="deployment.ipfsHash"
     class="elevation-1"
-    :custom-sort="customSort"
     loading-text="Loading... Please wait"
     mobile-breakpoint="0"
     :show-select="selectable"
@@ -30,6 +29,36 @@
       </v-btn>
     </template>
     <template v-slot:top>
+      <div class="d-flex align-content-center">
+        <v-btn text="Refresh Subgraphs" prepend-icon="mdi-refresh" @click="subgraphStore.refreshSubgraphs()" class="mx-5 my-6" stacked></v-btn>
+        <div class="d-flex align-content-center align-center">
+          <v-expansion-panels class="">
+            <v-expansion-panel
+              title="Subgraph Query Filters"
+            >
+              <v-expansion-panel-text>
+                <v-text-field
+                    v-model="subgraphSettingStore.settings.queryFilters.minSignal"
+                    type="number"
+                    label="Min Signal"
+                    class="d-inline-block mx-4"
+                    style="max-width:15rem"
+                ></v-text-field>
+                <v-combobox
+                    v-model="subgraphSettingStore.settings.queryFilters.networkFilter"
+                    :items="networks"
+                    label="Subgraph Networks"
+                    multiple
+                    chips
+                    clearable
+                    class="d-inline-block mx-4"
+                    style="min-width:13rem;max-width: 15rem;top: -5px"
+                ></v-combobox>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </div>
+      </div>
       <div class="d-block">
         <v-text-field
             v-model="search"
@@ -51,20 +80,44 @@
             class="d-inline-block mx-4"
             style="max-width:15rem"
         ></v-text-field>
-        <v-text-field
-            v-model="subgraphSettingStore.settings.newAllocation"
-            type="number"
-            label="New Allocation"
-            class="d-inline-block mx-4"
-            style="max-width:15rem"
-        ></v-text-field>
-        <v-text-field
-            v-model="subgraphSettingStore.settings.targetApr"
-            type="number"
-            label="Target APR"
-            class="d-inline-block mx-4"
-            style="max-width:15rem"
-        ></v-text-field>
+        <v-confirm-edit v-model="subgraphSettingStore.settings.newAllocation">
+          <template v-slot:default="{ model: proxyModel, save, cancel, isPristine, actions}">
+            <v-text-field
+              v-model="proxyModel.value"
+              type="number"
+              label="New Allocation"
+              class="d-inline-block mx-4"
+              style="max-width:15rem"
+              :append-inner-icon="isPristine ? '' : 'mdi-check'"
+              :clear-icon="isPristine ? '' : 'mdi-undo-variant'"
+              @click:append-inner="save"
+              @click:clear="cancel"
+              @keydown.enter="save"
+              clearable
+              hide-spin-buttons
+            ></v-text-field>
+            <component :is="actions" v-if="false"></component>
+          </template>
+        </v-confirm-edit>
+        <v-confirm-edit v-model="subgraphSettingStore.settings.targetApr">
+          <template v-slot:default="{ model: proxyModel, save, cancel, isPristine, actions}">
+            <v-text-field
+              v-model="proxyModel.value"
+              type="number"
+              label="Target APR"
+              class="d-inline-block mx-4"
+              style="max-width:15rem"
+              :append-inner-icon="isPristine ? '' : 'mdi-check'"
+              :clear-icon="isPristine ? '' : 'mdi-undo-variant'"
+              @click:append-inner="save"
+              @click:clear="cancel"
+              @keydown.enter="save"
+              clearable
+              hide-spin-buttons
+            ></v-text-field>
+            <component :is="actions" v-if="false"></component>
+          </template>
+        </v-confirm-edit>
         <v-select
             v-model="subgraphSettingStore.settings.noRewardsFilter"
             :items="[{text: 'Exclude Denied', action: 0}, {text:'Include Denied', action: 1}, {text: 'Only Denied', action: 2}]"
@@ -110,8 +163,8 @@
     <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <StatusDropdownVue :item='item' />
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.createdAt="{ item }">
-      <span :timestamp="item.currentVersion.subgraphDeployment.createdAt">{{ moment(item.currentVersion.subgraphDeployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
+    <template v-slot:item.deployment.createdAt="{ item }">
+      <span :timestamp="item.deployment.createdAt">{{ moment(item.deployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
     <template v-slot:item.proportion="{ item }">
       {{ numeral(item.proportion).format('0,0.0000') }}
@@ -132,26 +185,26 @@
     <template v-slot:item.dailyRewardsCut="{ item }">
       {{ numeral(web3.utils.fromWei(web3.utils.toBN(item.dailyRewardsCut))).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentSignalledTokens="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentSignalledTokens.toString())).format('0,0') }} GRT
+    <template v-slot:item.deployment.signalledTokens="{ item }">
+      {{ numeral(web3.utils.fromWei(item.deployment.signalledTokens.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.indexingRewardAmount="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.indexingRewardAmount.toString())).format('0,0') }} GRT
+    <template v-slot:item.deployment.indexingRewardAmount="{ item }">
+      {{ numeral(web3.utils.fromWei(item.deployment.indexingRewardAmount.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.queryFeesAmount="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.queryFeesAmount.toString())).format('0,0') }} GRT
+    <template v-slot:item.deployment.queryFeesAmount="{ item }">
+      {{ numeral(web3.utils.fromWei(item.deployment.queryFeesAmount.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.stakedTokens="{ item }">
-      {{ numeral(web3.utils.fromWei(item.currentVersion.subgraphDeployment.stakedTokens.toString())).format('0,0') }} GRT
+    <template v-slot:item.deployment.stakedTokens="{ item }">
+      {{ numeral(web3.utils.fromWei(item.deployment.stakedTokens.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.currentVersion.subgraphDeployment.manifest.network="{ item }">
-      {{ item.currentVersion.subgraphDeployment.manifest.network ? item.currentVersion.subgraphDeployment.manifest.network : "null" }}
+    <template v-slot:item.deployment.manifest.network="{ item }">
+      {{ item.deployment.manifest.network ? item.deployment.manifest.network : "null" }}
     </template> 
     <template v-slot:item.upgradeIndexer="{ item }">
       <span
         v-if="!item.upgradeIndexer.loading && !item.upgradeIndexer.loaded"
         >
-        <v-icon left @click="subgraphStore.fetchNumEntities(item.currentVersion.subgraphDeployment.ipfsHash);">
+        <v-icon left @click="subgraphStore.fetchNumEntities(item.deployment.ipfsHash);">
           mdi-account-arrow-down
         </v-icon>
       </span>
@@ -215,11 +268,11 @@ function resetFilters () {
 
 function customSort(items, index, isDesc) {
   items.sort((a, b) => {
-    if (index[0] == 'currentVersion.subgraphDeployment.createdAt'
-        || index[0] == 'currentSignalledTokens'
-        || index[0] == 'currentVersion.subgraphDeployment.stakedTokens'
-        || index[0] == 'currentVersion.subgraphDeployment.indexingRewardAmount'
-        || index[0] == 'currentVersion.subgraphDeployment.queryFeesAmount'
+    if (index[0] == 'deployment.createdAt'
+        || index[0] == 'deployment.signalledTokens'
+        || index[0] == 'deployment.stakedTokens'
+        || index[0] == 'deployment.indexingRewardAmount'
+        || index[0] == 'deployment.queryFeesAmount'
         || index[0] == 'proportion'
         || index[0] == 'apr'
         || index[0] == 'newApr'
@@ -253,22 +306,115 @@ function customSort(items, index, isDesc) {
 
   const headers = ref([
     { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },
-    { title: 'Name', key: 'metadata.displayName' },
-    { title: 'Network', key: 'currentVersion.subgraphDeployment.manifest.network'},
-    { title: 'Created', key: 'currentVersion.subgraphDeployment.createdAt' },
+    { title: 'Name', key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.displayName' },
+    { title: 'Network', key: 'deployment.manifest.network'},
+    { title: 'Created', key: 'deployment.createdAt' },
     { title: 'Current APR', key: 'apr'},
     { title: 'New APR', key: 'newApr'},
     { title: 'Max Allocation', key: 'maxAllo'},
     { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
     { title: 'Est Daily Rewards (After Cut)', key: 'dailyRewardsCut'},
-    { title: 'Current Signal', key: 'currentSignalledTokens'},
+    { title: 'Current Signal', key: 'deployment.signalledTokens'},
     { title: 'Entities', key: 'upgradeIndexer'},
     { title: 'Current Proportion', key: 'proportion'},
-    { title: 'Current Allocations', key: 'currentVersion.subgraphDeployment.stakedTokens'},
-    { title: 'Total Query Fees', key: 'currentVersion.subgraphDeployment.queryFeesAmount'},
-    { title: 'Total Indexing Rewards', key: 'currentVersion.subgraphDeployment.indexingRewardAmount'},
-    { title: 'Deployment ID', key: 'currentVersion.subgraphDeployment.ipfsHash', sortable: false },
+    { title: 'Current Allocations', key: 'deployment.stakedTokens'},
+    { title: 'Total Query Fees', key: 'deployment.queryFeesAmount'},
+    { title: 'Total Indexing Rewards', key: 'deployment.indexingRewardAmount'},
+    { title: 'Deployment ID', key: 'deployment.ipfsHash', sortable: false },
   ]);
 
+  const networks = [
+    "mainnet",
+    "arbitrum-one",
+    "matic",
+    "base",
+    "gnosis",
+    "arbitrum-sepolia",
+    "optimism",
+    "bsc",
+    "fantom",
+    "avalanche",
+    "zksync-era",
+    "fuji",
+    "near-testnet",
+    "sepolia",
+    "near-mainnet",
+    "polygon-zkevm",
+    "scroll",
+    "linea",
+    "moonriver",
+    "moonbeam",
+    "chapel",
+    "scroll-sepolia",
+    "celo",
+    "aurora",
+    "polygon-amoy",
+    "zksync-era-sepolia",
+    "xdai",
+    "injective",
+    "chiliz",
+    "fantom-testnet",
+    "mumbai",
+    "blast-mainnet",
+    "goerli",
+    "eos",
+    "optimism-sepolia",
+    "injective-mainnet",
+    "starknet-mainnet",
+    "harmony",
+    "fuse",
+    "boba",
+    "mode-mainnet",
+    "iotex-testnet",
+    "holesky",
+    "linea-sepolia",
+    "base-sepolia",
+    "solana-mainnet-beta",
+    "etherlink-mainnet",
+    "astar-zkevm-mainnet",
+    "xlayer-mainnet",
+    "blast-testnet",
+    "zkyoto-testnet",
+    "gnosis-beacon",
+    "mbase",
+    "wax",
+    "mode-sepolia",
+    "celo-alfajores",
+    "boba-bnb-testnet",
+    "cosmoshub-4",
+    "gravity-mainnet",
+    "soneium-testnet",
+    "unichain-testnet",
+    "aurora-testnet",
+    "chiado-beacon",
+    "gnosis-chiado",
+    "etherlink-testnet",
+    "sei-mainnet",
+    "iotex",
+    "boba-bnb",
+    "polygon-zkevm-testnet",
+    "base-testnet",
+    "neox-testnet",
+    "sei-testnet",
+    "arbitrum-goerli",
+    "boba-sepolia",
+    "osmosis-1",
+    "sei-atlantic",
+    "xlayer-sepolia",
+    "beacon",
+    "boba-testnet",
+    "sepolia-beacon",
+    "kylin",
+    "rootstock",
+    "neox",
+    "chiliz-testnet",
+    "geo",
+    "zksync-era-testnet",
+    "arbitrum-nova",
+    "btc",
+    "holesky-beacon",
+    "linea-goerli",
+    "polygon-zkevm-cardona"
+];
 
 </script>

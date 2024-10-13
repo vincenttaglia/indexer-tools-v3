@@ -4,7 +4,6 @@
       :items="allocationStore.getFilteredAllocations"
       item-selectable="subgraphDeployment.ipfsHash"
       class="elevation-1"
-      :custom-sort="customSort"
       loading-text="Loading... Please wait"
       mobile-breakpoint="0"
       :show-select="selectable"
@@ -290,50 +289,4 @@ const headers = ref([
     if(newAccount.address != oldAccount.address || newAccount.chain != oldAccount.chain)
       allocationStore.fetchData();
   });
-
-  function customSort(items, index, isDesc) {
-    items.sort((a, b) => {
-      if (index[0] == 'currentVersion.subgraphDeployment.createdAt'
-          || index[0] == 'currentSignalledTokens'
-          || index[0] == 'currentVersion.subgraphDeployment.stakedTokens'
-          || index[0] == 'currentVersion.subgraphDeployment.indexingRewardAmount'
-          || index[0] == 'currentVersion.subgraphDeployment.queryFeesAmount'
-          || index[0] == 'proportion'
-          || index[0] == 'apr'
-          || index[0] == 'newApr'
-          || index[0] == 'dailyRewards'
-          || index[0] == 'dailyRewardsCut'
-          || index[0] == 'maxAllo'
-      ) {
-        if (!isDesc[0]) {
-          return t(a, index[0]).safeObject - t(b, index[0]).safeObject;
-        } else {
-          return t(b, index[0]).safeObject - t(a, index[0]).safeObject;
-        }
-      }else if(index[0] == 'pendingRewards' || index[0] == 'pendingRewardsCut'){
-        console.log(t(a, index[0]).safeObject);
-        console.log(t(b, index[0]).safeObject);
-        if(!isDesc[0]){
-          return t(a, index[0]).safeObject.value - t(b, index[0]).safeObject.value;
-        } else{
-          return t(b, index[0]).safeObject.value - t(a, index[0]).safeObject.value;
-        }
-      }else {
-        if(typeof t(a, index[0]) !== 'undefined'){
-          let objA = t(a, index[0]).safeObject;
-          let objB = t(b, index[0]).safeObject;
-          if(objA == null || objB == null)
-            return objA != null && !isDesc[0];
-
-          if (!isDesc[0]) {
-            return objA.toString().toLowerCase().localeCompare(objB.toString().toLowerCase());
-          } else {
-            return objB.toString().toLowerCase().localeCompare(objA.toString().toLowerCase());
-          }
-        }
-      }
-
-    });
-    return items;
-  }
 </script>
