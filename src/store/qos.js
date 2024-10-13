@@ -10,7 +10,8 @@ const QOS_QUERY_NO_FILTER = gql`query queryDailyDataPoints($dayNumber: Int!){
   queryDailyDataPoints(
     orderBy: total_query_fees
     where: {dayNumber: $dayNumber}
-    orderDirection: desc
+    orderDirection: desc,
+    first: 1000
   ) {
     dayNumber
     chain_id
@@ -28,7 +29,8 @@ const QOS_QUERY = gql`query queryDailyDataPoints($dayNumber: Int!, $networkFilte
   queryDailyDataPoints(
     orderBy: total_query_fees
     where: {dayNumber: $dayNumber, chain_id_in: $networkFilter}
-    orderDirection: desc
+    orderDirection: desc,
+    first: 1000
   ) {
     dayNumber
     chain_id
