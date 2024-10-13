@@ -211,8 +211,8 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
             customPOI = `${state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} true `;
           }
         }
-        if(Object.keys(state.newAllocations).includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash)){
-          if(BigNumber(allocationStore.getSelectedAllocations[i].allocatedTokens).dividedBy(10**18) > BigNumber(state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash])){
+        if(subgraphStore.selected.includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.versions[0].subgraph.id)){
+          if(BigNumber(allocationStore.getSelectedAllocations[i].allocatedTokens).dividedBy(10**18).gt(BigNumber(state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]))){
             reallocate += `graph indexer actions queue reallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id} ${state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} ${customPOI}--network ${chainStore.getActiveChain.id}\n`;
           } else{
             reallocate2 += `graph indexer actions queue reallocate ${allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash} ${allocationStore.getSelectedAllocations[i].id} ${state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} ${customPOI}--network ${chainStore.getActiveChain.id}\n`;
@@ -235,11 +235,11 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       let skip = [];
       for(const i in allocationStore.getSelectedAllocations){
         let allo = {};
-        if(subgraphStore.selected.includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash)){
+        if(subgraphStore.selected.includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.versions[0].subgraph.id)){
           //console.log("CHECK");
           //console.log(BigNumber(allocationStore.getSelectedAllocations[i].allocatedTokens).dividedBy(10**18).toString());
           //console.log(state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]);
-          if(BigNumber(allocationStore.getSelectedAllocations[i].allocatedTokens).dividedBy(10**18) > BigNumber(state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash])){
+          if(BigNumber(allocationStore.getSelectedAllocations[i].allocatedTokens).dividedBy(10**18).gt(BigNumber(state.newAllocations[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]))){
             allo = {
               status: 'queued',
               type: 'reallocate',
