@@ -302,7 +302,7 @@ export const useSubgraphsStore = defineStore({
       return qosDatas;
     },
     getQosDash: (state) => {
-      return qosStore.qosData.map((e) => Object.assign({}, e, state.getSubgraphsDict[e.subgraphDeployment.id] || {} ));
+      return qosStore.qosData.filter((e) => state.getSubgraphsDict[e.subgraphDeployment.id]).map((e) => Object.assign({}, e, state.getSubgraphsDict[e.subgraphDeployment.id] || {} ));
     },
     getProportions: (state) => {
       let proportions = [];
