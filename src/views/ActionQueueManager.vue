@@ -21,7 +21,7 @@
   <br>
   <div class="d-flex justify-space-between">
     <div class="d-flex mr-auto flex-1-1-0 align-center">
-      <v-btn text="Refresh actions" prepend-icon="mdi-refresh" @click="queryActions()" class="mx-5 my-6 d-inline-block align-self-center justify-center" v-if="accountStore.getAgentConnectStatus" stacked></v-btn>
+      <v-btn text="Refresh actions" prepend-icon="mdi-refresh" @click="queryActions()" class="mx-5 my-6" v-if="accountStore.getAgentConnectStatus" stacked></v-btn>
       <v-select
           v-model="managerSettingStore.settings.statusFilter"
           :items="[{title: 'Queued', value: 'queued'}, {title:'Approved', value: 'approved'}, {title: 'Pending', value: 'pending'}, {title: 'Success', value: 'success'}, {title: 'Failed', value: 'failed'}, {title: 'Canceled', value: 'canceled'}]"
