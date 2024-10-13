@@ -194,11 +194,11 @@
     <template v-slot:item.deployment.queryFeesAmount="{ item }">
       {{ numeral(web3.utils.fromWei(item.deployment.queryFeesAmount.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.query_count="{ item }">
-      {{ numeral(item.query_count).format('0,0') }}
+    <template v-slot:item.qos.query_count="{ item }">
+      {{ item.qos?.query_count ? numeral(item.qos.query_count).format('0,0') : '-' }}
     </template>
-    <template v-slot:item.total_query_fees="{ item }">
-      {{ numeral(item.total_query_fees).format('0,0') }} GRT
+    <template v-slot:item.qos.total_query_fees="{ item }">
+      {{ item.qos?.total_query_fees ? numeral(item.qos.total_query_fees).format('0,0') : '-' }} GRT
     </template>
     <template v-slot:item.deployment.stakedTokens="{ item }">
       {{ numeral(web3.utils.fromWei(item.deployment.stakedTokens.toString())).format('0,0') }} GRT
