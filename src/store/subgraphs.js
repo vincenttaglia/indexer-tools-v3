@@ -506,6 +506,10 @@ export const useSubgraphsStore = defineStore({
       });
       
       
-    }
+    },
+    async refreshSubgraphs(){
+      this.selected = this.selected;
+      this.fetchData();
+    },
   }
 })
