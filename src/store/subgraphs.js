@@ -239,7 +239,7 @@ export const useSubgraphsStore = defineStore({
     getSelectedSubgraphs: (state) => {
       let selectedSubgraphs = [];
       for(let i = 0; i < state.selected.length; i++){
-        let subgraphIndex = state.subgraphs.findIndex((e) => e.id == state.selected[i])
+        let subgraphIndex = state.subgraphs.findIndex((e) => e.deployment.ipfsHash == state.selected[i])
         selectedSubgraphs[i] = {
           ...state.subgraphs[subgraphIndex],
           ...state.getProportions[subgraphIndex],

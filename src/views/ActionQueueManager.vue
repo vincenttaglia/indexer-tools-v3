@@ -99,8 +99,8 @@
     <template v-slot:item.deployment.createdAt="{ item }">
       <span :timestamp="item.deployment.createdAt">{{ moment(item.deployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
-    <template v-slot:item.currentSignalledTokens="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.currentSignalledTokens)).format('0,0') }} GRT
+    <template v-slot:item.deployment.signalledTokens="{ item }">
+      {{ numeral(Web3.utils.fromWei(item.deployment.signalledTokens)).format('0,0') }} GRT
     </template>
     <template v-slot:item.deployment.indexingRewardAmount="{ item }">
       {{ numeral(Web3.utils.fromWei(item.deployment.indexingRewardAmount)).format('0,0') }} GRT

@@ -35,7 +35,7 @@
         >
           <v-avatar :color="ringColor" size="34">
             <v-avatar size="30">
-              <v-img :src="metadata.image" />
+              <v-img :src="metadata?.image ? metadata.image : 'https://api.thegraph.com/ipfs/api/v0/cat?arg=QmdSeSQ3APFjLktQY3aNVu3M5QXPfE9ZRK5LqgghRgB7L9'" />
             </v-avatar>
           </v-avatar>
         </v-badge>

@@ -2,9 +2,8 @@
   <v-data-table
     :headers="headers"
     :items="subgraphStore.getFilteredSubgraphs"
-    item-key="deployment.ipfsHash"
+    item-value="deployment.ipfsHash"
     class="elevation-1"
-    :custom-sort="customSort"
     loading-text="Loading... Please wait"
     mobile-breakpoint="0"
     :show-select="selectable"

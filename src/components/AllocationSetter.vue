@@ -30,7 +30,7 @@
   <v-data-table
       :headers="headers"
       :items="newAllocationSetterStore.getSelectedSubgraphs"
-      item-key="deployment.ipfsHash"
+      item-value="deployment.ipfsHash"
       class="elevation-1"
       :custom-sort="customSort"
       :footer-props="{
@@ -40,7 +40,7 @@
       show-expand
       :expanded="subgraphStore.selected"
   >
-    <template v-slot:item.metadata.image="{ item }">
+    <template v-slot:item.deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.image="{ item }">
       <v-badge
           :model-value="item.deployment && item.deployment.deniedAt != '0'"
           bordered
@@ -50,15 +50,15 @@
           avatar
       >
         <v-avatar size="30">
-          <v-img :src="item.metadata.image" />
+          <v-img :src="item.deployment.versions[0].metadata.subgraphVersion.subgraph.metadata?.image ? item.deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.image : 'https://api.thegraph.com/ipfs/api/v0/cat?arg=QmdSeSQ3APFjLktQY3aNVu3M5QXPfE9ZRK5LqgghRgB7L9'" />
         </v-avatar>
       </v-badge>
     </template>
     <template v-slot:item.deployment.createdAt="{ item }">
       <span :timestamp="item.deployment.createdAt">{{ moment(item.deployment.createdAt + "000", "x").format("MMM D, YYYY HH:mm") }}</span>
     </template>
-    <template v-slot:item.currentSignalledTokens="{ item }">
-      {{ numeral(Web3.utils.fromWei(item.currentSignalledTokens)).format('0,0') }} GRT
+    <template v-slot:item.deployment.signalledTokens="{ item }">
+      {{ numeral(Web3.utils.fromWei(item.deployment.signalledTokens)).format('0,0') }} GRT
     </template>
     <template v-slot:item.deployment.indexingRewardAmount="{ item }">
       {{ numeral(Web3.utils.fromWei(item.deployment.indexingRewardAmount)).format('0,0') }} GRT
@@ -159,9 +159,9 @@ const headers = ref([
           title: 'Img',
           align: 'start',
           sortable: false,
-          key: 'metadata.image',
+          key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.image',
         },
-        { title: 'Name', key: 'metadata.displayName' },
+        { title: 'Name', key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.displayName' },
         { title: 'Current APR', key: 'apr'},
         { title: 'New APR', key: 'newApr'},
         { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
@@ -170,7 +170,7 @@ const headers = ref([
         { title: 'New Proportion', key: 'newProportion'},
         {
           title: 'Current Signal',
-          key: 'currentSignalledTokens',
+          key: 'deployment.signalledTokens',
         },
         { title: 'Created', key: 'deployment.createdAt' },
         { title: 'Current Allocations', key: 'deployment.stakedTokens'},
@@ -182,7 +182,7 @@ const headers = ref([
 function customSort(items, index, isDesc) {
   items.sort((a, b) => {
     if (index[0] == 'deployment.createdAt'
-        || index[0] == 'currentSignalledTokens'
+        || index[0] == 'deployment.signalledTokens'
         || index[0] == 'deployment.stakedTokens'
         || index[0] == 'deployment.indexingRewardAmount'
         || index[0] == 'deployment.queryFeesAmount'

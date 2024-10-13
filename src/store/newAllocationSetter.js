@@ -55,8 +55,8 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       let newAprs = [];
       for(let i = 0; i < state.getSelectedS.length; i++){
         let subgraph = state.getSelectedS[i];
-        if(subgraph.currentSignalledTokens != "0") {
-          newAprs[i] = { newApr: calculateNewApr(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, (state.newAllocations[subgraph.deployment.ipfsHash] ? state.newAllocations[subgraph.deployment.ipfsHash].toString() : "0"))};
+        if(subgraph.deployment.signalledTokens != "0") {
+          newAprs[i] = { newApr: calculateNewApr(subgraph.deployment.signalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, (state.newAllocations[subgraph.deployment.ipfsHash] ? state.newAllocations[subgraph.deployment.ipfsHash].toString() : "0"))};
         }else{
           newAprs[i] = { newApr: 0 };
         }
@@ -83,7 +83,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       for(let i = 0; i < state.getSelectedS.length; i++){
         let subgraph = state.getSelectedS[i];
         if(subgraph.deployment.stakedTokens != "0" && !accountStore.loading) {
-          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.currentSignalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, (state.newAllocations[subgraph.deployment.ipfsHash] ? state.newAllocations[subgraph.deployment.ipfsHash].toString() : "0")) }
+          dailyRewards[i] = { dailyRewards: calculateSubgraphDailyRewards(subgraph.deployment.signalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, (state.newAllocations[subgraph.deployment.ipfsHash] ? state.newAllocations[subgraph.deployment.ipfsHash].toString() : "0")) }
         }else{
           dailyRewards[i] = { dailyRewards: 0 }
         }
@@ -142,7 +142,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
 
               if (closingAllocation) {
                 totalRewardsPerYear = totalRewardsPerYear.plus(
-                    new BigNumber(state.getSelectedSubgraphs[i].currentSignalledTokens)
+                    new BigNumber(state.getSelectedSubgraphs[i].deployment.signalledTokens)
                         .dividedBy(networkStore.getTotalTokensSignalled)
                         .multipliedBy(networkStore.getIssuancePerYear)
                         .multipliedBy(newAllocationSize)
@@ -150,7 +150,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
                 );
               } else {
                 totalRewardsPerYear = totalRewardsPerYear.plus(
-                    new BigNumber(state.getSelectedSubgraphs[i].currentSignalledTokens)
+                    new BigNumber(state.getSelectedSubgraphs[i].deployment.signalledTokens)
                         .dividedBy(networkStore.getTotalTokensSignalled)
                         .multipliedBy(networkStore.getIssuancePerYear)
                         .multipliedBy(newAllocationSize)
@@ -313,7 +313,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
   actions: {
     async update(){
       for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
-        if(this.getSelectedSubgraphs[i].currentSignalledTokens == 0)
+        if(this.getSelectedSubgraphs[i].deployment.signalledTokens == 0)
           this.newAllocations[this.getSelectedSubgraphs[i].deployment.ipfsHash] ||= this.minAllocation0Signal;
         else
           this.newAllocations[this.getSelectedSubgraphs[i].deployment.ipfsHash] ||= this.minAllocation;
@@ -321,13 +321,13 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     },
     async setMinimums(){
       for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
-        if(this.getSelectedSubgraphs[i].currentSignalledTokens > 0 && !this.getSelectedSubgraphs[i].deployment.deniedAt && this.newAllocations[this.getSelectedSubgraphs[i].deployment.ipfsHash] < this.minAllocation)
+        if(this.getSelectedSubgraphs[i].deployment.signalledTokens > 0 && !this.getSelectedSubgraphs[i].deployment.deniedAt && this.newAllocations[this.getSelectedSubgraphs[i].deployment.ipfsHash] < this.minAllocation)
           this.newAllocations[this.getSelectedSubgraphs[i].deployment.ipfsHash] = this.minAllocation;
       }
     },
     async setMinimums0Signal(){
       for(let i = 0; i < this.getSelectedSubgraphs.length; i++){
-        if((this.getSelectedSubgraphs[i].currentSignalledTokens == 0 || this.getSelectedSubgraphs[i].deployment.deniedAt) && this.newAllocations[this.getSelectedSubgraphs[i].deployment.ipfsHash] < this.minAllocation0Signal)
+        if((this.getSelectedSubgraphs[i].deployment.signalledTokens == 0 || this.getSelectedSubgraphs[i].deployment.deniedAt) && this.newAllocations[this.getSelectedSubgraphs[i].deployment.ipfsHash] < this.minAllocation0Signal)
           this.newAllocations[this.getSelectedSubgraphs[i].deployment.ipfsHash] = this.minAllocation0Signal;
       }
     },
