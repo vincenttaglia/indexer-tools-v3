@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex align-content-center">
-    <v-btn text="Refresh Subgraphs" prepend-icon="mdi-refresh" @click="qosStore.fetchData()" class="mx-5 my-6" stacked></v-btn>
+    <v-btn text="Refresh Subgraphs" prepend-icon="mdi-refresh" @click="subgraphStore.refreshSubgraphs()" class="mx-5 my-6" stacked></v-btn>
     <div class="d-flex align-content-center align-center justify-center">
       <v-combobox
           v-model="subgraphSettingStore.settings.queryFilters.networkFilter"
@@ -16,13 +16,13 @@
   </div>
   <v-data-table
       :headers="headers"
-      :items="qosStore.qosData"
+      :items="subgraphStore.getQosDash"
       class="elevation-1"
       loading-text="Loading... Please wait"
       mobile-breakpoint="0"
       hover
       items-per-page="25"
-      :loading = "qosStore.loading"
+      :loading = "subgraphStore.loading"
   >
     <template v-slot:no-data>
       <p class="mt-4">
@@ -95,7 +95,8 @@ const subgraphSettingStore = useSubgraphSettingStore();
 const qosStore = useQosStore();
 const subgraphStore = useSubgraphsStore();
 
-qosStore.fetchData();
+if(subgraphStore.subgraphs.length == 0)
+  subgraphStore.fetchData()
 
 
 function resetFilters () {

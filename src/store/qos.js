@@ -1,12 +1,10 @@
 import { defineStore } from 'pinia'
 import { useSubgraphSettingStore } from './subgraphSettings';
-import { useSubgraphsStore } from './subgraphs';
 import gql from 'graphql-tag';
 import { qosSubgraphClient } from "@/plugins/qosSubgraphClient";
 
 
 const subgraphSettingStore = useSubgraphSettingStore();
-const subgraphStore = useSubgraphsStore();
 
 const QOS_QUERY_NO_FILTER = gql`query queryDailyDataPoints($dayNumber: Int!){
   queryDailyDataPoints(
@@ -51,14 +49,18 @@ export const useQosStore = defineStore('app', {
     loading: true,
   }),
   getters: {
-
+    getQosDict: (state) => {
+      let dict = {};
+      state.qosData.forEach(
+        (el) => (dict[el.subgraphDeployment.id] = el )
+      );
+      return dict;
+    },
   },
   actions: {
     async fetchData(){
       console.log("QOS DATA");
       this.loading = true;
-      if(subgraphStore.subgraphs.length == 0)
-        await subgraphStore.fetchData();
 
       qosSubgraphClient.query({
         query: gql`query{
@@ -79,9 +81,10 @@ export const useQosStore = defineStore('app', {
         }).then(({ data }) => {
           console.log("QUERY DAILY DATA POINTS");
           console.log(data.queryDailyDataPoints);
-          this.qosData = data.queryDailyDataPoints.map((e) => Object.assign({}, e, subgraphStore.getSubgraphsDict[e.subgraphDeployment.id] || {} ));
+          this.qosData = data.queryDailyDataPoints;
           console.log(this.qosData);
           this.loading = false;
+          return data.queryDailyDataPoints;
         })
       });
     }
