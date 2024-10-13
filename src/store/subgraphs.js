@@ -250,6 +250,13 @@ export const useSubgraphsStore = defineStore({
       }
       return selectedSubgraphs;
     },
+    getSubgraphsDict: (state) => {
+      let dict = {};
+      state.getSubgraphs.forEach(
+        (el) => (dict[el.deployment.ipfsHash] = el )
+      );
+      return dict;
+    },
     getDeploymentStatuses: (state) => {
       let deploymentStatuses = [];
       for(let i = 0; i < state.subgraphs.length; i++){
@@ -484,9 +491,9 @@ export const useSubgraphsStore = defineStore({
       });
     },
     async fetchData(){
-      networkStore.init().then(() => {
+      return networkStore.init().then(() => {
         this.loading = true;
-        this.fetch(0)
+        return this.fetch(0)
         .then((data) => {
           // let uniqueSubgraphs = []
           // let subgraphs = [];
@@ -502,6 +509,7 @@ export const useSubgraphsStore = defineStore({
             this.upgradeIndexer[i] = { value: "0", loading: false, loaded: false };
           }
           this.loading = false;
+          return this.subgraphs;
         })
       });
       

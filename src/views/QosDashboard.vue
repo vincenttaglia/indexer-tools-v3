@@ -38,6 +38,9 @@
         Reset Filters
       </v-btn>
     </template>
+    <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
+      <StatusDropdownVue :item='item' />
+    </template>
     <template v-slot:item.query_count="{ item }">
       {{ numeral(item.query_count).format('0,0') }}
     </template>
@@ -53,6 +56,29 @@
     <template v-slot:item.gateway_query_success_rate="{ item }">
       {{ numeral(item.gateway_query_success_rate).format('0.00%') }}
     </template>
+    <template v-slot:item.upgradeIndexer="{ item }">
+      <span
+        v-if="!item.upgradeIndexer.loading && !item.upgradeIndexer.loaded"
+        >
+        <v-icon left @click="subgraphStore.fetchNumEntities(item.deployment.ipfsHash);">
+          mdi-account-arrow-down
+        </v-icon>
+      </span>
+      <v-progress-circular
+          indeterminate
+          color="purple"
+          v-if="item.upgradeIndexer.loading && !item.upgradeIndexer.loaded"
+      ></v-progress-circular>
+      <div 
+       v-if="!item.upgradeIndexer.loading && item.upgradeIndexer.loaded"
+       class="d-flex"
+      >
+        <span>
+          {{ numeral(item.upgradeIndexer.value).format('0,0') }} Entities
+        </span>
+      </div>
+      
+    </template>
   </v-data-table>
 </template>
 
@@ -62,9 +88,12 @@ import numeral from "numeral";
 import { useSubgraphSettingStore } from "@/store/subgraphSettings";
 import { useQosStore } from "@/store/qos";
 import { networks } from "@/plugins/subgraphNetworks";
+import StatusDropdownVue from '@/components/StatusDropdown.vue';
+import { useSubgraphsStore } from "@/store/subgraphs";
 
 const subgraphSettingStore = useSubgraphSettingStore();
 const qosStore = useQosStore();
+const subgraphStore = useSubgraphsStore();
 
 qosStore.fetchData();
 
@@ -74,12 +103,16 @@ function resetFilters () {
 }
 
 const headers = ref([
-  { title: 'Deployment ID', key: 'subgraphDeployment.id' },
-  { title: 'Chain ID', key: 'chain_id'},
-  { title: 'Query Count (1d)', key: 'query_count' },
+  { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },
+  { title: 'Name', key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.displayName' },
   { title: 'Query Fees (1d)', key: 'total_query_fees'},
+  { title: 'Query Count (1d)', key: 'query_count' },
+  { title: 'Entities', key: 'upgradeIndexer'},
+  { title: 'Chain ID', key: 'chain_id'},
   { title: 'Avg Latency', key: 'avg_gateway_latency_ms' },
   { title: 'Avg Query Fee', key: 'avg_query_fee'},
   { title: 'Success Rate', key: 'gateway_query_success_rate' },
+  { title: 'Deployment ID', key: 'subgraphDeployment.id' },
+
 ]);
 </script>

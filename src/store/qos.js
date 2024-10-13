@@ -57,6 +57,9 @@ export const useQosStore = defineStore('app', {
     async fetchData(){
       console.log("QOS DATA");
       this.loading = true;
+      if(subgraphStore.subgraphs.length == 0)
+        await subgraphStore.fetchData();
+
       qosSubgraphClient.query({
         query: gql`query{
           queryDailyDataPoints(orderBy: dayNumber, first: 1, orderDirection: desc) {
@@ -76,7 +79,8 @@ export const useQosStore = defineStore('app', {
         }).then(({ data }) => {
           console.log("QUERY DAILY DATA POINTS");
           console.log(data.queryDailyDataPoints);
-          this.qosData = data.queryDailyDataPoints;
+          this.qosData = data.queryDailyDataPoints.map((e) => Object.assign({}, e, subgraphStore.getSubgraphsDict[e.subgraphDeployment.id] || {} ));
+          console.log(this.qosData);
           this.loading = false;
         })
       });
