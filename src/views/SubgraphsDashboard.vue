@@ -243,6 +243,7 @@
   import { storeToRefs } from 'pinia';
   import { useTableSettingStore } from "@/store/tableSettings";
   import StatusDropdownVue from '@/components/StatusDropdown.vue';
+  import { networks } from '@/plugins/subgraphNetworks';
 
 
   const search = ref('');
