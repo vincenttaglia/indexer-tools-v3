@@ -43,7 +43,12 @@ const routes = [
         path: 'query-dashboard',
         name: 'Query Fee Dashboard',
         component: () => import('@/views/QueryDashboard.vue'),
-      }
+      },
+      {
+        path: 'qos-dashboard',
+        name: 'QoS Dashboard',
+        component: () => import('@/views/QosDashboard.vue'),
+      },
     ],
   },
 ]
