@@ -58,34 +58,50 @@
       >
         Allocation Wizard
       </v-btn>
-      <v-btn
-          variant="text"
-          to="/actions-manager"
-          class="ml-2 mr-2"
-      >
-        Actions Manager
-      </v-btn>
-      <v-btn
-          variant="text"
-          to="/offchain-manager"
-          class="ml-2 mr-2"
-      >
-        Offchain Sync Manager
-      </v-btn>
-      <v-btn
-          variant="text"
-          to="/query-dashboard"
-          class="ml-2 mr-2"
-      >
-        Query Fee Dashboard
-      </v-btn>
-      <v-btn
-          variant="text"
-          to="/qos-dashboard"
-          class="ml-2 mr-2"
-      >
-        QoS Dashboard
-      </v-btn>
+      <v-menu>
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-bind="props"
+          >
+            Managers
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item to="/actions-manager">
+            <v-list-item-title>
+              Actions Manager
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item to="/offchain-manager">
+            <v-list-item-title>
+              Offchain Sync Manager
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <v-menu>
+        <template v-slot:activator="{ props }">
+          <v-btn
+            v-bind="props"
+          >
+            Dashboards
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item to="/query-dashboard">
+            <v-list-item-title>
+              Query Dashboard
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item to="/qos-dashboard">
+            <v-list-item-title>
+              QoS Dashboard
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
       <v-btn
           variant="text"
           to="/settings"
