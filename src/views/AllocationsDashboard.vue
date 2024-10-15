@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-      :headers="headers"
+      :headers="subgraphSettingsStore.settings.selectedAllocationColumns"
       :items="allocationStore.getFilteredAllocations"
       item-selectable="subgraphDeployment.ipfsHash"
       class="elevation-1"

@@ -31,6 +31,12 @@
             </v-icon>
             Custom RPCs
           </v-tab>
+          <v-tab value="dashboards">
+            <v-icon start>
+              mdi-view-column
+            </v-icon>
+            Dashboards
+          </v-tab>
         </v-tabs>
         <v-window v-model="tab">
           <v-window-item value="general">
@@ -79,6 +85,83 @@
             </v-card-text>
             </v-card>
           </v-window-item>
+          <v-window-item value="dashboards">
+            <v-btn
+              @click="subgraphSettingsStore.resetDefaultColumns()"
+              class="ma-5"
+              size="x-large"
+            >
+              Reset Columns
+            </v-btn>
+           
+            <v-combobox
+                v-model="subgraphSettingsStore.settings.selectedAllocationColumns"
+                :items="allocationsDashboardColumns"
+                label="Allocations Dashboard Columns"
+                multiple
+                class="d-inline-block mx-4"
+                style="min-width:13rem;top: -5px"
+                item-value="title"
+                key="key"
+                return-object
+            ></v-combobox>
+            <v-card
+              class="mx-auto"
+            >
+              <Sortable
+                :list="subgraphSettingsStore.settings.selectedAllocationColumns"
+                item-key="key"
+                tag="div"
+                @end="onAllocationsEnd"
+              >
+                <template #header>
+                    <header>
+                      <h1>Allocation Columns</h1>
+                    </header>
+                </template>
+                <template #item="{element}">
+                  <v-list-item
+                    rounded="lg"
+                    class="draggable"
+                    :key="element.key"
+                    :title="element.title"
+                  ></v-list-item>
+                </template>
+              </Sortable>
+            </v-card>
+            
+            <v-combobox
+                v-model="subgraphSettingsStore.settings.selectedSubgraphColumns"
+                :items="subgraphsDashboardColumns"
+                label="Subgraphs Dashboard Columns"
+                multiple
+                class="d-inline-block mx-4"
+                style="min-width:13rem;top: -5px"
+                item-value="title"
+                key="key"
+                return-object
+            ></v-combobox>
+            <Sortable
+              :list="subgraphSettingsStore.settings.selectedSubgraphColumns"
+              item-key="key"
+              tag="div"
+              @end="onSubgraphsEnd"
+            >
+              <template #header>
+                  <header>
+                    <h1>Subgraph Columns</h1>
+                  </header>
+              </template>
+              <template #item="{element}">
+                  <v-list-item
+                    rounded="lg"
+                    class="draggable"
+                    :key="element.key"
+                    :title="element.title"
+                  ></v-list-item>
+                </template>
+            </Sortable>
+          </v-window-item>
         </v-window>
       </div>
     </v-card>
@@ -92,6 +175,8 @@
   import { ref } from 'vue';
   import { storeToRefs } from 'pinia';
   import Web3 from 'web3';
+  import { allocationsDashboardColumns, subgraphsDashboardColumns } from '@/plugins/dashboardColumns';
+  import { Sortable } from "sortablejs-vue3";
   
   const subgraphSettingsStore = useSubgraphSettingStore();
   const subgraphSettings = storeToRefs(subgraphSettingsStore);
@@ -99,6 +184,10 @@
   const tab = ref("general");
   const mainnet_rpc_c = ref(subgraphSettingsStore.settings.rpc.mainnet != '');
   const arbitrum_rpc_c = ref(subgraphSettingsStore.settings.rpc.arbitrum != '');
+
+
+  function onSubgraphsEnd(event) { console.log(event); subgraphSettingsStore.moveItemInSubgraphColumns(event.oldIndex, event.newIndex) }
+  function onAllocationsEnd(event) { console.log(event); subgraphSettingsStore.moveItemInAllocationColumns(event.oldIndex, event.newIndex) }
 
   function updateMainnetRPC(rpc){
     if(rpc != '' && new Web3(rpc))
@@ -115,5 +204,11 @@
   </script>
   
   <style scoped>
-  
+  .draggable {
+    /*background: #fff;*/
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    cursor: move;
+  }
   </style>

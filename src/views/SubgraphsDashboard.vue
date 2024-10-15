@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :headers="subgraphSettingStore.settings.selectedSubgraphColumns"
     :items="subgraphStore.getFilteredSubgraphs"
     item-value="deployment.ipfsHash"
     class="elevation-1"
