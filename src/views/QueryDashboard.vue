@@ -86,7 +86,7 @@
 import { ref } from "vue";
 import numeral from "numeral";
 import { useSubgraphSettingStore } from "@/store/subgraphSettings";
-import { useQosStore } from "@/store/qos";
+import { useQosStore } from "@/store/queryFees";
 import { networks } from "@/plugins/subgraphNetworks";
 import StatusDropdownVue from '@/components/StatusDropdown.vue';
 import { useSubgraphsStore } from "@/store/subgraphs";

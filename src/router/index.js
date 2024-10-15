@@ -40,9 +40,9 @@ const routes = [
         component: () => import('@/views/OffchainSyncManager.vue'),
       },
       {
-        path: 'qos-dashboard',
-        name: 'QoS Dashboard',
-        component: () => import('@/views/QosDashboard.vue'),
+        path: 'query-dashboard',
+        name: 'Query Fee Dashboard',
+        component: () => import('@/views/QueryDashboard.vue'),
       }
     ],
   },

@@ -9,7 +9,7 @@ import { useSubgraphSettingStore } from './subgraphSettings';
 import { useAllocationStore } from './allocations';
 import { useChainStore } from './chains';
 import { useDeploymentStatusStore } from './deploymentStatuses';
-import { useQosStore } from './qos';
+import { useQosStore } from './queryFees';
 import { storeToRefs } from 'pinia';
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
