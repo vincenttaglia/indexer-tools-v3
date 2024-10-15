@@ -86,13 +86,13 @@
 import { ref } from "vue";
 import numeral from "numeral";
 import { useSubgraphSettingStore } from "@/store/subgraphSettings";
-import { useQosStore } from "@/store/queryFees";
+import { useQueryFeesStore } from "@/store/queryFees";
 import { networks } from "@/plugins/subgraphNetworks";
 import StatusDropdownVue from '@/components/StatusDropdown.vue';
 import { useSubgraphsStore } from "@/store/subgraphs";
 
 const subgraphSettingStore = useSubgraphSettingStore();
-const qosStore = useQosStore();
+const qosStore = useQueryFeesStore();
 const subgraphStore = useSubgraphsStore();
 
 if(subgraphStore.subgraphs.length == 0)

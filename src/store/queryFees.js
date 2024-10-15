@@ -45,7 +45,7 @@ const QOS_QUERY = gql`query queryDailyDataPoints($dayNumber: Int!, $networkFilte
   }
 }`;
 
-export const useQosStore = defineStore('queryFeeStore', {
+export const useQueryFeesStore = defineStore('queryFeeStore', {
   state: () => ({
     qosData: [],
     loading: true,
