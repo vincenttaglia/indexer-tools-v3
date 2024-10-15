@@ -9,6 +9,7 @@ import BigNumber from 'bignumber.js';
 import { storeToRefs } from 'pinia';
 import { calculateApr, calculateReadableDuration, calculateAllocationDailyRewards, indexerCut } from '@/plugins/commonCalcs';
 import { useSubgraphSettingStore } from './subgraphSettings';
+import { useQosStore } from './qos';
 
 
 const networkStore = useNetworkStore();
@@ -17,6 +18,7 @@ const chainStore = useChainStore();
 const deploymentStatusStore = useDeploymentStatusStore();
 const { getDeploymentStatuses } = storeToRefs(deploymentStatusStore);
 const subgraphSettingStore = useSubgraphSettingStore();
+const qosStore = useQosStore();
 
 
 networkStore.init();
@@ -154,6 +156,7 @@ export const useAllocationStore = defineStore('allocationStore', {
           ...state.getPendingRewards[i],
           ...state.getPendingRewardsCuts[i],
           ...state.getDeploymentStatuses[i],
+          ...state.getQosDatas[i],
         };
       }
       console.log(state.allocations);
@@ -169,6 +172,18 @@ export const useAllocationStore = defineStore('allocationStore', {
         }
       }
       return allocations;
+    },
+    getQosDatas: (state) => {
+      let qosDatas = [];
+      for(let i = 0; i < state.allocations.length; i++){
+        const qos = qosStore.getQosDict[state.allocations[i].subgraphDeployment.ipfsHash];
+        if(qos){
+          qosDatas[i] = { qos: qos };
+        }else{
+          qosDatas[i] = { };
+        }
+      }
+      return qosDatas;
     },
     getActiveDurations: (state) => {
       let activeDurations = [];
@@ -406,18 +421,21 @@ export const useAllocationStore = defineStore('allocationStore', {
     },
     async fetchData(){
       this.loading = true;
-      networkStore.init().then(() => {
+      const fetch = networkStore.init().then(() => {
         this.fetch(0)
         .then((data) => {
           console.log(data);
           this.allocations = data.allocations;
-          this.loaded = true;
-          this.loading = false;
           this.pendingRewards = Array(data.allocations.length).fill();
           for(let i = 0; i < this.pendingRewards.length; i++){
             this.pendingRewards[i] = { value: BigNumber(0), loading: false, loaded: false };
           }
-        })
+        });
+      });
+      const qos = qosStore.fetchData();
+      return Promise.all([fetch, qos]).then(() => {
+        this.loaded = true;
+        this.loading = false;
       });
     },
     async fetch(skip){

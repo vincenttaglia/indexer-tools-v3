@@ -34,7 +34,13 @@ export const useQosStore = defineStore('qosStore', {
     loading: true,
   }),
   getters: {
-
+    getQosDict: (state) => {
+      let dict = {};
+      state.qosData.forEach(
+        (el) => (dict[el.subgraph_deployment_ipfs_hash] = el )
+      );
+      return dict;
+    },
   },
   actions: {
     async fetchData(){

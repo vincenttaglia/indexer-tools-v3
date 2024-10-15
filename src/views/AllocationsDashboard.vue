@@ -186,6 +186,36 @@
         </v-tooltip>
       </div>
     </template>
+    <template v-slot:item.qos.query_count="{ item }">
+      {{ numeral(item.qos?.query_count).format('0,0') }} queries
+    </template>
+    <template v-slot:item.qos.total_query_fees="{ item }">
+      {{ numeral(item.qos?.total_query_fees).format('0,0') }} GRT
+    </template>
+    <template v-slot:item.qos.avg_indexer_latency_ms="{ item }">
+      {{ numeral(item.qos?.avg_indexer_latency_ms).format('0,0.0') }} ms
+    </template>
+    <template v-slot:item.qos.max_indexer_latency_ms="{ item }">
+      {{ numeral(item.qos?.max_indexer_latency_ms).format('0,0.0') }} ms
+    </template>
+    <template v-slot:item.qos.avg_query_fee="{ item }">
+      {{ numeral(item.qos?.avg_query_fee).format('0,0.00000') }} GRT
+    </template>
+    <template v-slot:item.qos.max_query_fee="{ item }">
+      {{ numeral(item.qos?.max_query_fee).format('0,0.00000') }} GRT
+    </template>
+    <template v-slot:item.qos.proportion_indexer_200_responses="{ item }">
+      {{ numeral(item.qos?.proportion_indexer_200_responses).format('0.00%') }}
+    </template>
+    <template v-slot:item.qos.avg_indexer_blocks_behind="{ item }">
+      {{ numeral(item.qos?.avg_indexer_blocks_behind).format('0,0') }} blocks
+    </template>
+    <template v-slot:item.qos.max_indexer_blocks_behind="{ item }">
+      {{ numeral(item.qos?.max_indexer_blocks_behind).format('0,0') }} blocks
+    </template>
+    <template v-slot:item.qos.num_indexer_200_responses="{ item }">
+      {{ numeral(item.qos?.num_indexer_200_responses).format('0,0') }} queries
+    </template>
     <template v-slot:body.append>
       <tr>
         <td style="font-size: 11px"><strong>Totals</strong></td>
@@ -272,6 +302,18 @@ const headers = ref([
     { title: 'Total Indexing Rewards', key: 'subgraphDeployment.indexingRewardAmount'},
     { title: 'Deployment ID', key: 'subgraphDeployment.ipfsHash', sortable: false },
     { title: 'Allocation ID', key: 'id', sortable: false, width: "100px" },
+    { title: 'Query Fees (1d)', key: 'qos.total_query_fees'},
+    { title: 'Query Count (1d)', key: 'qos.query_count' },
+    //{ title: 'Entities', key: 'upgradeIndexer'},
+    { title: 'Avg Latency', key: 'qos.avg_indexer_latency_ms' },
+    { title: 'Avg Query Fee', key: 'qos.avg_query_fee'},
+    { title: 'Success Rate', key: 'qos.proportion_indexer_200_responses' },
+    { title: 'Avg Blocks Behind', key: 'qos.avg_indexer_blocks_behind'},
+    { title: 'Max Latency', key: 'qos.max_indexer_latency_ms'},
+    { title: 'Max Blocks Behind', key: 'qos.max_indexer_blocks_behind'},
+    { title: 'Successful Queries', key: 'qos.num_indexer_200_responses'},
+    { title: 'Avg Query Fee', key: 'qos.avg_query_fee' },
+    { title: 'Max Query Fee', key: 'qos.max_query_fee' },
   ]);
 
   watch(loaded, (loaded) => {
