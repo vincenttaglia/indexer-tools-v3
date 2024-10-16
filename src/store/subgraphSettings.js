@@ -100,8 +100,6 @@ export const useSubgraphSettingStore = defineStore('subgraphSetting', {
     subgraphBlacklist: (state) => state.settings.subgraphBlacklist,
     subgraphSynclist: (state) => state.settings.subgraphSynclist,
     networks: (state) => state.settings.networks,
-    allocationsDashboardColumns: () => new Array(allocationsDashboardColumns),
-    subgraphsDashboardColumns: () => new Array(subgraphsDashboardColumns),
   },
   actions: {
     async moveItemInAllocationColumns(from, to) {
@@ -110,9 +108,11 @@ export const useSubgraphSettingStore = defineStore('subgraphSetting', {
     async moveItemInSubgraphColumns(from, to) {
       moveItemInArray(this.settings.selectedSubgraphColumns, from, to);
     },
-    async resetDefaultColumns(){
-      this.settings.selectedAllocationColumns = settingsDefault.selectedAllocationColumns;
-      this.settings.selectedSubgraphColumns = settingsDefault.selectedSubgraphColumns;
+    async resetAllocationDefaultColumns(){
+      this.settings.selectedAllocationColumns = settingsDefault.selectedAllocationColumns.slice();
+    },
+    async resetSubgraphDefaultColumns(){
+      this.settings.selectedSubgraphColumns = settingsDefault.selectedSubgraphColumns.slice();
     },
   }
 })
