@@ -89,7 +89,7 @@
             <div class="d-inline-flex flex-wrap justify-space-around">
               <v-card class="w-50 mx-5" style="min-width: 300px;max-width:500px">
                 <header class="d-flex align-center">
-                  <h2>Allocation Columns</h2>
+                  <h2 class="mx-4">Allocation Columns</h2>
                   <v-btn
                     @click="subgraphSettingsStore.resetAllocationDefaultColumns()"
                     class="ma-5"
@@ -118,7 +118,7 @@
                   <template #item="{element}">
                     <v-list-item
                       rounded="lg"
-                      class="draggable w-90"
+                      class="draggable w-90 mx-3"
                       :key="element.key"
                       :title="element.title"
                       density="compact"
@@ -137,7 +137,7 @@
               </v-card>
               <v-card class="w-50" style="min-width: 300px;max-width:500px">
                 <header class="d-flex align-center">
-                  <h2>Subgraph Columns</h2>
+                  <h2 class="mx-4">Subgraph Columns</h2>
                   <v-btn
                     @click="subgraphSettingsStore.resetSubgraphDefaultColumns()"
                     class="ma-5"
@@ -166,7 +166,7 @@
                   <template #item="{element}">
                       <v-list-item
                         rounded="lg"
-                        class="draggable w-90"
+                        class="draggable w-90 mx-3"
                         :key="element.key"
                         :title="element.title"
                       >
