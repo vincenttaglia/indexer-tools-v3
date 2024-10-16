@@ -217,25 +217,29 @@
       {{ numeral(item.qos?.num_indexer_200_responses).format('0,0') }} queries
     </template>
     <template v-slot:body.append>
-      <tr>
-        <td style="font-size: 11px"><strong>Totals</strong></td>
-        <td v-if="selectable"></td>
-        <td><strong>{{ allocationStore.getAllocations.length }} allocations</strong>&nbsp;&nbsp;</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><strong>{{ numeral(allocationStore.avgAPR).format('0,0.00%') }}</strong>&nbsp;&nbsp;</td>
-        <td><strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.dailyRewardsSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong></td>
-        <td><strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.dailyRewardsCutSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong></td>
-        <td><strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.pendingRewardsSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong></td>
-        <td><strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.pendingRewardsCutSum))).format('0,0') }} GRT</strong></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
+      <DashboardFooter :columns="subgraphSettingsStore.settings.selectedAllocationColumns" :selectable="selectable">
+        <template v-slot:deploymentStatus.blocksBehindChainhead>
+          <strong style="font-size: 11px">Totals</strong>
+        </template>
+        <template v-slot:subgraphDeployment.versions[0].subgraph.metadata.displayName>
+          <strong>{{ allocationStore.getAllocations.length }} allocations</strong>&nbsp;&nbsp;
+        </template>
+        <template v-slot:apr>
+          <strong>{{ numeral(allocationStore.avgAPR).format('0,0.00%') }}</strong>&nbsp;&nbsp;
+        </template>
+        <template v-slot:dailyRewards>
+          <strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.dailyRewardsSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong>
+        </template>
+        <template v-slot:dailyRewardsCut>
+          <strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.dailyRewardsCutSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong>
+        </template>
+        <template v-slot:pendingRewards.value>
+          <strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.pendingRewardsSum))).format('0,0') }} GRT&nbsp;&nbsp;</strong>
+        </template>
+        <template v-slot:pendingRewardsCut>
+          <strong>{{ numeral(Web3.utils.fromWei(Web3.utils.toBN(allocationStore.pendingRewardsCutSum))).format('0,0') }} GRT</strong>
+        </template>
+      </DashboardFooter>
     </template>
   </v-data-table>
 </template>
@@ -252,6 +256,7 @@ import { useSubgraphSettingStore } from "@/store/subgraphSettings";
 import { useChainStore } from "@/store/chains";
 import { useTableSettingStore } from "@/store/tableSettings";
 import StatusDropdownVue from '@/components/StatusDropdown.vue';
+import DashboardFooter from "@/components/DashboardFooter.vue";
 
 const allocationStore = useAllocationStore();
 const accountStore = useAccountStore();
