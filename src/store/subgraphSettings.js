@@ -1,11 +1,6 @@
 // Utilities
 import { defineStore } from 'pinia'
 
-function moveItemInArray(array, from, to) {
-  const item = array.splice(from-1, 1)[0];
-  array.splice(to-1, 0, item);
-}
-
 const settingsDefault = {
   search: '',
   minSignal: '',
@@ -102,11 +97,15 @@ export const useSubgraphSettingStore = defineStore('subgraphSetting', {
     networks: (state) => state.settings.networks,
   },
   actions: {
+    moveItemInArray(array, from, to) {
+      const item = this.settings[array].splice(from, 1)[0];
+      this.settings[array].splice(to, 0, item);
+    },
     async moveItemInAllocationColumns(from, to) {
-      moveItemInArray(this.settings.selectedAllocationColumns, from, to);
+      this.moveItemInArray('selectedAllocationColumns', from, to);
     },
     async moveItemInSubgraphColumns(from, to) {
-      moveItemInArray(this.settings.selectedSubgraphColumns, from, to);
+      this.moveItemInArray('selectedSubgraphColumns', from, to);
     },
     async resetAllocationDefaultColumns(){
       this.settings.selectedAllocationColumns = settingsDefault.selectedAllocationColumns.slice();

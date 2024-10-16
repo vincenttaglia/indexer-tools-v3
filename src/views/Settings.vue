@@ -85,7 +85,17 @@
             </v-card-text>
             </v-card>
           </v-window-item>
-          <v-window-item value="dashboards">           
+          <v-window-item value="dashboards">    
+            <header class="d-flex align-center">
+              <h2>Allocation Columns</h2>
+              <v-btn
+                @click="subgraphSettingsStore.resetAllocationDefaultColumns()"
+                class="ma-5"
+                size="large"
+              >
+                Reset Columns
+              </v-btn>
+            </header>       
             <v-combobox
                 v-model="subgraphSettingsStore.settings.selectedAllocationColumns"
                 :items="allocationsDashboardColumns"
@@ -97,48 +107,41 @@
                 key="key"
                 return-object
             ></v-combobox>
-            <v-card
-              class="mx-auto"
+            <Sortable
+              :list="subgraphSettingsStore.settings.selectedAllocationColumns"
+              item-key="key"
+              tag="div"
+              @end="onAllocationsUpdate"
             >
-              <Sortable
-                :list="subgraphSettingsStore.settings.selectedAllocationColumns"
-                item-key="key"
-                tag="div"
-                @end="onAllocationsEnd"
-              >
-                <template #header>
-                    <header class="d-flex align-center">
-                      <h1>Allocation Columns</h1>
-                      <v-btn
-                        @click="subgraphSettingsStore.resetAllocationDefaultColumns()"
-                        class="ma-5"
-                        size="large"
-                      >
-                        Reset Columns
-                      </v-btn>
-                    </header>
-                </template>
-                <template #item="{element}">
-                  <v-list-item
-                    rounded="lg"
-                    class="draggable"
-                    :key="element.key"
-                    :title="element.title"
-                    density="compact"
-                  >
-                    <template v-slot:append>
-                      <v-icon 
-                        icon="mdi-close"
-                        @click="removeColumn('selectedAllocationColumns', element.key)"
-                      >
+              <template #item="{element}">
+                <v-list-item
+                  rounded="lg"
+                  class="draggable"
+                  :key="element.key"
+                  :title="element.title"
+                  density="compact"
+                >
+                  <template v-slot:append>
+                    <v-icon 
+                      icon="mdi-close"
+                      @click="removeColumn('selectedAllocationColumns', element.key)"
+                    >
 
-                      </v-icon>
-                    </template>
-                  </v-list-item>
-                </template>
-              </Sortable>
-            </v-card>
-            
+                    </v-icon>
+                  </template>
+                </v-list-item>
+              </template>
+            </Sortable>
+            <header class="d-flex align-center">
+              <h2>Subgraph Columns</h2>
+              <v-btn
+                @click="subgraphSettingsStore.resetSubgraphDefaultColumns()"
+                class="ma-5"
+                size="large"
+              >
+                Reset Columns
+              </v-btn>
+            </header>
             <v-combobox
                 v-model="subgraphSettingsStore.settings.selectedSubgraphColumns"
                 :items="subgraphsDashboardColumns"
@@ -154,20 +157,8 @@
               :list="subgraphSettingsStore.settings.selectedSubgraphColumns"
               item-key="key"
               tag="div"
-              @end="onSubgraphsEnd"
+              @end="onSubgraphsUpdate"
             >
-              <template #header>
-                <header class="d-flex align-center">
-                  <h1>Subgraph Columns</h1>
-                  <v-btn
-                    @click="subgraphSettingsStore.resetSubgraphDefaultColumns()"
-                    class="ma-5"
-                    size="large"
-                  >
-                    Reset Columns
-                  </v-btn>
-                </header>
-              </template>
               <template #item="{element}">
                   <v-list-item
                     rounded="lg"
@@ -211,8 +202,8 @@
   const arbitrum_rpc_c = ref(subgraphSettingsStore.settings.rpc.arbitrum != '');
 
 
-  function onSubgraphsEnd(event) { console.log(event); subgraphSettingsStore.moveItemInSubgraphColumns(event.oldIndex, event.newIndex) }
-  function onAllocationsEnd(event) { console.log(event); subgraphSettingsStore.moveItemInAllocationColumns(event.oldIndex, event.newIndex) }
+  function onSubgraphsUpdate(event) { console.log(event); subgraphSettingsStore.moveItemInSubgraphColumns(event.oldIndex, event.newIndex) }
+  function onAllocationsUpdate(event) { console.log(event); subgraphSettingsStore.moveItemInAllocationColumns(event.oldIndex, event.newIndex) }
 
   function updateMainnetRPC(rpc){
     if(rpc != '' && new Web3(rpc))
