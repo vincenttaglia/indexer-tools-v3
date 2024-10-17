@@ -16,7 +16,7 @@
   </div>
   <v-data-table
       :headers="headers"
-      :items="subgraphStore.getQosDash"
+      :items="subgraphStore.getQueryFeeDash"
       class="elevation-1"
       loading-text="Loading... Please wait"
       mobile-breakpoint="0"

@@ -16,7 +16,7 @@ const accountStore = useAccountStore();
 const allocationStore = useAllocationStore();
 const chainStore = useChainStore();
 const deploymentStatusStore = useDeploymentStatusStore();
-const qosStore = useQueryFeesStore();
+const queryFeeStore = useQueryFeesStore();
 accountStore.fetchData();
 const subgraphSettingStore = useSubgraphSettingStore();
 import BigNumber from "bignumber.js";
@@ -234,7 +234,7 @@ export const useSubgraphsStore = defineStore({
           ...state.getCurrentlyAllocated[i],
           ...state.getDeploymentStatuses[i],
           ...state.getUpgradeIndexer[i],
-          ...state.getQosDatas[i],
+          ...state.getQueryFeeDatas[i],
         };
       }
       return subgraphs;
@@ -289,10 +289,10 @@ export const useSubgraphsStore = defineStore({
       }
       return deploymentStatuses;
     },
-    getQosDatas: (state) => {
+    getQueryFeeDatas: (state) => {
       let qosDatas = [];
       for(let i = 0; i < state.subgraphs.length; i++){
-        const qos = qosStore.getQosDict[state.subgraphs[i].deployment.ipfsHash];
+        const qos = queryFeeStore.getQosDict[state.subgraphs[i].deployment.ipfsHash];
         if(qos){
           qosDatas[i] = { qos: qos };
         }else{
@@ -301,8 +301,8 @@ export const useSubgraphsStore = defineStore({
       }
       return qosDatas;
     },
-    getQosDash: (state) => {
-      return qosStore.qosData.filter((e) => state.getSubgraphsDict[e.subgraphDeployment.id]).map((e) => Object.assign({}, e, state.getSubgraphsDict[e.subgraphDeployment.id] || {} ));
+    getQueryFeeDash: (state) => {
+      return queryFeeStore.qosData.filter((e) => state.getSubgraphsDict[e.subgraphDeployment.id]).map((e) => Object.assign({}, e, state.getSubgraphsDict[e.subgraphDeployment.id] || {} ));
     },
     getProportions: (state) => {
       let proportions = [];
@@ -529,7 +529,7 @@ export const useSubgraphsStore = defineStore({
           return this.subgraphs;
         })
         .then(() => {
-          return qosStore.fetchData().then(() => {
+          return queryFeeStore.fetchData().then(() => {
             this.loading = false;
           });
         })

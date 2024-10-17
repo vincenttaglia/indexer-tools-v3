@@ -156,7 +156,7 @@ export const useAllocationStore = defineStore('allocationStore', {
           ...state.getPendingRewards[i],
           ...state.getPendingRewardsCuts[i],
           ...state.getDeploymentStatuses[i],
-          ...state.getQosDatas[i],
+          ...state.getQueryFeeDatas[i],
         };
       }
       console.log(state.allocations);
@@ -173,7 +173,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
       return allocations;
     },
-    getQosDatas: (state) => {
+    getQueryFeeDatas: (state) => {
       let qosDatas = [];
       for(let i = 0; i < state.allocations.length; i++){
         const qos = qosStore.getQosDict[state.allocations[i].subgraphDeployment.ipfsHash];
