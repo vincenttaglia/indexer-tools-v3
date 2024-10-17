@@ -4,13 +4,13 @@
   </div>
   <v-data-table
       :headers="headers"
-      :items="qosStore.qosData"
+      :items="getQosDash"
       class="elevation-1"
       loading-text="Loading... Please wait"
       mobile-breakpoint="0"
       hover
       items-per-page="25"
-      :loading = "qosStore.loading"
+      :loading = "qosStore.loading || subgraphStore.loading"
   >
     <template v-slot:no-data>
       <p class="mt-4">
@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import numeral from "numeral";
 import { useSubgraphSettingStore } from "@/store/subgraphSettings";
 import { useQueryFeesStore } from "@/store/queryFees";
@@ -78,16 +78,25 @@ const subgraphSettingStore = useSubgraphSettingStore();
 const qosStore = useQosStore();
 const subgraphStore = useSubgraphsStore();
 
+if(subgraphStore.subgraphs.length == 0 && !subgraphStore.loading){
+  subgraphStore.fetchData();
+}
+
 qosStore.fetchData();
 
+
+
+const getQosDash = computed(() => {
+  return qosStore.qosData.filter((e) => subgraphStore.getSubgraphsDict[e.subgraph_deployment_ipfs_hash]).map((e) => Object.assign({}, e, subgraphStore.getSubgraphsDict[e.subgraph_deployment_ipfs_hash] || {} ));
+})
 
 function resetFilters () {
 
 }
 
 const headers = ref([
-  //{ title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },
-  //{ title: 'Name', key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.displayName' },
+  { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },
+  { title: 'Name', key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.displayName' },
   { title: 'Query Fees (1d)', key: 'total_query_fees'},
   { title: 'Query Count (1d)', key: 'query_count' },
   //{ title: 'Entities', key: 'upgradeIndexer'},
