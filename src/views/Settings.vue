@@ -19,6 +19,12 @@
             </v-icon>
             General
           </v-tab>
+          <v-tab value="dashboards">
+            <v-icon start>
+              mdi-view-column
+            </v-icon>
+            Dashboards
+          </v-tab>
           <v-tab value="accounts">
             <v-icon start>
             mdi-account
@@ -30,12 +36,6 @@
               mdi-wifi
             </v-icon>
             Custom RPCs
-          </v-tab>
-          <v-tab value="dashboards">
-            <v-icon start>
-              mdi-view-column
-            </v-icon>
-            Dashboards
           </v-tab>
         </v-tabs>
         <v-window v-model="tab">
