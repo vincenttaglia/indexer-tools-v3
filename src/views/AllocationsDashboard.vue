@@ -218,8 +218,11 @@
     </template>
     <template v-slot:body.append>
       <DashboardFooter :columns="subgraphSettingsStore.settings.selectedAllocationColumns" :selectable="selectable">
-        <template v-slot:deploymentStatus.blocksBehindChainhead>
+        <template v-slot:selectable>
           <strong style="font-size: 11px">Totals</strong>
+        </template>
+        <template v-slot:deploymentStatus.blocksBehindChainhead>
+          <strong style="font-size: 11px" v-if="!selectable">Totals</strong>
         </template>
         <template v-slot:subgraphDeployment.versions[0].subgraph.metadata.displayName>
           <strong>{{ allocationStore.getAllocations.length }} allocations</strong>&nbsp;&nbsp;
