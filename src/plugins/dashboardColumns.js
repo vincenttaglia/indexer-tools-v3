@@ -34,6 +34,9 @@ const allocationsDashboardColumns = [
   { title: 'Max Query Fee', key: 'qos.max_query_fee' },
   { title: 'Network Query Fees (1d)', key: 'queryFees.total_query_fees'},
   { title: 'Network Queries (1d)', key: 'queryFees.query_count'},
+  { title: 'Avg Network Latency', key: 'queryFees.avg_gateway_latency_ms' },
+  { title: 'Avg Network Query Fee', key: 'queryFees.avg_query_fee'},
+  { title: 'Network Success Rate', key: 'queryFees.gateway_query_success_rate' },
 ];
 const subgraphsDashboardColumns = [
   { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },
@@ -54,6 +57,9 @@ const subgraphsDashboardColumns = [
   { title: 'Query Fees (1d)', key: 'queryFees.total_query_fees'},
   { title: 'Queries (1d)', key: 'queryFees.query_count'},
   { title: 'Deployment ID', key: 'deployment.ipfsHash', sortable: false },
+  { title: 'Avg Latency', key: 'queryFees.avg_gateway_latency_ms' },
+  { title: 'Avg Query Fee', key: 'queryFees.avg_query_fee'},
+  { title: 'Success Rate', key: 'queryFees.gateway_query_success_rate' },
 ];
 
 export { subgraphsDashboardColumns, allocationsDashboardColumns };

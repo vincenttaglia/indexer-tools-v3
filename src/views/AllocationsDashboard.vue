@@ -222,6 +222,15 @@
     <template v-slot:item.queryFees.total_query_fees="{ item }">
       {{ item.queryFees?.total_query_fees ? numeral(item.queryFees.total_query_fees).format('0,0') : '-' }} GRT
     </template>
+    <template v-slot:item.queryFees.avg_gateway_latency_ms="{ item }">
+      {{ numeral(item.queryFees?.avg_gateway_latency_ms).format('0,0.00') }} ms
+    </template>
+    <template v-slot:item.queryFees.avg_query_fee="{ item }">
+      {{ numeral(item.queryFees?.avg_query_fee).format('0,0.00000') }} GRT
+    </template>
+    <template v-slot:item.queryFees.gateway_query_success_rate="{ item }">
+      {{ numeral(item.queryFees?.gateway_query_success_rate).format('0.00%') }}
+    </template>
     <template v-slot:body.append>
       <DashboardFooter :columns="subgraphSettingsStore.settings.selectedAllocationColumns" :selectable="selectable">
         <template v-slot:selectable>

@@ -194,11 +194,20 @@
     <template v-slot:item.deployment.queryFeesAmount="{ item }">
       {{ numeral(web3.utils.fromWei(item.deployment.queryFeesAmount.toString())).format('0,0') }} GRT
     </template>
-    <template v-slot:item.qos.query_count="{ item }">
-      {{ item.qos?.query_count ? numeral(item.qos.query_count).format('0,0') : '-' }}
+    <template v-slot:item.queryFees.query_count="{ item }">
+      {{ item.queryFees?.query_count ? numeral(item.queryFees.query_count).format('0,0') : '-' }}
     </template>
-    <template v-slot:item.qos.total_query_fees="{ item }">
-      {{ item.qos?.total_query_fees ? numeral(item.qos.total_query_fees).format('0,0') : '-' }} GRT
+    <template v-slot:item.queryFees.total_query_fees="{ item }">
+      {{ item.queryFees?.total_query_fees ? numeral(item.queryFees.total_query_fees).format('0,0') : '-' }} GRT
+    </template>
+    <template v-slot:item.queryFees.avg_gateway_latency_ms="{ item }">
+      {{ numeral(item.queryFees?.avg_gateway_latency_ms).format('0,0.00') }} ms
+    </template>
+    <template v-slot:item.queryFees.avg_query_fee="{ item }">
+      {{ numeral(item.queryFees?.avg_query_fee).format('0,0.00000') }} GRT
+    </template>
+    <template v-slot:item.queryFees.gateway_query_success_rate="{ item }">
+      {{ numeral(item.queryFees?.gateway_query_success_rate).format('0.00%') }}
     </template>
     <template v-slot:item.deployment.stakedTokens="{ item }">
       {{ numeral(web3.utils.fromWei(item.deployment.stakedTokens.toString())).format('0,0') }} GRT
