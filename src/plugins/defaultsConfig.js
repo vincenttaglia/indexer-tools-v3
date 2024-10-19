@@ -29,6 +29,7 @@ export const loadDefaultsConfig = async () => {
           subgraphArbitrum: value.DEFAULT_SUBGRAPH_ARBITRUM,
           subgraphSepolia: value.DEFAULT_SUBGRAPH_SEPOLIA,
           subgraphArbitrumSepolia: value.DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA,
+          qosSubgraph: value.DEFAULT_QOS_SUBGRAPH,
         }
       }
 
@@ -44,6 +45,7 @@ export const loadDefaultsConfig = async () => {
           subgraphArbitrum: import.meta.env.VITE_DEFAULT_SUBGRAPH_ARBITRUM,
           subgraphSepolia: import.meta.env.VITE_DEFAULT_SUBGRAPH_SEPOLIA,
           subgraphArbitrumSepolia: import.meta.env.VITE_DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA,
+          qosSubgraph: import.meta.env.VITE_DEFAULT_QOS_SUBGRAPH,
         }
       }
     }
@@ -59,6 +61,7 @@ export const loadDefaultsConfig = async () => {
         subgraphArbitrum: "https://gateway-arbitrum.network.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp",
         subgraphSepolia: "https://gateway-arbitrum.network.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/8pVKDwHniAz87CHEQsiz2wgFXGZXrbMDkrxgauVVfMJC",
         subgraphArbitrumSepolia: "https://gateway-arbitrum.network.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/3xQHhMudr1oh69ut36G2mbzpYmYxwqCeU6wwqyCDCnqV",
+        qosSubgraph: "https://gateway.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/Dtr9rETvwokot4BSXaD5tECanXfqfJKcvHuaaEgPDD2D",
       }
     }
     

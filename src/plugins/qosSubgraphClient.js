@@ -1,9 +1,13 @@
+import { loadDefaultsConfig } from "./defaultsConfig";
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
+
+const defaultsConfigVariables = await loadDefaultsConfig();
+const defaultsConfig = defaultsConfigVariables.variables;
 
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: "https://gateway.thegraph.com/api/146d8cd439901e24257f3c19d82359da/subgraphs/id/Dtr9rETvwokot4BSXaD5tECanXfqfJKcvHuaaEgPDD2D",
+  uri: defaultsConfig.qosSubgraph,
 });
 
 const cache = new InMemoryCache();
