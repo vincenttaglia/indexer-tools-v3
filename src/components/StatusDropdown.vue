@@ -184,7 +184,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, toRefs } from 'vue';
 import { useAccountStore } from '@/store/accounts';
 import { useChainStore } from '@/store/chains';
 import numeral from 'numeral';
@@ -195,12 +195,12 @@ const chainStore = useChainStore();
 const snackbar = ref(false);
 const text = ref("");
 const props = defineProps(['item', 'subgraph', 'metadata']);
-const item = props.item;
-const subgraph = props.subgraph || item.deployment;
-const metadata = props.metadata || item.deployment.versions[0].metadata.subgraphVersion.subgraph.metadata;
+const { item } = toRefs(props);
 
-const isDenied = subgraph.deniedAt != '0';
-const isAllocated = ref(item.currentlyAllocated);
+const subgraph = computed(() => props.subgraph || item.value.deployment);
+const metadata = computed(() => props.metadata || item.value.deployment.versions[0].metadata.subgraphVersion.subgraph.metadata);
+const isDenied = computed(() => subgraph.value.deniedAt != '0');
+const isAllocated = ref(item.value.currentlyAllocated);
 
 const badge = ref(false);
 const badgeIcon = ref("");
@@ -208,32 +208,32 @@ const badgeColor = ref("");
 const copyDialog = ref(false);
 const copyText = ref("");
 
-if(isAllocated.value && item.deployment){
+if(isAllocated.value && item.value.deployment){
   badgeIcon.value = "mdi-exclamation-thick";
   badgeColor.value = "warning";
   badge.value = true;
-} else if(isDenied){
+} else if(isDenied.value){
   badgeIcon.value = "mdi-currency-usd-off";
   badgeColor.value = "error";
   badge.value = true;
 }
 
-const hasFatalError = item.deploymentStatus?.health == 'failed' && item.deploymentStatus?.fatalError;
-const ringColor = item.deploymentStatus?.color || '';
-const dropdownStatusColor = ringColor || 'white';
-const icon = item.deploymentStatus?.icon || 'mdi-close';
-const health = item.deploymentStatus?.health?.toUpperCase() || "Not Deployed";
+const hasFatalError = computed(() => item.value.deploymentStatus?.health == 'failed' && item.value.deploymentStatus?.fatalError);
+const ringColor = computed(() => item.value.deploymentStatus?.color || '');
+const dropdownStatusColor = computed(() => ringColor.value || 'white');
+const icon = computed(() => item.value.deploymentStatus?.icon || 'mdi-close');
+const health = computed(() => item.value.deploymentStatus?.health?.toUpperCase() || "Not Deployed");
 
-const firstBlock = item.deploymentStatus?.chains?.[0]?.earliestBlock?.number || '-';
-const lastBlock = item.deploymentStatus?.chains?.[0]?.latestBlock?.number || '-';
-const chainHead = item.deploymentStatus?.chains?.[0]?.chainHeadBlock?.number || '-';
+const firstBlock = computed(() => item.value.deploymentStatus?.chains?.[0]?.earliestBlock?.number || '-');
+const lastBlock = computed(() => item.value.deploymentStatus?.chains?.[0]?.latestBlock?.number || '-');
+const chainHead = computed(() => item.value.deploymentStatus?.chains?.[0]?.chainHeadBlock?.number || '-');
 
-const completion = numeral((item.deploymentStatus?.chains?.[0]?.latestBlock?.number - item.deploymentStatus?.chains?.[0]?.earliestBlock?.number) / (item.deploymentStatus?.chains?.[0]?.chainHeadBlock?.number - item.deploymentStatus?.chains?.[0]?.earliestBlock?.number)).format('0.00%') || '-%';
-const completionValue = (item.deploymentStatus?.chains?.[0]?.latestBlock?.number - item.deploymentStatus?.chains?.[0]?.earliestBlock?.number) / (item.deploymentStatus?.chains?.[0]?.chainHeadBlock?.number - item.deploymentStatus?.chains?.[0]?.earliestBlock?.number)*100 || 0;
+const completion = computed(() => numeral((item.value.deploymentStatus?.chains?.[0]?.latestBlock?.number - item.value.deploymentStatus?.chains?.[0]?.earliestBlock?.number) / (item.value.deploymentStatus?.chains?.[0]?.chainHeadBlock?.number - item.value.deploymentStatus?.chains?.[0]?.earliestBlock?.number)).format('0.00%') || '-%');
+const completionValue = computed(() => (item.value.deploymentStatus?.chains?.[0]?.latestBlock?.number - item.value.deploymentStatus?.chains?.[0]?.earliestBlock?.number) / (item.value.deploymentStatus?.chains?.[0]?.chainHeadBlock?.number - item.value.deploymentStatus?.chains?.[0]?.earliestBlock?.number)*100 || 0);
 
-const errorBlockNumber = item.deploymentStatus?.fatalError?.block?.number;
-const errorBlockHash = item.deploymentStatus?.fatalError?.block?.hash;
-const errorMsg = item.deploymentStatus?.fatalError?.message;
+const errorBlockNumber = computed(() => item.value.deploymentStatus?.fatalError?.block?.number);
+const errorBlockHash = computed(() => item.value.deploymentStatus?.fatalError?.block?.hash);
+const errorMsg = computed(() => item.value.deploymentStatus?.fatalError?.message);
 
 function offchainSync(ipfsHash){
   let indexingRuleInput = {
