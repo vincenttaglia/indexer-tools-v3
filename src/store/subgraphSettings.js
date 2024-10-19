@@ -34,6 +34,7 @@ const settingsDefault = {
     },
     { title: 'Name', key: 'subgraphDeployment.versions[0].subgraph.metadata.displayName' },
     { title: 'Allocated', key: 'allocatedTokens'},
+    { title: 'Network', key: 'subgraphDeployment.manifest.network'},
     { title: 'Created', key: 'createdAt' },
     { title: 'Allocation Duration', key: 'activeDuration'},
     { title: 'Current APR', key: 'apr'},
