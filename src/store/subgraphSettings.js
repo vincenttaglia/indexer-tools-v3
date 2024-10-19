@@ -57,6 +57,8 @@ const settingsDefault = {
     { title: 'Successful Queries', key: 'qos.num_indexer_200_responses'},
     { title: 'Avg Query Fee', key: 'qos.avg_query_fee' },
     { title: 'Max Query Fee', key: 'qos.max_query_fee' },
+    { title: 'Network Query Fees (1d)', key: 'queryFees.total_query_fees'},
+    { title: 'Network Queries (1d)', key: 'queryFees.query_count'},
   ],
   selectedSubgraphColumns: [
     { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },

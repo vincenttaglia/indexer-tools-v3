@@ -10,6 +10,7 @@ import { storeToRefs } from 'pinia';
 import { calculateApr, calculateReadableDuration, calculateAllocationDailyRewards, indexerCut } from '@/plugins/commonCalcs';
 import { useSubgraphSettingStore } from './subgraphSettings';
 import { useQosStore } from './qos';
+import { useQueryFeesStore } from './queryFees';
 
 
 const networkStore = useNetworkStore();
@@ -19,6 +20,7 @@ const deploymentStatusStore = useDeploymentStatusStore();
 const { getDeploymentStatuses } = storeToRefs(deploymentStatusStore);
 const subgraphSettingStore = useSubgraphSettingStore();
 const qosStore = useQosStore();
+const queryFeeStore = useQueryFeesStore();
 
 
 networkStore.init();
@@ -156,6 +158,7 @@ export const useAllocationStore = defineStore('allocationStore', {
           ...state.getPendingRewards[i],
           ...state.getPendingRewardsCuts[i],
           ...state.getDeploymentStatuses[i],
+          ...state.getQosDatas[i],
           ...state.getQueryFeeDatas[i],
         };
       }
@@ -173,7 +176,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
       return allocations;
     },
-    getQueryFeeDatas: (state) => {
+    getQosDatas: (state) => {
       let qosDatas = [];
       for(let i = 0; i < state.allocations.length; i++){
         const qos = qosStore.getQosDict[state.allocations[i].subgraphDeployment.ipfsHash];
@@ -184,6 +187,18 @@ export const useAllocationStore = defineStore('allocationStore', {
         }
       }
       return qosDatas;
+    },
+    getQueryFeeDatas: (state) => {
+      let queryFeeDatas = [];
+      for(let i = 0; i < state.allocations.length; i++){
+        const queryFeeData = queryFeeStore.getQosDict[state.allocations[i].subgraphDeployment.ipfsHash];
+        if(queryFeeData){
+          queryFeeDatas[i] = { queryFees: queryFeeData }
+        }else{
+          queryFeeDatas[i] = { }
+        }
+      }
+      return queryFeeDatas;
     },
     getActiveDurations: (state) => {
       let activeDurations = [];
@@ -434,7 +449,8 @@ export const useAllocationStore = defineStore('allocationStore', {
         });
       });
       const qos = qosStore.fetchData();
-      return Promise.all([fetch, qos]).then(() => {
+      const queryFees = queryFeeStore.fetchData();
+      return Promise.all([fetch, qos, queryFees]).then(() => {
         this.loaded = true;
         this.loading = false;
       });

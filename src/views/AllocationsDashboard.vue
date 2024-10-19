@@ -216,6 +216,12 @@
     <template v-slot:item.qos.num_indexer_200_responses="{ item }">
       {{ numeral(item.qos?.num_indexer_200_responses).format('0,0') }} queries
     </template>
+    <template v-slot:item.queryFees.query_count="{ item }">
+      {{ item.queryFees?.query_count ? numeral(item.queryFees.query_count).format('0,0') : '-' }}
+    </template>
+    <template v-slot:item.queryFees.total_query_fees="{ item }">
+      {{ item.queryFees?.total_query_fees ? numeral(item.queryFees.total_query_fees).format('0,0') : '-' }} GRT
+    </template>
     <template v-slot:body.append>
       <DashboardFooter :columns="subgraphSettingsStore.settings.selectedAllocationColumns" :selectable="selectable">
         <template v-slot:selectable>
