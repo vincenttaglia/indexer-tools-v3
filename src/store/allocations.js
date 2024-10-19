@@ -430,6 +430,7 @@ export const useAllocationStore = defineStore('allocationStore', {
           for(let i = 0; i < this.pendingRewards.length; i++){
             this.pendingRewards[i] = { value: BigNumber(0), loading: false, loaded: false };
           }
+          return this.allocations;
         });
       });
       const qos = qosStore.fetchData();

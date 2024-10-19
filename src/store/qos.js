@@ -47,7 +47,7 @@ export const useQosStore = defineStore('qosStore', {
       console.log("QOS DATA");
       this.loading = true;
 
-      qosSubgraphClient.query({
+      return qosSubgraphClient.query({
         query: gql`query{
           queryDailyDataPoints(orderBy: dayNumber, first: 1, orderDirection: desc) {
             dayNumber
