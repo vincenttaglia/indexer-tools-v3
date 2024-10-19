@@ -16,15 +16,6 @@
       <p class="mt-4">
         No data available
       </p>
-      <br>
-      <v-btn
-        rounded
-        variant="text"
-        @click="resetFilters()"
-        class="mb-4 mt-2"
-      >
-        Reset Filters
-      </v-btn>
     </template>
     <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <StatusDropdownVue :item='item' />
@@ -67,14 +58,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import numeral from "numeral";
-import { useSubgraphSettingStore } from "@/store/subgraphSettings";
-import { useQueryFeesStore } from "@/store/queryFees";
-import { networks } from "@/plugins/subgraphNetworks";
 import StatusDropdownVue from '@/components/StatusDropdown.vue';
 import { useSubgraphsStore } from "@/store/subgraphs";
 import { useQosStore } from "@/store/qos";
 
-const subgraphSettingStore = useSubgraphSettingStore();
 const qosStore = useQosStore();
 const subgraphStore = useSubgraphsStore();
 
@@ -89,10 +76,6 @@ qosStore.fetchData();
 const getQosDash = computed(() => {
   return qosStore.qosData.filter((e) => subgraphStore.getSubgraphsDict[e.subgraph_deployment_ipfs_hash]).map((e) => Object.assign({}, e, subgraphStore.getSubgraphsDict[e.subgraph_deployment_ipfs_hash] || {} ));
 })
-
-function resetFilters () {
-
-}
 
 const headers = ref([
   { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },

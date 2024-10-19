@@ -28,15 +28,6 @@
       <p class="mt-4">
         No data available
       </p>
-      <br>
-      <v-btn
-        rounded
-        variant="text"
-        @click="resetFilters()"
-        class="mb-4 mt-2"
-      >
-        Reset Filters
-      </v-btn>
     </template>
     <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <StatusDropdownVue :item='item' />
@@ -86,22 +77,15 @@
 import { ref } from "vue";
 import numeral from "numeral";
 import { useSubgraphSettingStore } from "@/store/subgraphSettings";
-import { useQueryFeesStore } from "@/store/queryFees";
 import { networks } from "@/plugins/subgraphNetworks";
 import StatusDropdownVue from '@/components/StatusDropdown.vue';
 import { useSubgraphsStore } from "@/store/subgraphs";
 
 const subgraphSettingStore = useSubgraphSettingStore();
-const qosStore = useQueryFeesStore();
 const subgraphStore = useSubgraphsStore();
 
 if(subgraphStore.subgraphs.length == 0)
   subgraphStore.fetchData()
-
-
-function resetFilters () {
-
-}
 
 const headers = ref([
   { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },
