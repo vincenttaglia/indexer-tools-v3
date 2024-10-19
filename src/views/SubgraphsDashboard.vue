@@ -261,76 +261,17 @@
     },
   })
 
-function resetFilters () {
-  search.value = "";
-  subgraphSettingStore.settings.minSignal = "";
-  subgraphSettingStore.settings.maxSignal = "";
-  subgraphSettingStore.settings.noRewardsFilter = 1;
-  subgraphSettingStore.settings.networkFilter = [];
-  subgraphSettingStore.settings.statusFilter = "none";
-  subgraphSettingStore.settings.activateBlacklist = false;
-  subgraphSettingStore.settings.activateSynclist = false;
-  subgraphSettingStore.settings.hideCurrentlyAllocated = false;
-}
-
-function customSort(items, index, isDesc) {
-  items.sort((a, b) => {
-    if (index[0] == 'deployment.createdAt'
-        || index[0] == 'deployment.signalledTokens'
-        || index[0] == 'deployment.stakedTokens'
-        || index[0] == 'deployment.indexingRewardAmount'
-        || index[0] == 'deployment.queryFeesAmount'
-        || index[0] == 'proportion'
-        || index[0] == 'apr'
-        || index[0] == 'newApr'
-        || index[0] == 'dailyRewards'
-        || index[0] == 'dailyRewardsCut'
-        || index[0] == 'maxAllo'
-    ) {
-      if (!isDesc[0]) {
-        return t(a, index[0]).safeObject - t(b, index[0]).safeObject;
-      } else {
-        return t(b, index[0]).safeObject - t(a, index[0]).safeObject;
-      }
-    } else {
-      if(typeof t(a, index[0]) !== 'undefined'){
-        let objA = t(a, index[0]).safeObject;
-        let objB = t(b, index[0]).safeObject;
-        if(objA == null || objB == null)
-          return objA != null && !isDesc[0];
-
-        if (!isDesc[0]) {
-          return objA.toString().toLowerCase().localeCompare(objB.toString().toLowerCase());
-        } else {
-          return objB.toString().toLowerCase().localeCompare(objA.toString().toLowerCase());
-        }
-      }
-    }
-
-  });
-  return items;
-}
-
-  const headers = ref([
-    { title: 'Status', key: 'deploymentStatus.blocksBehindChainhead', align: 'start' },
-    { title: 'Name', key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.displayName' },
-    { title: 'Network', key: 'deployment.manifest.network'},
-    { title: 'Created', key: 'deployment.createdAt' },
-    { title: 'Current APR', key: 'apr'},
-    { title: 'New APR', key: 'newApr'},
-    { title: 'Max Allocation', key: 'maxAllo'},
-    { title: 'Est Daily Rewards (Before Cut)', key: 'dailyRewards'},
-    { title: 'Est Daily Rewards (After Cut)', key: 'dailyRewardsCut'},
-    { title: 'Current Signal', key: 'deployment.signalledTokens'},
-    { title: 'Entities', key: 'upgradeIndexer'},
-    { title: 'Current Proportion', key: 'proportion'},
-    { title: 'Current Allocations', key: 'deployment.stakedTokens'},
-    //{ title: 'Total Query Fees', key: 'deployment.queryFeesAmount'},
-    //{ title: 'Total Indexing Rewards', key: 'deployment.indexingRewardAmount'},
-    { title: 'Query Fees (1d)', key: 'qos.total_query_fees'},
-    { title: 'Queries (1d)', key: 'qos.query_count'},
-    { title: 'Deployment ID', key: 'deployment.ipfsHash', sortable: false },
-  ]);
+  function resetFilters () {
+    search.value = "";
+    subgraphSettingStore.settings.minSignal = "";
+    subgraphSettingStore.settings.maxSignal = "";
+    subgraphSettingStore.settings.noRewardsFilter = 1;
+    subgraphSettingStore.settings.networkFilter = [];
+    subgraphSettingStore.settings.statusFilter = "none";
+    subgraphSettingStore.settings.activateBlacklist = false;
+    subgraphSettingStore.settings.activateSynclist = false;
+    subgraphSettingStore.settings.hideCurrentlyAllocated = false;
+  }
 
 
 
