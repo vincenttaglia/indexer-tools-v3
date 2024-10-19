@@ -47,13 +47,13 @@ const QOS_QUERY = gql`query queryDailyDataPoints($dayNumber: Int!, $networkFilte
 
 export const useQueryFeesStore = defineStore('queryFeeStore', {
   state: () => ({
-    qosData: [],
+    queryFeeData: [],
     loading: true,
   }),
   getters: {
-    getQosDict: (state) => {
+    getQueryFeeDict: (state) => {
       let dict = {};
-      state.qosData.forEach(
+      state.queryFeeData.forEach(
         (el) => (dict[el.subgraphDeployment.id] = el )
       );
       return dict;
@@ -83,8 +83,8 @@ export const useQueryFeesStore = defineStore('queryFeeStore', {
         }).then(({ data }) => {
           console.log("QUERY DAILY DATA POINTS");
           console.log(data.queryDailyDataPoints);
-          this.qosData = data.queryDailyDataPoints;
-          console.log(this.qosData);
+          this.queryFeeData = data.queryDailyDataPoints;
+          console.log(this.queryFeeData);
           this.loading = false;
           return data.queryDailyDataPoints;
         })

@@ -73,8 +73,8 @@ const settingsDefault = {
     { title: 'Entities', key: 'upgradeIndexer'},
     { title: 'Current Proportion', key: 'proportion'},
     { title: 'Current Allocations', key: 'deployment.stakedTokens'},
-    { title: 'Query Fees (1d)', key: 'qos.total_query_fees'},
-    { title: 'Queries (1d)', key: 'qos.query_count'},
+    { title: 'Query Fees (1d)', key: 'queryFees.total_query_fees'},
+    { title: 'Queries (1d)', key: 'queryFees.query_count'},
     { title: 'Deployment ID', key: 'deployment.ipfsHash', sortable: false },
   ],
 };

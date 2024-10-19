@@ -290,16 +290,16 @@ export const useSubgraphsStore = defineStore({
       return deploymentStatuses;
     },
     getQueryFeeDatas: (state) => {
-      let qosDatas = [];
+      let queryFeeDatas = [];
       for(let i = 0; i < state.subgraphs.length; i++){
-        const qos = queryFeeStore.getQosDict[state.subgraphs[i].deployment.ipfsHash];
-        if(qos){
-          qosDatas[i] = { qos: qos };
+        const queryFees = queryFeeStore.getQueryFeeDict[state.subgraphs[i].deployment.ipfsHash];
+        if(queryFees){
+          queryFeeDatas[i] = { queryFees: queryFees };
         }else{
-          qosDatas[i] = { };
+          queryFeeDatas[i] = { };
         }
       }
-      return qosDatas;
+      return queryFeeDatas;
     },
     getQueryFeeDash: (state) => {
       return queryFeeStore.qosData.filter((e) => state.getSubgraphsDict[e.subgraphDeployment.id]).map((e) => Object.assign({}, e, state.getSubgraphsDict[e.subgraphDeployment.id] || {} ));

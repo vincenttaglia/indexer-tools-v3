@@ -191,7 +191,7 @@ export const useAllocationStore = defineStore('allocationStore', {
     getQueryFeeDatas: (state) => {
       let queryFeeDatas = [];
       for(let i = 0; i < state.allocations.length; i++){
-        const queryFeeData = queryFeeStore.getQosDict[state.allocations[i].subgraphDeployment.ipfsHash];
+        const queryFeeData = queryFeeStore.getQueryFeeDict[state.allocations[i].subgraphDeployment.ipfsHash];
         if(queryFeeData){
           queryFeeDatas[i] = { queryFees: queryFeeData }
         }else{
