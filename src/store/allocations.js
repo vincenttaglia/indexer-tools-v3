@@ -291,33 +291,8 @@ export const useAllocationStore = defineStore('allocationStore', {
     },
     getDeploymentStatuses: (state) => {
       let deploymentStatuses = [];
-      console.log("DEPLOY STATUS");
       for(let i = 0; i < state.allocations.length; i++){
-        let deploymentStatus = state.getDeploymentStatusesCall.find((e) => e.subgraph == state.allocations[i].subgraphDeployment.ipfsHash);
-        console.log("DEPLOYY STATUS");
-        console.log(deploymentStatus);
-        if(deploymentStatus != undefined){
-          if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError && deploymentStatus.fatalError.deterministic == false){
-            deploymentStatus.icon = 'mdi-refresh';
-            deploymentStatus.color = 'yellow';
-          }else if(deploymentStatus.health == 'failed' && deploymentStatus.fatalError && deploymentStatus.fatalError.deterministic == true){
-            deploymentStatus.icon = 'mdi-close';
-            deploymentStatus.color = 'red';
-          }else if(deploymentStatus.health == 'healthy' && deploymentStatus.synced == true){
-            deploymentStatus.icon = 'mdi-check';
-            deploymentStatus.color = 'green';
-          }else if(deploymentStatus.health == 'healthy' && deploymentStatus.synced == false){
-            deploymentStatus.icon = 'mdi-minus';
-            deploymentStatus.color = 'blue'
-          }else{
-            deploymentStatus.icon = 'mdi-help';
-            deploymentStatus.color = 'default';
-          }
-          deploymentStatus.blocksBehindChainhead = deploymentStatus?.chains?.[0]?.chainHeadBlock?.number && deploymentStatus?.chains?.[0]?.latestBlock?.number ? parseInt(deploymentStatus?.chains[0].chainHeadBlock.number) - parseInt(deploymentStatus.chains[0].latestBlock.number) : Number.MAX_SAFE_INTEGER;
-          deploymentStatuses[i] = { deploymentStatus: deploymentStatus }
-        }else{
-          deploymentStatuses[i] = { deploymentStatus: { icon: 'mdi-close', color: 'default', blocksBehindChainhead: deploymentStatus?.chains?.[0]?.chainHeadBlock?.number && deploymentStatus?.chains?.[0]?.latestBlock?.number ? parseInt(deploymentStatus.chains[0].chainHeadBlock.number) - parseInt(deploymentStatus.chains[0].latestBlock.number) : Number.MAX_SAFE_INTEGER } }
-        }
+        deploymentStatuses[i] = { deploymentStatus: deploymentStatusStore.getDeploymentStatusDict[state.allocations[i].subgraphDeployment.ipfsHash] || deploymentStatusStore.getBlankStatus }
       }
       return deploymentStatuses;
     },

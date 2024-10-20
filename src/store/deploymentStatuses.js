@@ -6,13 +6,53 @@ const accountStore = useAccountStore();
 export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
   state: () => ({
     status: [],
+    loading: false,
+    loaded: false,
   }),
   getters: {
     getIndexerUrl: () => accountStore.getActiveUrl,
-    getDeploymentStatuses: (state) => state.status,
+    getData: (state) => state.status,
+    getDeploymentStatusDict: (state) => {
+      let dict = {};
+      state.status.forEach(
+        (el) => (dict[el.subgraph] = el )
+      );
+      return dict;
+    },
+    getDeploymentStatuses: (state) => {
+      let deploymentStatuses = [];
+      for(let i = 0; i < state.status.length; i++){
+        deploymentStatuses[i] = state.status[i];
+        if(deploymentStatuses[i].health == 'failed' && deploymentStatuses[i].fatalError && deploymentStatuses[i].fatalError.deterministic == false){
+          deploymentStatuses[i].icon = 'mdi-refresh';
+          deploymentStatuses[i].color = 'yellow';
+        }else if(deploymentStatuses[i].health == 'failed' && deploymentStatuses[i].fatalError && deploymentStatuses[i].fatalError.deterministic == true){
+          deploymentStatuses[i].icon = 'mdi-close';
+          deploymentStatuses[i].color = 'red';
+        }else if(deploymentStatuses[i].health == 'healthy' && deploymentStatuses[i].synced == true){
+          deploymentStatuses[i].icon = 'mdi-check';
+          deploymentStatuses[i].color = 'green';
+        }else if(deploymentStatuses[i].health == 'healthy' && deploymentStatuses[i].synced == false){
+          deploymentStatuses[i].icon = 'mdi-minus';
+          deploymentStatuses[i].color = 'blue'
+        }else{
+          deploymentStatuses[i].icon = 'mdi-help';
+          deploymentStatuses[i].color = 'default';
+        }
+        deploymentStatuses[i].blocksBehindChainhead = deploymentStatuses[i]?.chains?.[0]?.chainHeadBlock?.number && deploymentStatuses[i].chains?.[0]?.latestBlock?.number ? parseInt(deploymentStatuses[i]?.chains[0].chainHeadBlock.number) - parseInt(deploymentStatuses[i].chains[0].latestBlock.number) : Number.MAX_SAFE_INTEGER;
+      }
+      return deploymentStatuses;
+    },
+    getBlankStatus: () => {
+      return { icon: 'mdi-close', color: 'default', blocksBehindChainhead: Number.MAX_SAFE_INTEGER } 
+    },
   },
   actions: {
-    async update(){
+    async init(){
+      if(!this.loading && !this.loaded)
+        this.fetchData();
+    },
+    async fetchData(){
       console.log("UPDATE STATUS");
       const url = new URL('/status', this.getIndexerUrl);
       console.log(url.href);
@@ -27,6 +67,11 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
         console.log(json);
         this.status = json.data.indexingStatuses;
       });
+    },
+    async update(){
+      if(!this.loading){
+        this.fetchData();
+      }
     }
   },
 })
