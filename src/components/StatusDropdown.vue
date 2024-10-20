@@ -198,8 +198,8 @@ const props = defineProps(['item', 'subgraph', 'metadata']);
 const { item } = toRefs(props);
 
 const subgraph = computed(() => props.subgraph || item.value.deployment);
-const metadata = computed(() => props.metadata || item.value.deployment.versions[0].metadata.subgraphVersion.subgraph.metadata);
-const isDenied = computed(() => subgraph.value.deniedAt != '0');
+const metadata = computed(() => props.metadata || item.value.deployment?.versions[0].metadata.subgraphVersion.subgraph.metadata);
+const isDenied = computed(() => subgraph.value?.deniedAt != '0');
 const isAllocated = ref(item.value.currentlyAllocated);
 
 const badge = ref(false);
