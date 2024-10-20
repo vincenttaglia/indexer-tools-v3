@@ -106,6 +106,9 @@ export const useSubgraphsStore = defineStore({
     upgradeIndexer: [],
   }),
   getters: {
+    loadingAll: (state) =>{
+      return state.loading || deploymentStatusStore.loading || queryFeeStore.loading;
+    },
     getFilteredSubgraphs: (state) => {
       let subgraphs = state.getSubgraphs;
       

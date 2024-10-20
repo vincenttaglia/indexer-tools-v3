@@ -9,7 +9,7 @@
     :show-select="selectable"
     v-model="selected"
     v-model:sort-by="tableSettingsStore.subgraphSettings.sortBy"
-    v-model:loading="subgraphStore.loading"
+    v-model:loading="subgraphStore.loadingAll"
     v-model:items-per-page="tableSettingsStore.subgraphSettings.itemsPerPage"
     :search="search"
     hover

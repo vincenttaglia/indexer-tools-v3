@@ -17,7 +17,6 @@ const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
 const chainStore = useChainStore();
 const deploymentStatusStore = useDeploymentStatusStore();
-const { getDeploymentStatuses } = storeToRefs(deploymentStatusStore);
 const subgraphSettingStore = useSubgraphSettingStore();
 const qosStore = useQosStore();
 const queryFeeStore = useQueryFeesStore();
@@ -26,7 +25,7 @@ const queryFeeStore = useQueryFeesStore();
 networkStore.init();
 accountStore.fetchData()
 .then(() => {
-  deploymentStatusStore.update();
+  deploymentStatusStore.init();
 });
 
 
@@ -42,8 +41,8 @@ export const useAllocationStore = defineStore('allocationStore', {
     networkFilter: [],
   }),
   getters: {
-    getDeploymentStatusesCall: () => {
-      return getDeploymentStatuses.value;
+    loadingAll: (state) => {
+      return state.loading || deploymentStatusStore.loading || qosStore.loading || queryFeeStore.loading
     },
     getFilteredAllocations: (state) => {
       let allocations = state.getAllocations;

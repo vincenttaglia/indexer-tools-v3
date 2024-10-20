@@ -66,6 +66,8 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
         console.log("SAVING STATUS")
         console.log(json);
         this.status = json.data.indexingStatuses;
+        this.loading = false;
+        this.loaded = true;
       });
     },
     async update(){

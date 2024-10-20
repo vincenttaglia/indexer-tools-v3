@@ -9,7 +9,7 @@
       :show-select="selectable"
       v-model="selected"
       v-model:sort-by="tableSettingsStore.allocationSettings.sortBy"
-      v-model:loading="allocationStore.loading"
+      v-model:loading="allocationStore.loadingAll"
       v-model:items-per-page="tableSettingsStore.allocationSettings.itemsPerPage"
       hover
       no-data-text="No data available<br>"

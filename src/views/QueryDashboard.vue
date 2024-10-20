@@ -22,7 +22,7 @@
       mobile-breakpoint="0"
       hover
       items-per-page="25"
-      :loading = "subgraphStore.loading"
+      :loading = "subgraphStore.loadingAll"
   >
     <template v-slot:no-data>
       <p class="mt-4">
