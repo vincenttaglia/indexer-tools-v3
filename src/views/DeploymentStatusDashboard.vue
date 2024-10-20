@@ -101,6 +101,10 @@
 
         deploymentStatuses.value[i].deployment = subgraphStore.getDataDict[deploymentStatuses.value[i].deploymentStatus.subgraph]?.deployment;
       }
+      console.log(deploymentStatuses);
+      loading.value = false;
+    }).catch((error) => {
+      console.error(error);
       loading.value = false;
     });
   }
