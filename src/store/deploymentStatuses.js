@@ -68,12 +68,15 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
         this.status = json.data.indexingStatuses;
         this.loading = false;
         this.loaded = true;
+      }).catch((error) => {
+        console.error(`Deployment status query error: ${error.message}`);
+        this.loading = false;
       });
     },
     async update(){
       if(!this.loading){
         this.fetchData();
       }
-    }
+    },
   },
 })

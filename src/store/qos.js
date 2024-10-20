@@ -71,6 +71,9 @@ export const useQosStore = defineStore('qosStore', {
           this.loading = false;
           return data.indexer.allocationDailyDataPoints;
         })
+      }).catch((error) => {
+        console.error(`QoS query error: ${error.message}`);
+        this.loading = false;
       });
     }
   },

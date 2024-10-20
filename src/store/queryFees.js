@@ -88,6 +88,9 @@ export const useQueryFeesStore = defineStore('queryFeeStore', {
           this.loading = false;
           return data.queryDailyDataPoints;
         })
+      }).catch((error) => {
+        console.error(`Query Fee QOS query error: ${error.message}`);
+        this.loading = false;
       });
     }
   },
