@@ -253,6 +253,13 @@ export const useSubgraphsStore = defineStore({
       }
       return selectedSubgraphs;
     },
+    getDataDict: (state) => {
+      let dict = {};
+      state.subgraphs.forEach(
+        (el) => (dict[el.deployment.ipfsHash] = el)
+      );
+      return dict;
+    },
     getSubgraphsDict: (state) => {
       let dict = {};
       state.getSubgraphs.forEach(
