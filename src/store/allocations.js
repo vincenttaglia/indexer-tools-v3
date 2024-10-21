@@ -492,6 +492,10 @@ export const useAllocationStore = defineStore('allocationStore', {
           })
         }
         return data;
+      }).catch((err) => {
+        if(err.graphQLErrors){
+          alert(`API Error: ${err.graphQLErrors[0].message}`);
+        }
       });
     }
   }

@@ -72,6 +72,9 @@ export const useQosStore = defineStore('qosStore', {
           return data.indexer.allocationDailyDataPoints;
         })
       }).catch((error) => {
+        if(error.graphQLErrors){
+          alert(`API Error: ${error.graphQLErrors[0].message}`);
+        }
         console.error(`QoS query error: ${error.message}`);
         this.loading = false;
       });
