@@ -7,7 +7,7 @@ const defaultsConfig = defaultsConfigVariables.variables;
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: defaultsConfig.qosSubgraph,
+  uri: defaultsConfig.qosSubgraph.replace("[api-key]", defaultsConfig.apiKey),
 });
 
 const cache = new InMemoryCache();

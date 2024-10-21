@@ -8,22 +8,22 @@ console.log(defaultsConfig.subgraphArbitrum);
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: defaultsConfig.subgraphMainnet,
+  uri: defaultsConfig.subgraphMainnet.replace("[api-key]", defaultsConfig.apiKey),
 });
 
 const arbitrumHttpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: defaultsConfig.subgraphArbitrum,
+  uri: defaultsConfig.subgraphArbitrum.replace("[api-key]", defaultsConfig.apiKey),
 });
 
 const sepoliaHttpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: defaultsConfig.subgraphSepolia,
+  uri: defaultsConfig.subgraphSepolia.replace("[api-key]", defaultsConfig.apiKey),
 });
 
 const arbitrumSepoliaHttpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: defaultsConfig.subgraphArbitrumSepolia,
+  uri: defaultsConfig.subgraphArbitrumSepolia.replace("[api-key]", defaultsConfig.apiKey),
 });
 
 // Cache implementation
