@@ -125,7 +125,7 @@
         deploymentStatuses.value[i].deploymentStatus.blocksBehindChainhead = deploymentStatuses.value[i]?.deploymentStatus?.chains?.[0]?.chainHeadBlock?.number && deploymentStatuses.value[i].deploymentStatus?.chains?.[0]?.latestBlock?.number ? parseInt(deploymentStatuses.value[i].deploymentStatus?.chains[0].chainHeadBlock.number) - parseInt(deploymentStatuses.value[i].deploymentStatus.chains[0].latestBlock.number) : Number.MAX_SAFE_INTEGER;
 
         deploymentStatuses.value[i].deployment = subgraphStore.getDataDict[deploymentStatuses.value[i].deploymentStatus.subgraph]?.deployment;
-        deploymentStatuses.value[i].deploymentStatus.completion = numeral((item.value.deploymentStatus?.chains?.[0]?.latestBlock?.number - item.value.deploymentStatus?.chains?.[0]?.earliestBlock?.number) / (item.value.deploymentStatus?.chains?.[0]?.chainHeadBlock?.number - item.value.deploymentStatus?.chains?.[0]?.earliestBlock?.number)).format('0.00%') || '-%';
+        deploymentStatuses.value[i].deploymentStatus.completion = numeral((deploymentStatuses.value[i].chains?.[0]?.latestBlock?.number - deploymentStatuses.value[i].chains?.[0]?.earliestBlock?.number) / (deploymentStatuses.value[i].chains?.[0]?.chainHeadBlock?.number - deploymentStatuses.value[i].chains?.[0]?.earliestBlock?.number)).format('0.00%') || '-%';
       }
       console.log(deploymentStatuses);
       loading.value = false;
