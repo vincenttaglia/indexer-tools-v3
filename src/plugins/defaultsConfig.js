@@ -48,3 +48,7 @@ export const loadDefaultsConfig = async () => {
     }    
     
 }
+
+export function replaceAPI(string, apiKey){
+  return string.replace("[api-key]", apiKey).replace("{api-key}", apiKey);
+}
