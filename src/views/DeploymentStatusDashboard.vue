@@ -55,6 +55,30 @@
     key: 'deployment.versions[0].metadata.subgraphVersion.subgraph.metadata.displayName',
   },
   {
+    title: 'First Block',
+    key: 'deploymentStatus.chains[0].earliestBlock.number'
+  },
+  {
+    title: 'Last Block',
+    key: 'deploymentStatus.chains[0].latestBlock.number'
+  },
+  {
+    title: 'Chainhead Block',
+    key: 'deploymentStatus.chains[0].chainHeadBlock.number'
+  },
+  {
+    title: 'Health',
+    key: 'deploymentStatus.health'
+  },
+  {
+    title: 'Synced',
+    key: 'deploymentStatus.synced'
+  },
+  {
+    title: 'Completion',
+    key: 'deploymentStatus.completion'
+  },
+  {
     title: 'Node',
     key: 'deploymentStatus.node',
   },
@@ -100,6 +124,7 @@
         deploymentStatuses.value[i].deploymentStatus.blocksBehindChainhead = deploymentStatuses.value[i]?.deploymentStatus?.chains?.[0]?.chainHeadBlock?.number && deploymentStatuses.value[i].deploymentStatus?.chains?.[0]?.latestBlock?.number ? parseInt(deploymentStatuses.value[i].deploymentStatus?.chains[0].chainHeadBlock.number) - parseInt(deploymentStatuses.value[i].deploymentStatus.chains[0].latestBlock.number) : Number.MAX_SAFE_INTEGER;
 
         deploymentStatuses.value[i].deployment = subgraphStore.getDataDict[deploymentStatuses.value[i].deploymentStatus.subgraph]?.deployment;
+        deploymentStatuses.value[i].deploymentStatus.completion = numeral((item.value.deploymentStatus?.chains?.[0]?.latestBlock?.number - item.value.deploymentStatus?.chains?.[0]?.earliestBlock?.number) / (item.value.deploymentStatus?.chains?.[0]?.chainHeadBlock?.number - item.value.deploymentStatus?.chains?.[0]?.earliestBlock?.number)).format('0.00%') || '-%';
       }
       console.log(deploymentStatuses);
       loading.value = false;
