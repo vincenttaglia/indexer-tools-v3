@@ -34,6 +34,7 @@
   import { ref, watch } from 'vue';
   import { useSubgraphsStore } from '@/store/subgraphs';
   import StatusDropdown from '@/components/StatusDropdown.vue';
+  import numeral from 'numeral';
 
   const statusUrl = ref();
   const deploymentStatuses = ref([]);
