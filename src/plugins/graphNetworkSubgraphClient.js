@@ -1,4 +1,4 @@
-import { loadDefaultsConfig } from "./defaultsConfig";
+import { loadDefaultsConfig, replaceAPI } from "./defaultsConfig";
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
 
 const defaultsConfigVariables = await loadDefaultsConfig();
@@ -8,22 +8,22 @@ console.log(defaultsConfig.subgraphArbitrum);
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: defaultsConfig.subgraphMainnet,
+  uri: replaceAPI(defaultsConfig.subgraphMainnet, defaultsConfig.apiKey),
 });
 
 const arbitrumHttpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: defaultsConfig.subgraphArbitrum,
+  uri: replaceAPI(defaultsConfig.subgraphArbitrum, defaultsConfig.apiKey),
 });
 
 const sepoliaHttpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: defaultsConfig.subgraphSepolia,
+  uri: replaceAPI(defaultsConfig.subgraphSepolia, defaultsConfig.apiKey),
 });
 
 const arbitrumSepoliaHttpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: defaultsConfig.subgraphArbitrumSepolia,
+  uri: replaceAPI(defaultsConfig.subgraphArbitrumSepolia, defaultsConfig.apiKey),
 });
 
 // Cache implementation
