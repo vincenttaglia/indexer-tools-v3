@@ -74,6 +74,10 @@ export const useNetworkStore = defineStore('network', {
           this.networks[chain.id].currentEpoch = data.data.graphNetwork.currentEpoch;
           this.networks[chain.id].issuancePerYear = data.data.graphNetwork.networkGRTIssuancePerBlock * chainStore.getBlocksPerYear;
           this.networks[chain.id].totalTokensAllocated = data.data.graphNetwork.totalTokensAllocated;
+        }).catch((err) => {
+          if(err.graphQLErrors){
+            alert(`API Error: ${err.graphQLErrors[0].message}`);
+          }
         }));
       }
       return queries;

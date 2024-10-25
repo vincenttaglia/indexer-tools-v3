@@ -491,6 +491,10 @@ export const useSubgraphsStore = defineStore({
         }
         
         return data;
+      }).catch((err) => {
+        if(err.graphQLErrors){
+          alert(`API Error: ${err.graphQLErrors[0].message}`);
+        }
       });
     },
     async fetchData(){

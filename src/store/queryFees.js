@@ -89,6 +89,9 @@ export const useQueryFeesStore = defineStore('queryFeeStore', {
           return data.queryDailyDataPoints;
         })
       }).catch((error) => {
+        if(error.graphQLErrors){
+          alert(`API Error: ${error.graphQLErrors[0].message}`);
+        }
         console.error(`Query Fee QOS query error: ${error.message}`);
         this.loading = false;
       });
