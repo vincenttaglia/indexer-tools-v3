@@ -71,12 +71,16 @@ export const useQosStore = defineStore('qosStore', {
           this.loading = false;
           return data.indexer.allocationDailyDataPoints;
         })
-      }).catch((error) => {
-        if(error.graphQLErrors){
-          alert(`API Error: ${error.graphQLErrors[0].message}`);
-        }
-        console.error(`QoS query error: ${error.message}`);
+      }).catch((err) => {
         this.loading = false;
+        if(err.graphQLErrors[0]?.message){
+          console.error(`QoS API error: ${err.graphQLErrors[0].message}`)
+          alert(`QoS API Error: ${err.graphQLErrors[0].message}`);
+        }
+        if(err.message){
+          console.error(`QoS query error: ${err.message}`);
+          alert(`QoS Error: ${err.message}`);
+        }
       });
     }
   },

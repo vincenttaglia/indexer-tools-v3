@@ -493,9 +493,14 @@ export const useAllocationStore = defineStore('allocationStore', {
         }
         return data;
       }).catch((err) => {
-        if(err.graphQLErrors){
-          this.loading = false;
-          alert(`API Error: ${err.graphQLErrors[0].message}`);
+        this.loading = false;
+        if(err.graphQLErrors[0]?.message){
+          console.error(`Allocations API error: ${err.graphQLErrors[0].message}`)
+          alert(`Allocations API Error: ${err.graphQLErrors[0].message}`);
+        }
+        if(err.message){
+          console.error(`Allocations query error: ${err.message}`);
+          alert(`Allocations Error: ${err.message}`);
         }
       });
     }

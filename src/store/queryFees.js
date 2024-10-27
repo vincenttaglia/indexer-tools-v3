@@ -88,12 +88,16 @@ export const useQueryFeesStore = defineStore('queryFeeStore', {
           this.loading = false;
           return data.queryDailyDataPoints;
         })
-      }).catch((error) => {
-        if(error.graphQLErrors){
-          alert(`API Error: ${error.graphQLErrors[0].message}`);
-        }
-        console.error(`Query Fee QOS query error: ${error.message}`);
+      }).catch((err) => {
         this.loading = false;
+        if(err.graphQLErrors[0]?.message){
+          console.error(`Query fee API error: ${err.graphQLErrors[0].message}`)
+          alert(`Query Fee API Error: ${err.graphQLErrors[0].message}`);
+        }
+        if(err.message){
+          console.error(`Query fee query error: ${err.message}`);
+          alert(`Query Fee Error: ${err.message}`);
+        }
       });
     }
   },

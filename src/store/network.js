@@ -75,9 +75,14 @@ export const useNetworkStore = defineStore('network', {
           this.networks[chain.id].issuancePerYear = data.data.graphNetwork.networkGRTIssuancePerBlock * chainStore.getBlocksPerYear;
           this.networks[chain.id].totalTokensAllocated = data.data.graphNetwork.totalTokensAllocated;
         }).catch((err) => {
-          if(err.graphQLErrors){
-            this.loading = false;
-            alert(`API Error: ${err.graphQLErrors[0].message}`);
+          this.loading = false;
+          if(err.graphQLErrors[0]?.message){
+            console.error(`Network API error: ${err.graphQLErrors[0].message}`);
+            alert(`Network API Error: ${err.graphQLErrors[0].message}`);
+          }
+          if(err.message){
+            console.error(`Network query error: ${err.message}`);
+            alert(`Network Error: ${err.message}`);
           }
         }));
       }
