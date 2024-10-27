@@ -76,6 +76,7 @@ export const useNetworkStore = defineStore('network', {
           this.networks[chain.id].totalTokensAllocated = data.data.graphNetwork.totalTokensAllocated;
         }).catch((err) => {
           if(err.graphQLErrors){
+            this.loading = false;
             alert(`API Error: ${err.graphQLErrors[0].message}`);
           }
         }));

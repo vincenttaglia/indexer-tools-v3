@@ -43,7 +43,7 @@ export const loadDefaultsConfig = async () => {
         subgraphSepolia: value.DEFAULT_SUBGRAPH_SEPOLIA || import.meta.env.VITE_DEFAULT_SUBGRAPH_SEPOLIA || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/8pVKDwHniAz87CHEQsiz2wgFXGZXrbMDkrxgauVVfMJC",
         subgraphArbitrumSepolia: value.DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA || import.meta.env.VITE_DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/3xQHhMudr1oh69ut36G2mbzpYmYxwqCeU6wwqyCDCnqV",
         qosSubgraph: value.DEFAULT_QOS_SUBGRAPH || import.meta.env.VITE_DEFAULT_QOS_SUBGRAPH || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/Dtr9rETvwokot4BSXaD5tECanXfqfJKcvHuaaEgPDD2D",
-        apiKey: value.GRAPH_API_KEY || import.meta.env.VITE_GRAPH_API_KEY || "146d8cd439901e24257f3c19d82359da",
+        apiKey: value.GRAPH_API_KEY || import.meta.env.VITE_GRAPH_API_KEY || "3bab348a7c385b1870039eb890fd0a5f",
       }
     }    
     
