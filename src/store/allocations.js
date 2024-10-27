@@ -383,8 +383,30 @@ export const useAllocationStore = defineStore('allocationStore', {
   },
   actions: {
     async fetchAllPendingRewards(){
-      for(let i = 0; i < this.allocations.length; i++){
-        this.fetchPendingRewards(this.getAllocations[i].id);
+      let y = 0;
+      while(y < this.getAllocations.length){
+        const max = y + 50 < this.getAllocations.length ? y + 50 : this.getAllocations.length;
+        let batch = new chainStore.getActiveChain.web3.BatchRequest();
+        for(let i = y; i < max; i++){
+          let allocation = this.getAllocations[i];
+          if(!allocation.pendingRewards.loading && !allocation.pendingRewards.loaded){
+            allocation.pendingRewards.loading = true;
+            batch.add(chainStore.getRewardsContract.methods.getRewards(allocation.id).call.request(function(error, value){
+              if(value != undefined){
+                allocation.pendingRewards.value = BigNumber(value);
+                allocation.pendingRewards.loaded = true;
+              }
+              
+              allocation.pendingRewards.loading = false;
+            }));
+          }
+        }
+        await batch.execute();
+
+        y = y + 50 < this.getAllocations.length ? y + 50 : this.getAllocations.length;
+        if(y < this.getAllocations.length - 1){
+            await new Promise(r => setTimeout(r, 1500));
+        }
       }
     },
     async fetchPendingRewards(allocationId){
