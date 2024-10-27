@@ -98,6 +98,7 @@ export const useSubgraphSettingStore = defineStore('subgraphSetting', {
     subgraphBlacklist: (state) => state.settings.subgraphBlacklist,
     subgraphSynclist: (state) => state.settings.subgraphSynclist,
     networks: (state) => state.settings.networks,
+    newAprCalc: (state) => state.settings?.selectedSubgraphColumns?.find((i) => i.key == 'newApr'),
   },
   actions: {
     moveItemInArray(array, from, to) {

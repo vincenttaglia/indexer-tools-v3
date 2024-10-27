@@ -320,13 +320,17 @@ export const useSubgraphsStore = defineStore({
     },
     getNewAprs: (state) => {
       let newAprs = [];
-      for(let i = 0; i < state.subgraphs.length; i++){
-        let subgraph = state.subgraphs[i];
-        if(subgraph.deployment.signalledTokens > 0) {
-          newAprs[i] = { newApr: calculateNewApr(subgraph.deployment.signalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.settings.newAllocation)};
-        }else{
-          newAprs[i] = { newApr: 0 };
+      if(subgraphSettingStore.newAprCalc){
+        for(let i = 0; i < state.subgraphs.length; i++){
+          let subgraph = state.subgraphs[i];
+          if(subgraph.deployment.signalledTokens > 0) {
+            newAprs[i] = { newApr: calculateNewApr(subgraph.deployment.signalledTokens, state.getFutureStakedTokens[i].futureStakedTokens, networkStore, subgraphSettingStore.settings.newAllocation)};
+          }else{
+            newAprs[i] = { newApr: 0 };
+          }
         }
+      }else{
+        newAprs = Array(state.subgraphs.length).fill({ newApr: 0 });
       }
       return newAprs;
     },

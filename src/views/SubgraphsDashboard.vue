@@ -80,7 +80,7 @@
             class="d-inline-block mx-4"
             style="max-width:15rem"
         ></v-text-field>
-        <v-confirm-edit v-model="subgraphSettingStore.settings.newAllocation">
+        <v-confirm-edit v-if="subgraphSettingStore.newAprCalc" v-model="subgraphSettingStore.settings.newAllocation">
           <template v-slot:default="{ model: proxyModel, save, cancel, isPristine, actions}">
             <v-text-field
               v-model="proxyModel.value"
