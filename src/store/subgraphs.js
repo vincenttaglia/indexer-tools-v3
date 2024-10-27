@@ -499,28 +499,29 @@ export const useSubgraphsStore = defineStore({
     async fetchData(){
       return networkStore.init().then(() => {
         this.loading = true;
-        return this.fetch(0)
-        .then((data) => {
-          // let uniqueSubgraphs = []
-          // let subgraphs = [];
-          // for(let i = 0; i < data.subgraphDeploymentManifests.length; i++){
-          //   if(data.subgraphDeploymentManifests[i].deployment?.ipfsHash && !uniqueSubgraphs.includes(data.subgraphDeploymentManifests[i].deployment?.ipfsHash)){
-          //     uniqueSubgraphs.push(data.subgraphDeploymentManifests[i].deployment.ipfsHash);
-          //     subgraphs.push(data.subgraphDeploymentManifests[i]);
-          //   }
-          // }
-          this.subgraphs = data.subgraphDeploymentManifests;
-          this.upgradeIndexer = Array(data.subgraphDeploymentManifests.length).fill();
-          for(let i = 0; i < this.upgradeIndexer.length; i++){
-            this.upgradeIndexer[i] = { value: "0", loading: false, loaded: false };
-          }
-          return this.subgraphs;
-        })
-        .then(() => {
-          return queryFeeStore.fetchData().then(() => {
-            this.loading = false;
+        const subgraphData = this.fetch(0)
+          .then((data) => {
+            // let uniqueSubgraphs = []
+            // let subgraphs = [];
+            // for(let i = 0; i < data.subgraphDeploymentManifests.length; i++){
+            //   if(data.subgraphDeploymentManifests[i].deployment?.ipfsHash && !uniqueSubgraphs.includes(data.subgraphDeploymentManifests[i].deployment?.ipfsHash)){
+            //     uniqueSubgraphs.push(data.subgraphDeploymentManifests[i].deployment.ipfsHash);
+            //     subgraphs.push(data.subgraphDeploymentManifests[i]);
+            //   }
+            // }
+            this.subgraphs = data.subgraphDeploymentManifests;
+            this.upgradeIndexer = Array(data.subgraphDeploymentManifests.length).fill();
+            for(let i = 0; i < this.upgradeIndexer.length; i++){
+              this.upgradeIndexer[i] = { value: "0", loading: false, loaded: false };
+            }
+            return this.subgraphs;
           });
-        })
+
+        const queryFeeData = queryFeeStore.fetchData();
+
+        return Promise.all([subgraphData, queryFeeData]).then(() => {
+          this.loading = false;
+        });
       });
       
       
