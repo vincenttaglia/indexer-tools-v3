@@ -100,6 +100,11 @@
               QoS Dashboard
             </v-list-item-title>
           </v-list-item>
+          <v-list-item to="/status-dashboard">
+            <v-list-item-title>
+              Deployment Status Dashboard
+            </v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
       <v-btn
@@ -124,6 +129,7 @@
       <v-list-item title="Offchain Sync Manager" to="/offchain-manager"></v-list-item>
       <v-list-item title="Query Fee Dashboard" to="/query-dashboard"></v-list-item>
       <v-list-item title="QoS Dashboard" to="/qos-dashboard"></v-list-item>
+      <v-list-item title="Deployment Status Dashboard" to="/status-dashboard"></v-list-item>
       <v-list-item title="Settings" to="/settings"></v-list-item>
     </v-list>
   </v-navigation-drawer>

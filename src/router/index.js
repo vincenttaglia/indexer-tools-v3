@@ -49,6 +49,11 @@ const routes = [
         name: 'QoS Dashboard',
         component: () => import('@/views/QosDashboard.vue'),
       },
+      {
+        path: 'status-dashboard',
+        name: 'Status Dashboard',
+        component: () => import('@/views/DeploymentStatusDashboard.vue'),
+      }
     ],
   },
 ]
