@@ -21,6 +21,7 @@ https://thegraph.com/studio/apikeys/
 docker pull ghcr.io/vincenttaglia/indexer-tools:latest
 ```
 ### Run Image
+List of available ENV variables [here](./DOCKER_ENV.md)
 ```
 docker run \
   -p 3000:3000 \
