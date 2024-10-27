@@ -49,60 +49,60 @@ export const useAllocationStore = defineStore('allocationStore', {
       
       if(subgraphSettingStore.settings.statusFilter == 'all'){
         allocations = allocations.filter((i) => {
-          return deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash) != undefined;
+          return deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash] != undefined;
         });
       }
 
       if(subgraphSettingStore.settings.statusFilter == 'closable'){
         allocations = allocations.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
-            if(status != undefined && status.synced == true && (status.fatalError == undefined || status.fatalError.deterministic == true))
-              return true
+          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          if(status != undefined && status.synced == true && (status.fatalError == undefined || status.fatalError.deterministic == true))
+            return true
           return false;
         });
       }
 
       if(subgraphSettingStore.settings.statusFilter == 'healthy-synced'){
         allocations = allocations.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
-            if(status != undefined && status.health == 'healthy' && status.synced == true)
-              return true
+          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          if(status != undefined && status.health == 'healthy' && status.synced == true)
+            return true
           return false;
         });
       }
 
       if(subgraphSettingStore.settings.statusFilter == 'syncing'){
         allocations = allocations.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
-            if(status != undefined && status.health == 'healthy' && status.synced == false)
-              return true
+          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          if(status != undefined && status.health == 'healthy' && status.synced == false)
+            return true
           return false;
         });
       }
 
       if(subgraphSettingStore.settings.statusFilter == 'failed'){
         allocations = allocations.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
-            if(status != undefined && status.health == 'failed')
-              return true
+          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          if(status != undefined && status.health == 'failed')
+            return true
           return false;
         });
       }
 
       if(subgraphSettingStore.settings.statusFilter == 'non-deterministic'){
         allocations = allocations.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
-            if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == false)
-              return true
+          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == false)
+            return true
           return false;
         });
       }
 
       if(subgraphSettingStore.settings.statusFilter == 'deterministic'){
         allocations = allocations.filter((i) => {
-          let status = deploymentStatusStore.getDeploymentStatuses.find((o) => o.subgraph == i.subgraphDeployment.ipfsHash);
-            if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == true)
-              return true
+          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == true)
+            return true
           return false;
         });
       }
