@@ -14,7 +14,7 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
     getData: (state) => state.status,
     getDeploymentStatusDict: (state) => {
       let dict = {};
-      state.status.forEach(
+      state.getDeploymentStatuses.forEach(
         (el) => (dict[el.subgraph] = el )
       );
       return dict;
