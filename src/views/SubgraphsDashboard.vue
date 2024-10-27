@@ -133,6 +133,7 @@
             label="Subgraph Networks"
             multiple
             chips
+            clearable
             class="d-inline-block mx-4"
             style="min-width:13rem;max-width: 15rem;top: -5px"
         ></v-combobox>
