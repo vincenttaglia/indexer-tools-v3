@@ -121,7 +121,10 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
       return accountStore.availableStake;
     },
     calculatedAvailableStake: (state) => {
-      let calc = BigNumber(state.availableStake).plus(allocationStore.calculatedClosingStake).minus(Web3.utils.toWei(state.calculatedOpeningStake.toString()));
+      let calc = BigNumber(state.availableStake)
+        .plus(allocationStore.calculatedClosingStake)
+        .minus(Web3.utils.toWei(state.calculatedOpeningStake.toString()))
+        .integerValue(BigNumber.ROUND_FLOOR);
       if(calc.toString() != "NaN")
         return calc
       else
