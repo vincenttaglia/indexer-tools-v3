@@ -32,6 +32,13 @@
           chips
           style="min-width: 150px;"
       ></v-select>
+      <v-select
+          v-model="managerSettingStore.settings.selectStrategy"
+          :items="[{title: 'Page', value: 'page'}, {title:'All', value: 'all'}]"
+          label="Select Strategy"
+          class="d-inline-block mx-5 mt-6 flex-0-1"
+          style="min-width: 150px;"
+      ></v-select>
     </div>
     <div class="d-flex text-center flex-row ml-auto mr-auto align-stretch">
       <v-card style="min-width: 150px" variant="tonal" class="mx-1">
@@ -61,6 +68,7 @@
       v-model="selected"
       :loading="loading"
       v-model:sort-by="sortBy"
+      :select-strategy="managerSettingStore.settings.selectStrategy"
   >
     <template v-slot:item.transaction="{ item }">
       <v-btn  
