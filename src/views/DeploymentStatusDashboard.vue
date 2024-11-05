@@ -32,16 +32,28 @@
 
 <script setup>
   import { ref, watch } from 'vue';
+  import { useAccountStore } from '@/store/accounts';
   import { useSubgraphsStore } from '@/store/subgraphs';
   import StatusDropdown from '@/components/StatusDropdown.vue';
   import numeral from 'numeral';
+  import { storeToRefs } from 'pinia';
 
+  const accountStore = useAccountStore();
+  const { getActiveUrl } = storeToRefs(accountStore);
   const statusUrl = ref();
   const deploymentStatuses = ref([]);
   const subgraphStore = useSubgraphsStore();
   const loading = ref(false);
+  if(getActiveUrl.value){
+    statusUrl.value = new URL('/status', getActiveUrl.value).toString();
+    getStatus();
+  }
 
   watch(statusUrl, () => {
+    getStatus();
+  });
+  watch(getActiveUrl, () => {
+    statusUrl.value = new URL('/status', getActiveUrl.value).toString();
     getStatus();
   });
   
@@ -91,12 +103,13 @@
 
   async function getStatus(){
     loading.value = true;
-    const url = new URL('/status', statusUrl.value);
+    const url = new URL(statusUrl.value);
     console.log(url.href);
     await subgraphStore.fetchData();
     fetch(url.href,  {
       method: "POST",
       headers: {"Content-type": "application/json"},
+      // https://github.com/graphprotocol/graph-node/blob/fc8065746b79dc94514d26e77cfe83c3d668d368/server/index-node/src/schema.graphql#L56
       body: JSON.stringify({query: "{ indexingStatuses { subgraph synced health fatalError{ message deterministic block{ hash number } } node chains{ latestBlock{number} chainHeadBlock{number} earliestBlock{number} } } }"}),
     })
     .then((res) => res.json())
