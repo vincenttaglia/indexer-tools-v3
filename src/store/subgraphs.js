@@ -37,7 +37,11 @@ export const useSubgraphsStore = defineStore({
     },
     getFilteredSubgraphs: (state) => {
       let subgraphs = state.getSubgraphs;
-      
+
+      subgraphs = subgraphs.filter((i) => {
+        return i.currentVersion.subgraphDeployment.manifest !== null;
+      });
+
       if(subgraphSettingStore.settings.noRewardsFilter === 0){
         subgraphs = subgraphs.filter((i) => {
           return !i.currentVersion.subgraphDeployment.deniedAt;
