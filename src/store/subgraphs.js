@@ -25,12 +25,13 @@ import { upgradeIndexerClient } from '@/plugins/upgradeIndexerClient';
 
 const { getDeploymentStatuses } = storeToRefs(deploymentStatusStore);
 
-const SUBGRAPH_QUERY = gql`query subgraphDeploymentManifests($skip: Int!, $minSignal: Int!, $networks: [String]){
+const SUBGRAPH_QUERY = gql`query subgraphDeploymentManifests($cursor: String!, $minSignal: String!, $networks: [String]){
   subgraphDeploymentManifests(
-    skip: $skip,
     first: 1000,
-    where: {deployment_: {signalledTokens_gt: $minSignal}, network_in: $networks}
+    orderBy: "id",
+    where: {id_gt: $cursor, deployment_: {signalledTokens_gt: $minSignal}, network_in: $networks}
   ) {
+    id
     deployment {
       id
       deniedAt
@@ -61,12 +62,13 @@ const SUBGRAPH_QUERY = gql`query subgraphDeploymentManifests($skip: Int!, $minSi
   }
 }`;
 
-const SUBGRAPH_QUERY_NO_NETWORK_FILTER = gql`query subgraphDeploymentManifests($skip: Int!, $minSignal: Int!){
+const SUBGRAPH_QUERY_NO_NETWORK_FILTER = gql`query subgraphDeploymentManifests($cursor: String!, $minSignal: String!){
   subgraphDeploymentManifests(
-    skip: $skip,
     first: 1000,
-    where: {deployment_: {signalledTokens_gt: $minSignal}}
+    orderBy: "id",
+    where: {id_gt: $cursor, deployment_: {signalledTokens_gt: $minSignal}}
   ) {
+    id
     deployment {
       id
       deniedAt
@@ -471,20 +473,20 @@ export const useSubgraphsStore = defineStore({
       }
       
     },
-    async fetch(skip){
-      console.log("Fetch " + skip);
+    async fetch(cursor = "0"){
+      console.log("Fetch after " + cursor);
       return chainStore.getNetworkSubgraphClient.query({
         query: subgraphSettingStore.settings.queryFilters.networkFilter.length == 0 ? SUBGRAPH_QUERY_NO_NETWORK_FILTER : SUBGRAPH_QUERY,
         variables: {
-          skip: skip,
-          minSignal: Number.parseInt(subgraphSettingStore.settings.queryFilters.minSignal) || 0,
+          cursor: cursor,
+          minSignal: Web3.utils.toWei(subgraphSettingStore.settings.queryFilters.minSignal || "0").toString(),
           networks: subgraphSettingStore.settings.queryFilters.networkFilter,
         },
       })
       .then(({ data, networkStatus }) => {
         console.log(data);
         if(networkStatus == 7 && data.subgraphDeploymentManifests.length == 1000){
-          return this.fetch(skip + data.subgraphDeploymentManifests.length)
+          return this.fetch(data.subgraphDeploymentManifests[data.subgraphDeploymentManifests.length-1].id)
           .then((data1) => {
             let concatData = {};
             if(typeof data.subgraphDeploymentManifests == "object" && typeof data1.subgraphDeploymentManifests == "object")
@@ -510,7 +512,7 @@ export const useSubgraphsStore = defineStore({
     async fetchData(){
       return networkStore.init().then(() => {
         this.loading = true;
-        const subgraphData = this.fetch(0)
+        const subgraphData = this.fetch()
           .then((data) => {
             // let uniqueSubgraphs = []
             // let subgraphs = [];
