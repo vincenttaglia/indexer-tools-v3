@@ -24,6 +24,14 @@ export const useChainValidationStore = defineStore('chainValidationStore', {
   getters: {
     getIndexerUrl: () => accountStore.getActiveUrl,
     getData: (state) => state.chainStatus,
+    getChains: (state) => state.chains,
+    getChainStatus: (state) => {
+      let chainStatus = {};
+      for(let i in state.chains){
+        chainStatus[state.chains[i]] = state.chainStatus[state.chains[i]].externalBlockHash == `0x${state.chainStatus[state.chains[i]].indexerBlockHash}`;
+      }
+      return chainStatus;
+    },
   },
   actions: {
     async init(){
