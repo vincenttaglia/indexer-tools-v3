@@ -33,7 +33,7 @@ export const loadDefaultsConfig = async () => {
 
     return {
       variables: {
-        accounts: value.DEFAULT_ACCOUNTS || json || [ { "address": "0x1b92e4cba0f82c85c1298af861247849988c788c", "name": "vincenttaglia-indexer.eth", "active": true, "chain": "arbitrum-one", "agentConnect": false, "agentEndpoint": "", "poiQuery": false, "poiQueryEndpoint": "" } ],
+        accounts: value.DEFAULT_ACCOUNTS || json || [ { "address": "0x1b92e4cba0f82c85c1298af861247849988c788c", "name": "vincenttaglia-indexer.eth", "active": true, "chain": "arbitrum-one", "agentConnect": false, "agentEndpoint": "", "poiQuery": false, "poiQueryEndpoint": "", "chainValidation": false, "chainValidationEndpoint": "" } ],
         rpcMainnet: value.DEFAULT_RPC_MAINNET || import.meta.env.VITE_DEFAULT_RPC_MAINNET || "https://mainnet.infura.io/v3/659344f230804542a4e653f875172105",
         rpcArbitrum: value.DEFAULT_RPC_ARBITRUM || import.meta.env.VITE_DEFAULT_RPC_ARBITRUM || "https://arb-mainnet.g.alchemy.com/v2/er8LBcXpoFwlV8xJee-WXFbFG_M8L4JK",
         rpcSepolia: value.DEFAULT_RPC_SEPOLIA || import.meta.env.VITE_DEFAULT_RPC_SEPOLIA || "https://eth-sepolia.g.alchemy.com/v2/eKJ8_13LMaVi2bSITYWTMqskgsGiey8K",

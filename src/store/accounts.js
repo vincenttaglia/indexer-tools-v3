@@ -48,6 +48,26 @@ export const useAccountStore = defineStore('accountStore', {
         cache,
       });
     },
+    getChainValidationStatus: (state) => state.getActiveAccount.chainValidation,
+    getChainValidationEndpoint: (state) => state.getActiveAccount.chainValidationEndpoint,
+    getChainValidationClient: (state) => {
+      // HTTP connection to the API
+      const httpLink = createHttpLink({
+        uri: state.getChainValidationEndpoint,
+        headers: {
+          "Access-Control-Request-Private-Network": "true",
+        },
+      });
+
+      // Cache implementation
+      const cache = new InMemoryCache();
+
+      // Create the apollo client
+      return new ApolloClient({
+        link: httpLink,
+        cache,
+      });
+    },
   },
   actions: {
     async fetchData(){
