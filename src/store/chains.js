@@ -84,6 +84,7 @@ export const useChainStore = defineStore('chainStore', {
     getRewardsContractAddress: (state) => state.getActiveChain.rewardsContractAddress,
     getStakingContractAddress: (state) => state.getActiveChain.stakingContractAddress,
     getNetworkSubgraphClient: (state) => state.getActiveChain.networkSubgraphClient,
+    getEboSubgraphClient: (state) => state.getActiveChain.eboSubgraphClient,
     getRewardsContract: (state) => new state.getActiveChain.web3.eth.Contract(RewardsContractABI, state.getRewardsContractAddress),
     getBlocksPerDay: (state) => state.getActiveChain.blocksPerDay,
     getBlocksPerYear: (state) => state.getActiveChain.blocksPerDay * 365,
