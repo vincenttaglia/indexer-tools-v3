@@ -11,6 +11,7 @@ import { calculateApr, calculateReadableDuration, calculateAllocationDailyReward
 import { useSubgraphSettingStore } from './subgraphSettings';
 import { useQosStore } from './qos';
 import { useQueryFeesStore } from './queryFees';
+import { useChainValidationStore } from './chainValidation';
 
 
 const networkStore = useNetworkStore();
@@ -20,13 +21,15 @@ const deploymentStatusStore = useDeploymentStatusStore();
 const subgraphSettingStore = useSubgraphSettingStore();
 const qosStore = useQosStore();
 const queryFeeStore = useQueryFeesStore();
-
+const chainValidation = useChainValidationStore();
 
 networkStore.init();
 accountStore.fetchData()
 .then(() => {
   deploymentStatusStore.init();
 });
+
+chainValidation.init();
 
 
 export const useAllocationStore = defineStore('allocationStore', {

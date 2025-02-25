@@ -28,12 +28,10 @@ export const useAccountStore = defineStore('accountStore', {
     },
     getPOIQueryStatus: (state) => state.getActiveAccount.poiQuery,
     getPOIQueryEndpoint: (state) => state.getActiveAccount.poiQueryEndpoint,
-    getAgentConnectStatus: (state) => state.getActiveAccount.agentConnect,
-    getAgentConnectEndpoint: (state) => state.getActiveAccount.agentEndpoint,
-    getAgentConnectClient: (state) => {
+    getPOIQueryClient: (state) => {
       // HTTP connection to the API
       const httpLink = createHttpLink({
-        uri: state.getAgentConnectEndpoint,
+        uri: state.getPOIQueryEndpoint,
         headers: {
           "Access-Control-Request-Private-Network": "true",
         },
@@ -48,12 +46,12 @@ export const useAccountStore = defineStore('accountStore', {
         cache,
       });
     },
-    getChainValidationStatus: (state) => state.getActiveAccount.chainValidation,
-    getChainValidationEndpoint: (state) => state.getActiveAccount.chainValidationEndpoint,
-    getChainValidationClient: (state) => {
+    getAgentConnectStatus: (state) => state.getActiveAccount.agentConnect,
+    getAgentConnectEndpoint: (state) => state.getActiveAccount.agentEndpoint,
+    getAgentConnectClient: (state) => {
       // HTTP connection to the API
       const httpLink = createHttpLink({
-        uri: state.getChainValidationEndpoint,
+        uri: state.getAgentConnectEndpoint,
         headers: {
           "Access-Control-Request-Private-Network": "true",
         },
