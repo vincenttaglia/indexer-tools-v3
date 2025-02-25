@@ -13,6 +13,7 @@
       v-model:items-per-page="tableSettingsStore.allocationSettings.itemsPerPage"
       hover
       no-data-text="No data available<br>"
+      :row-props="colorRowItem"
   >
     <template v-slot:no-data>
       <p class="mt-4">
@@ -276,12 +277,14 @@
   import { useTableSettingStore } from "@/store/tableSettings";
   import StatusDropdownVue from '@/components/StatusDropdown.vue';
   import DashboardFooter from "@/components/DashboardFooter.vue";
+  import { useChainValidationStore } from "@/store/chainValidation";
 
   const allocationStore = useAllocationStore();
   const accountStore = useAccountStore();
   const subgraphSettingsStore = useSubgraphSettingStore();
   const tableSettingsStore = useTableSettingStore();
   const chainStore = useChainStore();
+  const chainValidationStore = useChainValidationStore();
   const { getActiveAccount } = storeToRefs(accountStore);
 
   const { selected, loaded } = storeToRefs(allocationStore);
@@ -298,6 +301,20 @@
     allocationStore.networkFilter = [];
     allocationStore.activateBlacklist = false;
     allocationStore.activateSynclist = false;
+  }
+
+  function colorRowItem(item){
+    if(!chainValidationStore.getChains.includes(item.item.subgraphDeployment.manifest.network))
+      return null;
+
+    if(chainValidationStore.getChainStatus[item.item.subgraphDeployment.manifest.network])
+      return { style: 'background-color: rgba(33,66,33,1)'};
+
+    if(chainValidationStore.getData[item.item.subgraphDeployment.manifest.network].externalBlockHash == null)
+      return { style: 'background-color: rgba(99,99,33,1)'}
+
+    return { style: 'background-color: rgba(99,33,33,1)'}
+    
   }
 
   watch(loaded, (loaded) => {
