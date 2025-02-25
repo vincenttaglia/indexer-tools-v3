@@ -1,6 +1,7 @@
 // Utilities
 import { defineStore } from 'pinia'
 import { apolloClient, arbitrumApolloClient, sepoliaApolloClient, arbitrumSepoliaApolloClient } from "@/plugins/graphNetworkSubgraphClient";
+import { mainnetEboClient, arbitrumEboClient, sepoliaEboClient, arbitrumSepoliaEboClient } from '@/plugins/eboSubgraphClient';
 import { useSubgraphSettingStore } from './subgraphSettings';
 import Web3 from 'web3';
 import RewardsContractABI from '@/abis/rewardsContractABI.json';
@@ -33,6 +34,7 @@ export const useChainStore = defineStore('chainStore', {
       rewardsContractAddress: "0x9Ac758AB77733b4150A901ebd659cbF8cB93ED66",
       stakingContractAddress: "0xF55041E37E12cD407ad00CE2910B8269B01263b9",
       networkSubgraphClient: apolloClient,
+      eboSubgraphClient: mainnetEboClient,
       blocksPerDay: 7200,
       active: startChain == "mainnet",
       },
@@ -44,6 +46,7 @@ export const useChainStore = defineStore('chainStore', {
       rewardsContractAddress: "0x971B9d3d0Ae3ECa029CAB5eA1fB0F72c85e6a525",
       stakingContractAddress: "0x00669A4CF01450B64E8A2A20E9b1FCB71E61eF03",
       networkSubgraphClient: arbitrumApolloClient,
+      eboSubgraphClient: arbitrumEboClient,
       blocksPerDay: 5760,
       active: startChain == "arbitrum-one",
       },
@@ -55,6 +58,7 @@ export const useChainStore = defineStore('chainStore', {
       rewardsContractAddress: "0x9a86322dEa5136C74ee6d1b06F4Ab9A6bB2724E0",
       stakingContractAddress: "0x14e9B07Dc56A0B03ac8A58453B5cCCB289d6ec90",
       networkSubgraphClient: sepoliaApolloClient,
+      eboSubgraphClient: sepoliaEboClient,
       blocksPerDay: 43200,
       active: startChain == "sepolia",
       },
@@ -66,6 +70,7 @@ export const useChainStore = defineStore('chainStore', {
       rewardsContractAddress: "0x00b9d319E3D09E83c62f453B44354049Dd93a345",
       stakingContractAddress: "0x865365C425f3A593Ffe698D9c4E6707D14d51e08",
       networkSubgraphClient: arbitrumSepoliaApolloClient,
+      eboSubgraphClient: arbitrumSepoliaEboClient,
       blocksPerDay: 43200,
       active: startChain == "arbitrum-sepolia",
       },
