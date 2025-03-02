@@ -212,8 +212,16 @@ export const useAllocationStore = defineStore('allocationStore', {
         const validChain = chainValidation.getChainStatus[state.allocations[i].subgraphDeployment.manifest.network];
         const synced = epochStore.getBlockNumbers[state.allocations[i].subgraphDeployment.manifest.network] <= deploymentStatus?.chains?.[0]?.latestBlock?.number;
         const deterministicFailure = synced ? null : deploymentStatus?.health == 'failed' && deploymentStatus?.fatalError && deploymentStatus?.fatalError?.deterministic == true;
-        // TODO: implement deterministicSameBlock
-        const deterministicSameBlock = synced ? null : null;
+
+        let deterministicSameBlock = null;
+        if(deterministicFailure && !synced){
+          const upgradeIndexerFailedStatus = deploymentStatusStore.getUpgradeIndexerFailedStatus[state.allocations[i].subgraphDeployment.ipfsHash];
+          deterministicSameBlock = 
+            upgradeIndexerFailedStatus?.health == 'failed'
+            && upgradeIndexerFailedStatus?.fatalError
+            && upgradeIndexerFailedStatus?.fatalError?.deterministic == true
+            && upgradeIndexerFailedStatus?.fatalError?.block?.hash == deploymentStatus?.fatalError?.block?.hash;
+        }
         let statusChecks = {
           synced: synced,
           deterministicFailure: deterministicFailure,

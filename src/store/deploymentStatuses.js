@@ -1,17 +1,24 @@
 // Utilities
 import { defineStore } from 'pinia'
 import { useAccountStore } from './accounts'
+import { useChainValidationStore } from './chainValidation';
+import { upgradeIndexerClient } from '@/plugins/upgradeIndexerClient';
+import gql from 'graphql-tag';
 const accountStore = useAccountStore();
+const chainValidationStore = useChainValidationStore();
 
 export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
   state: () => ({
     status: [],
+    failedSubgraphs: [],
+    upgradeIndexerFailedStatus: {},
     loading: false,
     loaded: false,
   }),
   getters: {
     getIndexerUrl: () => accountStore.getActiveUrl,
     getData: (state) => state.status,
+    getUpgradeIndexerFailedStatus: (state) => state.upgradeIndexerFailedStatus,
     getDeploymentStatusDict: (state) => {
       let dict = {};
       state.getDeploymentStatuses.forEach(
@@ -63,9 +70,36 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
       })
       .then((res) => res.json())
       .then((json) => {
-        console.log("SAVING STATUS")
-        console.log(json);
         this.status = json.data.indexingStatuses;
+        for(let i in json.data.indexingStatuses){
+          if(json.data.indexingStatuses[i].health == 'failed' && json.data.indexingStatuses[i].fatalError && json.data.indexingStatuses[i].fatalError.deterministic == true)
+            this.failedSubgraphs.push(json.data.indexingStatuses[i].subgraph);
+        }
+        upgradeIndexerClient.query({
+          query: gql`query  indexingStatuses($subgraphs: [String!]){
+            indexingStatuses(subgraphs: $subgraphs){
+              health
+              subgraph
+              fatalError {
+                handler
+                message
+                deterministic
+                block {
+                  hash
+                  number
+                }
+              }
+            }
+          }`,
+          variables: {
+            subgraphs: this.failedSubgraphs,
+          }
+        })
+        .then((data) => {
+          for(let i in data.data.indexingStatuses){
+            this.upgradeIndexerFailedStatus[data.data.indexingStatuses[i].subgraph] = data.data.indexingStatuses[i];
+          }
+        });
         this.loading = false;
         this.loaded = true;
       }).catch((error) => {
