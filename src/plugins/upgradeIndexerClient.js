@@ -3,7 +3,7 @@ import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: "https://api.thegraph.com/index-node/graphql",
+  uri: "https://indexer.upgrade.thegraph.com/status",
 });
 
 const cache = new InMemoryCache();
