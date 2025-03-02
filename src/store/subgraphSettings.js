@@ -32,6 +32,7 @@ const settingsDefault = {
       align: 'start',
       key: 'deploymentStatus.blocksBehindChainhead',
     },
+    { title: 'Status Checks', key: 'deploymentStatus.health'},
     { title: 'Name', key: 'subgraphDeployment.versions[0].subgraph.metadata.displayName' },
     { title: 'Allocated', key: 'allocatedTokens'},
     { title: 'Network', key: 'subgraphDeployment.manifest.network'},
