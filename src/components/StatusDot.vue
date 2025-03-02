@@ -9,8 +9,8 @@
 <style scoped>
 .dot {
   display: inline-block;
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%; 
   box-shadow: 0 0 0 7px transparentize(var(--color), 0.5);
   background-color: var(--color);
