@@ -209,7 +209,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       for(let i = 0; i < state.allocations.length; i++){
         const deploymentStatus = deploymentStatusStore.getDeploymentStatusDict[state.allocations[i].subgraphDeployment.ipfsHash];
 
-        const validChain = chainValidation.getChainStatus[state.allocations[i].subgraphDeployment.manifest.network];
+        const validChain = !accountStore.getPOIQueryStatus ? null : subgraphSettingStore.chainValidation.getChainStatus[state.allocations[i].subgraphDeployment.manifest.network];
         const synced = epochStore.getBlockNumbers[state.allocations[i].subgraphDeployment.manifest.network] <= deploymentStatus?.chains?.[0]?.latestBlock?.number;
         const deterministicFailure = synced ? null : deploymentStatus?.health == 'failed' && deploymentStatus?.fatalError && deploymentStatus?.fatalError?.deterministic == true;
 
