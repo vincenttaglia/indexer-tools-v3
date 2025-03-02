@@ -13,7 +13,6 @@
       v-model:items-per-page="tableSettingsStore.allocationSettings.itemsPerPage"
       hover
       no-data-text="No data available<br>"
-      :row-props="colorRowItem"
   >
     <template v-slot:no-data>
       <p class="mt-4">
@@ -62,6 +61,12 @@
     </template>
     <template v-slot:item.deploymentStatus.blocksBehindChainhead="{ item }">
       <StatusDropdownVue :item='item' :subgraph='item.subgraphDeployment' :metadata='item.subgraphDeployment.versions[0].subgraph.metadata' />
+    </template>
+    <template v-slot:item.deploymentStatus.health="{ item }">
+      <StatusDot title="Valid Chain" :status="item.statusChecks?.validChain" />
+      <StatusDot title="Synced" :status="item.statusChecks?.synced" />
+      <StatusDot title="Deterministic Failure" :status="item.statusChecks?.deterministicFailure" />
+      <StatusDot title="Deterministic Failure Same Block" :status="item.statusChecks?.deterministicSameBlock" />
     </template>
     <template v-slot:item.id="{ item }" style="width:100;max-width:100px;min-width:100px;overflow-x: scroll;">
       <p style="width:100;max-width:100px;min-width:100px;overflow-x: scroll;">{{ item.id }}</p>
@@ -278,6 +283,7 @@
   import StatusDropdownVue from '@/components/StatusDropdown.vue';
   import DashboardFooter from "@/components/DashboardFooter.vue";
   import { useChainValidationStore } from "@/store/chainValidation";
+  import StatusDot from "@/components/StatusDot.vue";
 
   const allocationStore = useAllocationStore();
   const accountStore = useAccountStore();
@@ -301,20 +307,6 @@
     allocationStore.networkFilter = [];
     allocationStore.activateBlacklist = false;
     allocationStore.activateSynclist = false;
-  }
-
-  function colorRowItem(item){
-    if(!chainValidationStore.getChains.includes(item.item.subgraphDeployment.manifest.network))
-      return null;
-
-    if(chainValidationStore.getChainStatus[item.item.subgraphDeployment.manifest.network])
-      return { style: 'background-color: rgba(33,66,33,1)'};
-
-    if(chainValidationStore.getData[item.item.subgraphDeployment.manifest.network].externalBlockHash == null)
-      return { style: 'background-color: rgba(99,99,33,1)'}
-
-    return { style: 'background-color: rgba(99,33,33,1)'}
-    
   }
 
   watch(loaded, (loaded) => {

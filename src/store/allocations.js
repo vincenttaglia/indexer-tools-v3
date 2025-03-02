@@ -12,7 +12,7 @@ import { useSubgraphSettingStore } from './subgraphSettings';
 import { useQosStore } from './qos';
 import { useQueryFeesStore } from './queryFees';
 import { useChainValidationStore } from './chainValidation';
-
+import { useEpochStore } from './epochStore';
 
 const networkStore = useNetworkStore();
 const accountStore = useAccountStore();
@@ -22,13 +22,14 @@ const subgraphSettingStore = useSubgraphSettingStore();
 const qosStore = useQosStore();
 const queryFeeStore = useQueryFeesStore();
 const chainValidation = useChainValidationStore();
+const epochStore = useEpochStore();
 
 networkStore.init();
 accountStore.fetchData()
 .then(() => {
   deploymentStatusStore.init();
 });
-
+epochStore.init();
 chainValidation.init();
 
 
@@ -162,6 +163,7 @@ export const useAllocationStore = defineStore('allocationStore', {
           ...state.getDeploymentStatuses[i],
           ...state.getQosDatas[i],
           ...state.getQueryFeeDatas[i],
+          ...state.getStatusChecks[i],
         };
       }
       console.log(state.allocations);
@@ -201,6 +203,26 @@ export const useAllocationStore = defineStore('allocationStore', {
         }
       }
       return queryFeeDatas;
+    },
+    getStatusChecks: (state) => {
+      let statusChecksData = [];
+      for(let i = 0; i < state.allocations.length; i++){
+        const deploymentStatus = deploymentStatusStore.getDeploymentStatusDict[state.allocations[i].subgraphDeployment.ipfsHash];
+
+        const validChain = chainValidation.getChainStatus[state.allocations[i].subgraphDeployment.manifest.network];
+        const synced = epochStore.getBlockNumbers[state.allocations[i].subgraphDeployment.manifest.network] <= deploymentStatus?.chains?.[0]?.latestBlock?.number;
+        const deterministicFailure = synced ? null : deploymentStatus?.health == 'failed' && deploymentStatus?.fatalError && deploymentStatus?.fatalError?.deterministic == true;
+        // TODO: implement deterministicSameBlock
+        const deterministicSameBlock = synced ? null : null;
+        let statusChecks = {
+          synced: synced,
+          deterministicFailure: deterministicFailure,
+          deterministicSameBlock: deterministicSameBlock,
+          validChain: validChain,
+        };
+        statusChecksData[i] = { statusChecks: statusChecks };
+      }
+      return statusChecksData;
     },
     getActiveDurations: (state) => {
       let activeDurations = [];
