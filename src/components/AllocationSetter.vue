@@ -1,18 +1,42 @@
 <template>
   <div class="d-flex">
     <div class="d-flex">
-      <v-text-field
-        class="mt-5 mx-2"
-        type="number"
-        v-model="newAllocationSetterStore.minAllocation"
-        label="Minimum Allocation"
-      ></v-text-field>
-      <v-text-field
-          class="mt-5 mx-2"
-          type="number"
-          v-model="newAllocationSetterStore.minAllocation0Signal"
-          label="Minimum Allocation (0 Signal)"
-      ></v-text-field>
+      <v-confirm-edit v-model="newAllocationSetterStore.minAllocation">
+        <template v-slot:default="{ model: proxyModel, save, cancel, isPristine, actions}">
+          <v-text-field
+            v-model="proxyModel.value"
+            type="number"
+            label="Minimum Allocation"
+            class="mt-5 mx-2"
+            :append-inner-icon="isPristine ? '' : 'mdi-check'"
+            :clear-icon="isPristine ? '' : 'mdi-undo-variant'"
+            @click:append-inner="save"
+            @click:clear="cancel"
+            @keydown.enter="save"
+            clearable
+            hide-spin-buttons
+          ></v-text-field>
+          <component :is="actions" v-if="false"></component>
+        </template>
+      </v-confirm-edit>
+      <v-confirm-edit v-model="newAllocationSetterStore.minAllocation0Signal">
+        <template v-slot:default="{ model: proxyModel, save, cancel, isPristine, actions}">
+          <v-text-field
+            v-model="proxyModel.value"
+            type="number"
+            label="Minimum Allocation (0 Signal)"
+            class="mt-5 mx-2"
+            :append-inner-icon="isPristine ? '' : 'mdi-check'"
+            :clear-icon="isPristine ? '' : 'mdi-undo-variant'"
+            @click:append-inner="save"
+            @click:clear="cancel"
+            @keydown.enter="save"
+            clearable
+            hide-spin-buttons
+          ></v-text-field>
+          <component :is="actions" v-if="false"></component>
+        </template>
+      </v-confirm-edit>
     </div>
     <v-btn
         class="d-inline-block mx-2 my-1 align-self-center"
