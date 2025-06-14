@@ -49,6 +49,7 @@ export const useQueryFeesStore = defineStore('queryFeeStore', {
   state: () => ({
     queryFeeData: [],
     loading: true,
+    error: false,
   }),
   getters: {
     getQueryFeeDict: (state) => {
@@ -62,6 +63,7 @@ export const useQueryFeesStore = defineStore('queryFeeStore', {
   actions: {
     async fetchData(){
       console.log("QOS DATA");
+      this.error = true;
       this.loading = true;
 
       return qosSubgraphClient.query({
@@ -92,11 +94,17 @@ export const useQueryFeesStore = defineStore('queryFeeStore', {
         this.loading = false;
         if(err.graphQLErrors[0]?.message){
           console.error(`Query fee API error: ${err.graphQLErrors[0].message}`)
-          alert(`Query Fee API Error: ${err.graphQLErrors[0].message}`);
+          if(!this.error){
+            alert(`Query Fee API Error: ${err.graphQLErrors[0].message}`);
+            this.error = true;
+          }
         }
         if(err.message){
           console.error(`Query fee query error: ${err.message}`);
-          alert(`Query Fee Error: ${err.message}`);
+          if(!this.error){
+            alert(`Query Fee Error: ${err.message}`);
+            this.error = true;
+          }
         }
       });
     }

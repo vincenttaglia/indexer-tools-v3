@@ -17,6 +17,7 @@ export const useNetworkStore = defineStore('network', {
         totalSupply: "0",
         currentEpoch: "0",
         totalTokensAllocated: "0",
+        error: false,
       },
       "arbitrum-one": {
         totalTokensSignalled: "0",
@@ -25,6 +26,7 @@ export const useNetworkStore = defineStore('network', {
         totalSupply: "0",
         currentEpoch: "0",
         totalTokensAllocated: "0",
+        error: false,
       },
       "sepolia": {
         totalTokensSignalled: "0",
@@ -33,6 +35,7 @@ export const useNetworkStore = defineStore('network', {
         totalSupply: "0",
         currentEpoch: "0",
         totalTokensAllocated: "0",
+        error: false
       },
       "arbitrum-sepolia": {
         totalTokensSignalled: "0",
@@ -41,6 +44,7 @@ export const useNetworkStore = defineStore('network', {
         totalSupply: "0",
         currentEpoch: "0",
         totalTokensAllocated: "0",
+        error: false,
       }
     }
   }),
@@ -54,39 +58,42 @@ export const useNetworkStore = defineStore('network', {
   },
   actions: {
     async init(){
-      let queries = [];
-      for(let chain of chainStore.getChains){
-        queries.push(chain.networkSubgraphClient.query({
-          query: gql`query{
-            graphNetwork(id: 1){
-              totalTokensSignalled
-              networkGRTIssuancePerBlock
-              totalSupply
-              currentEpoch
-              totalTokensAllocated
-            }
-          }`,
-        }).then((data) => {
-          console.log(data);
-          this.networks[chain.id].totalTokensSignalled = data.data.graphNetwork.totalTokensSignalled;
-          this.networks[chain.id].issuancePerBlock = data.data.graphNetwork.networkGRTIssuancePerBlock;
-          this.networks[chain.id].totalSupply = data.data.graphNetwork.totalSupply;
-          this.networks[chain.id].currentEpoch = data.data.graphNetwork.currentEpoch;
-          this.networks[chain.id].issuancePerYear = data.data.graphNetwork.networkGRTIssuancePerBlock * chainStore.getBlocksPerYear;
-          this.networks[chain.id].totalTokensAllocated = data.data.graphNetwork.totalTokensAllocated;
-        }).catch((err) => {
-          this.loading = false;
-          if(err.graphQLErrors[0]?.message){
-            console.error(`Network API error: ${err.graphQLErrors[0].message}`);
+      let chain = chainStore.getActiveChain;
+      chain.networkSubgraphClient.query({
+        query: gql`query{
+          graphNetwork(id: 1){
+            totalTokensSignalled
+            networkGRTIssuancePerBlock
+            totalSupply
+            currentEpoch
+            totalTokensAllocated
+          }
+        }`,
+      }).then((data) => {
+        console.log(data);
+        this.networks[chain.id].totalTokensSignalled = data.data.graphNetwork.totalTokensSignalled;
+        this.networks[chain.id].issuancePerBlock = data.data.graphNetwork.networkGRTIssuancePerBlock;
+        this.networks[chain.id].totalSupply = data.data.graphNetwork.totalSupply;
+        this.networks[chain.id].currentEpoch = data.data.graphNetwork.currentEpoch;
+        this.networks[chain.id].issuancePerYear = data.data.graphNetwork.networkGRTIssuancePerBlock * chainStore.getBlocksPerYear;
+        this.networks[chain.id].totalTokensAllocated = data.data.graphNetwork.totalTokensAllocated;
+      }).catch((err) => {
+        this.loading = false;
+        if(err.graphQLErrors[0]?.message){
+          console.error(`Network API error: ${err.graphQLErrors[0].message}`);
+          if(!this.networks[chain.id].error){
             alert(`Network API Error: ${err.graphQLErrors[0].message}`);
+            this.networks[chain.id].error = true;
           }
-          if(err.message){
-            console.error(`Network query error: ${err.message}`);
+        }
+        if(err.message){
+          console.error(`Network query error: ${err.message}`);
+          if(!this.networks[chain.id].error){
             alert(`Network Error: ${err.message}`);
+            this.networks[chain.id].error = true
           }
-        }));
-      }
-      return queries;
+        }
+      });
     }
   }
 })

@@ -39,6 +39,7 @@ export const useAllocationStore = defineStore('allocationStore', {
     activateSynclist: false,
     activateBlacklist: false,
     networkFilter: [],
+    error: false,
   }),
   getters: {
     loadingAll: (state) => {
@@ -435,6 +436,7 @@ export const useAllocationStore = defineStore('allocationStore', {
         return this.fetchData();
     },
     async fetchData(){
+      this.error = false;
       this.loading = true;
       const fetch = networkStore.init().then(() => {
         this.fetch(0)
@@ -522,11 +524,17 @@ export const useAllocationStore = defineStore('allocationStore', {
         this.loading = false;
         if(err.graphQLErrors[0]?.message){
           console.error(`Allocations API error: ${err.graphQLErrors[0].message}`)
-          alert(`Allocations API Error: ${err.graphQLErrors[0].message}`);
+          if(!this.error){
+            alert(`Allocations API Error: ${err.graphQLErrors[0].message}`);
+            this.error = true
+          }
         }
         if(err.message){
           console.error(`Allocations query error: ${err.message}`);
-          alert(`Allocations Error: ${err.message}`);
+          if(!this.error){
+            alert(`Allocations Error: ${err.message}`);
+            this.error = true
+          }
         }
       });
     }
