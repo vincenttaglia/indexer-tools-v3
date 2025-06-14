@@ -106,6 +106,7 @@ export const useSubgraphsStore = defineStore({
     selected: [],
     loading: false,
     upgradeIndexer: [],
+    error: false,
   }),
   getters: {
     loadingAll: (state) =>{
@@ -501,16 +502,23 @@ export const useSubgraphsStore = defineStore({
         this.loading = false;
         if(err.graphQLErrors[0]?.message){
           console.error(`Subgraphs API error: ${err.graphQLErrors[0].message}`)
-          alert(`Subgraphs API Error: ${err.graphQLErrors[0].message}`);
+          if(!this.error){
+            alert(`Subgraphs API Error: ${err.graphQLErrors[0].message}`);
+            this.error = true;
+          }
         }
         if(err.message){
           console.error(`Subgraphs query error: ${err.message}`);
-          alert(`Subgraphs Error: ${err.message}`);
+          if(!this.error){
+            alert(`Subgraphs Error: ${err.message}`);
+            this.error = true;
+          }
         }
       });
     },
     async fetchData(){
       return networkStore.init().then(() => {
+        this.error = false;
         this.loading = true;
         const subgraphData = this.fetch()
           .then((data) => {

@@ -2,9 +2,10 @@ import { defineStore } from 'pinia'
 import gql from 'graphql-tag';
 import { qosSubgraphClient } from "@/plugins/qosSubgraphClient";
 import { useAccountStore } from './accounts';
-
+import { useChainStore } from './chains';
 
 const accountStore = useAccountStore();
+const chainStore = useChainStore();
 
 const QOS_QUERY = gql`query queryDailyDataPoints($dayNumber: Int!, $indexer: String!){
   indexer(id: $indexer) {
@@ -46,6 +47,10 @@ export const useQosStore = defineStore('qosStore', {
     async fetchData(){
       console.log("QOS DATA");
       this.loading = true;
+      if(chainStore.getActiveChain.id != "arbitrum-one"){
+        this.loading = false;
+        return [];
+      }
 
       return qosSubgraphClient.query({
         query: gql`query{
@@ -73,13 +78,13 @@ export const useQosStore = defineStore('qosStore', {
         })
       }).catch((err) => {
         this.loading = false;
-        if(err.graphQLErrors[0]?.message){
+        if(err.graphQLErrors?.[0]?.message){
           console.error(`QoS API error: ${err.graphQLErrors[0].message}`)
           alert(`QoS API Error: ${err.graphQLErrors[0].message}`);
         }
         if(err.message){
           console.error(`QoS query error: ${err.message}`);
-          alert(`QoS Error: ${err.message}`);
+          //alert(`QoS Error: ${err.message}`);
         }
       });
     }
