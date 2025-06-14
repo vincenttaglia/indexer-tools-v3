@@ -322,32 +322,44 @@ function getURL(path, base){
   return new URL(path, base);
 }
 
-function sendActionsToAgent(){
-  accountStore.getAgentConnectClient.mutate({
-    mutation: gql`mutation queueActions($actions: [ActionInput!]!){
-      queueActions(actions: $actions) {
-        actions{
-          id
-          status
-          type
-          deploymentID
-          allocationID
-          amount
-          poi
-          force
-          priority
-          source
-          reason
-          transaction
-          failureReason
-          createdAt
-          updatedAt
-          protocolNetwork
+async function batchSendActions(actions){
+  let x = 0;
+  let reqs = []
+  while(x < newAllocationSetterStore.actionsQueueBuildAPIObject.length){
+    let actionsBatch = actions.slice(x, x+100);
+    reqs.push(accountStore.getAgentConnectClient.mutate({
+      mutation: gql`mutation queueActions($actions: [ActionInput!]!){
+        queueActions(actions: $actions) {
+          actions{
+            id
+            status
+            type
+            deploymentID
+            allocationID
+            amount
+            poi
+            force
+            priority
+            source
+            reason
+            transaction
+            failureReason
+            createdAt
+            updatedAt
+            protocolNetwork
+          }
         }
-      }
-    }`,
-    variables: { actions: newAllocationSetterStore.actionsQueueBuildAPIObject }
-  }).catch((errors) => {
+      }`,
+      variables: { actions: actionsBatch }
+    }));
+    x = x+100;
+  }
+  return Promise.all(reqs);
+  
+}
+
+function sendActionsToAgent(){
+  batchSendActions(newAllocationSetterStore.actionsQueueBuildAPIObject).catch((errors) => {
     console.log("Action Queue Errors:")
     for(let i in errors){
       console.log(errors[i]);
@@ -358,7 +370,7 @@ function sendActionsToAgent(){
   }).then((data) => {
     console.log("AGENT CONNECT SEND ACTIONS DATA");
     console.log(data);
-    text.value = `Queued ${data.data.queueActions.length} actions`;
+    text.value = `Queued ${data.reduce((n, currentBatch) => n + currentBatch.data.queueActions.length, 0)} actions`;
     snackbar.value = true;
     queryActions();
   });
