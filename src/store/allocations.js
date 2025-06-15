@@ -214,20 +214,15 @@ export const useAllocationStore = defineStore('allocationStore', {
         const synced = epochStore.getBlockNumbers[state.allocations[i].subgraphDeployment.manifest.network] <= deploymentStatus?.chains?.[0]?.latestBlock?.number;
         const deterministicFailure = synced ? null : deploymentStatus?.health == 'failed' && deploymentStatus?.fatalError && deploymentStatus?.fatalError?.deterministic == true;
 
-        let deterministicSameBlock = null;
-        if(deterministicFailure && !synced){
-          // const upgradeIndexerFailedStatus = deploymentStatusStore.getUpgradeIndexerFailedStatus[state.allocations[i].subgraphDeployment.ipfsHash];
-          // deterministicSameBlock = 
-          //   upgradeIndexerFailedStatus?.health == 'failed'
-          //   && upgradeIndexerFailedStatus?.fatalError
-          //   && upgradeIndexerFailedStatus?.fatalError?.deterministic == true
-          //   && upgradeIndexerFailedStatus?.fatalError?.block?.hash == deploymentStatus?.fatalError?.block?.hash;
-        }
+        const otherIndexerStatus = deploymentStatusStore.getDeploymentFailures[state.allocations[i].subgraphDeployment.ipfsHash];
+        let healthComparison = otherIndexerStatus?.healthy > otherIndexerStatus?.failed;
         let statusChecks = {
           synced: synced,
           deterministicFailure: deterministicFailure,
-          deterministicSameBlock: false,
+          healthComparison: healthComparison,
           validChain: validChain,
+          healthyCount: otherIndexerStatus?.healthy,
+          failedCount: otherIndexerStatus?.failed,
         };
         statusChecksData[i] = { statusChecks: statusChecks };
       }

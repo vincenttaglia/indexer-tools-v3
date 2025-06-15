@@ -64,9 +64,9 @@
     </template>
     <template v-slot:item.deploymentStatus.health="{ item }">
       <StatusDot title="Valid Chain" :status="item.statusChecks?.validChain" />
+      <StatusDot :title="`Other Indexers Status (${item.statusChecks?.healthyCount} h/${item.statusChecks?.failedCount} f)`" :status="item.statusChecks?.healthComparison" />
       <StatusDot title="Synced" :status="item.statusChecks?.synced" />
       <StatusDot title="Deterministic Failure" :status="item.statusChecks?.deterministicFailure" />
-      <StatusDot title="Deterministic Failure Same Block" :status="item.statusChecks?.deterministicSameBlock" />
     </template>
     <template v-slot:item.id="{ item }" style="width:100;max-width:100px;min-width:100px;overflow-x: scroll;">
       <p style="width:100;max-width:100px;min-width:100px;overflow-x: scroll;">{{ item.id }}</p>

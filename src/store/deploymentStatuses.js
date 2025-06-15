@@ -48,6 +48,22 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
     getBlankStatus: () => {
       return { icon: 'mdi-close', color: 'default', blocksBehindChainhead: Number.MAX_SAFE_INTEGER } 
     },
+    getDeploymentFailures: (state) => {
+      let deploymentFailures = {};
+      for(let i in state.indexerStatuses){
+        for(let d in state.indexerStatuses[i]){
+          if(deploymentFailures[d] == null)
+            deploymentFailures[d] = { healthy: 0, failed: 0, other: 0 }
+          if(state.indexerStatuses[i][d].health == 'healthy')
+            deploymentFailures[d].healthy += 1
+          else if(state.indexerStatuses[i][d].health == 'failed')
+            deploymentFailures[d].failed += 1
+          else
+            deploymentFailures[d].other += 1
+        }
+      }
+      return deploymentFailures;
+    },
   },
   actions: {
     async init(){
@@ -57,7 +73,7 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
            this.loading = false;
            this.loaded = true;
         });
-        let indexerStatuses = this.fetchIndexerData.then(() => {
+        let indexerStatuses = this.fetchIndexerData().then(() => {
           return this.fetchIndexerStatuses();
         });
         return Promise.all([userStatus, indexerStatuses]);
@@ -95,7 +111,7 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
       let promises = [];
       for(let indexer in this.indexerUrls){
         promises.push(
-          this.fetchStatus(this.indexerUrls[i])
+          this.fetchStatus(this.indexerUrls[indexer])
           .then((json) => {
             this.indexerStatuses[indexer] = json.data.indexingStatuses.reduce((obj, status) => {
               return {
