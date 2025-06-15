@@ -51,11 +51,16 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
   },
   actions: {
     async init(){
-      if(!this.loading && !this.loaded)
-        this.fetchData();
-    },
-    async fetchUserData(){
-
+      if(!this.loading && !this.loaded){
+        let userStatus = this.fetchUserStatuses();
+        let indexerStatuses = this.fetchIndexerData.then(() => {
+          return this.fetchIndexerStatuses();
+        });
+        return Promise.all([userStatus, indexerStatuses]).then(() => {
+           this.loading = false;
+           this.loaded = true;
+        })
+      }
     },
     async fetchIndexerData(){
       return chainStore.getActiveChain.networkSubgraphClient.query({
@@ -90,8 +95,6 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
           })
         );
       }
-      this.loading = false;
-      this.loaded = true;
       return Promise.all(promises);
     },
     async fetchIndexerStatus(url){
@@ -104,12 +107,12 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
       .then((res) => res.json())
       .catch((error) => {
         console.error(`Deployment status query error: ${error.message}`);
-        this.loading = false;
       });
     },
     async update(){
       if(!this.loading){
-        this.fetchData();
+        this.loaded = false;
+        this.init();
       }
     },
   },
