@@ -4,14 +4,17 @@ import { useAccountStore } from './accounts'
 import { useChainValidationStore } from './chainValidation';
 import { upgradeIndexerClient } from '@/plugins/upgradeIndexerClient';
 import gql from 'graphql-tag';
+import { apolloClient, arbitrumApolloClient, sepoliaApolloClient, arbitrumSepoliaApolloClient } from "@/plugins/graphNetworkSubgraphClient";
+import { useChainStore } from './chains';
 const accountStore = useAccountStore();
 const chainValidationStore = useChainValidationStore();
+const chainStore = useChainStore();
 
 export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
   state: () => ({
-    status: [],
-    failedSubgraphs: [],
-    upgradeIndexerFailedStatus: {},
+    status: {},
+    indexerUrls: {},
+    indexerStatuses: {},
     loading: false,
     loaded: false,
   }),
@@ -59,50 +62,55 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
       if(!this.loading && !this.loaded)
         this.fetchData();
     },
-    async fetchData(){
-      console.log("UPDATE STATUS");
-      const url = new URL('/status', this.getIndexerUrl);
-      console.log(url.href);
-      fetch(url.href,  {
+    async fetchUserData(){
+
+    },
+    async fetchIndexerData(){
+      return chainStore.getActiveChain.networkSubgraphClient.query({
+        query: gql`query{
+          indexers(where: {allocationCount_gt: 0}) {
+            url
+            account {
+              id
+            }
+          }
+        }`,
+      }).then((data) =>{
+        for(let i in data.data.indexers){
+          if(data.data.indexers[i].account.id != accountStore.getActiveAccount.address)
+            this.indexerUrls[data.data.indexers[i].account.id] = data.data.indexers[i].url;
+        }
+      });
+    },
+    async fetchUserStatuses(){
+      return this.fetchIndexerStatuses(indexers[i])
+      .then((json) => {
+        this.status = new Map(json.data.indexingStatuses.map((e) => [e.subgraph, e]));
+      })
+    },
+    async fetchIndexerStatuses(){
+      let promises = [];
+      for(let indexer in this.indexerUrls){
+        promises.push(
+          this.fetchIndexerStatuses(this.indexerUrls[i])
+          .then((json) => {
+            this.indexerStatuses[indexer] = new Map(json.data.indexingStatuses.map((e) => [e.subgraph, e]));
+          })
+        );
+      }
+      this.loading = false;
+      this.loaded = true;
+      return Promise.all(promises);
+    },
+    async fetchIndexerStatus(url){
+      const url = new URL('/status', url);
+      return fetch(url.href,  {
         method: "POST",
         headers: {"Content-type": "application/json"},
         body: JSON.stringify({query: "{ indexingStatuses { subgraph synced health fatalError{ message deterministic block{ hash number } } node chains{ latestBlock{number} chainHeadBlock{number} earliestBlock{number} } } }"}),
       })
       .then((res) => res.json())
-      .then((json) => {
-        this.status = json.data.indexingStatuses;
-        for(let i in json.data.indexingStatuses){
-          if(json.data.indexingStatuses[i].health == 'failed' && json.data.indexingStatuses[i].fatalError && json.data.indexingStatuses[i].fatalError.deterministic == true)
-            this.failedSubgraphs.push(json.data.indexingStatuses[i].subgraph);
-        }
-        upgradeIndexerClient.query({
-          query: gql`query  indexingStatuses($subgraphs: [String!]){
-            indexingStatuses(subgraphs: $subgraphs){
-              health
-              subgraph
-              fatalError {
-                handler
-                message
-                deterministic
-                block {
-                  hash
-                  number
-                }
-              }
-            }
-          }`,
-          variables: {
-            subgraphs: this.failedSubgraphs,
-          }
-        })
-        .then((data) => {
-          for(let i in data.data.indexingStatuses){
-            this.upgradeIndexerFailedStatus[data.data.indexingStatuses[i].subgraph] = data.data.indexingStatuses[i];
-          }
-        });
-        this.loading = false;
-        this.loaded = true;
-      }).catch((error) => {
+      .catch((error) => {
         console.error(`Deployment status query error: ${error.message}`);
         this.loading = false;
       });
