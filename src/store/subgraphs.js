@@ -157,13 +157,13 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'all'){
         subgraphs = subgraphs.filter((i) => {
-          return deploymentStatusStore.getDeploymentStatusDict[i.deployment.ipfsHash] != undefined;
+          return deploymentStatusStore.getDeploymentStatuses[i.deployment.ipfsHash] != undefined;
         });
       }
 
       if(subgraphSettingStore.settings.statusFilter == 'closable'){
         subgraphs = subgraphs.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.deployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.deployment.ipfsHash];
           if(status != undefined && status.synced == true && (status.fatalError == undefined || status.fatalError.deterministic == true))
             return true
           return false;
@@ -172,7 +172,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'healthy-synced'){
         subgraphs = subgraphs.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.deployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.deployment.ipfsHash];
           if(status != undefined && status.health == 'healthy' && status.synced == true)
             return true
           return false;
@@ -181,7 +181,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'syncing'){
         subgraphs = subgraphs.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.deployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.deployment.ipfsHash];
           if(status != undefined && status.health == 'healthy' && status.synced == false)
             return true
           return false;
@@ -190,7 +190,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'failed'){
         subgraphs = subgraphs.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.deployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.deployment.ipfsHash];
           if(status != undefined && status.health == 'failed')
             return true
           return false;
@@ -199,7 +199,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'non-deterministic'){
         subgraphs = subgraphs.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.deployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.deployment.ipfsHash];
           if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == false)
             return true
           return false;
@@ -208,7 +208,7 @@ export const useSubgraphsStore = defineStore({
 
       if(subgraphSettingStore.settings.statusFilter == 'deterministic'){
         subgraphs = subgraphs.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.deployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.deployment.ipfsHash];
           if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == true)
             return true
           return false;
@@ -273,7 +273,7 @@ export const useSubgraphsStore = defineStore({
     getDeploymentStatuses: (state) => {
       let deploymentStatuses = [];
       for(let i = 0; i < state.subgraphs.length; i++){
-        deploymentStatuses[i] = { deploymentStatus: deploymentStatusStore.getDeploymentStatusDict[state.subgraphs[i].deployment.ipfsHash] || deploymentStatusStore.getBlankStatus }
+        deploymentStatuses[i] = { deploymentStatus: deploymentStatusStore.getDeploymentStatuses[state.subgraphs[i].deployment.ipfsHash] || deploymentStatusStore.getBlankStatus }
       }
       return deploymentStatuses;
     },

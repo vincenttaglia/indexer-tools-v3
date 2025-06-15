@@ -54,13 +54,13 @@ export const useAllocationStore = defineStore('allocationStore', {
       
       if(subgraphSettingStore.settings.statusFilter == 'all'){
         allocations = allocations.filter((i) => {
-          return deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash] != undefined;
+          return deploymentStatusStore.getDeploymentStatuses[i.subgraphDeployment.ipfsHash] != undefined;
         });
       }
 
       if(subgraphSettingStore.settings.statusFilter == 'closable'){
         allocations = allocations.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.subgraphDeployment.ipfsHash];
           if(status != undefined && status.synced == true && (status.fatalError == undefined || status.fatalError.deterministic == true))
             return true
           return false;
@@ -69,7 +69,7 @@ export const useAllocationStore = defineStore('allocationStore', {
 
       if(subgraphSettingStore.settings.statusFilter == 'healthy-synced'){
         allocations = allocations.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.subgraphDeployment.ipfsHash];
           if(status != undefined && status.health == 'healthy' && status.synced == true)
             return true
           return false;
@@ -78,7 +78,7 @@ export const useAllocationStore = defineStore('allocationStore', {
 
       if(subgraphSettingStore.settings.statusFilter == 'syncing'){
         allocations = allocations.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.subgraphDeployment.ipfsHash];
           if(status != undefined && status.health == 'healthy' && status.synced == false)
             return true
           return false;
@@ -87,7 +87,7 @@ export const useAllocationStore = defineStore('allocationStore', {
 
       if(subgraphSettingStore.settings.statusFilter == 'failed'){
         allocations = allocations.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.subgraphDeployment.ipfsHash];
           if(status != undefined && status.health == 'failed')
             return true
           return false;
@@ -96,7 +96,7 @@ export const useAllocationStore = defineStore('allocationStore', {
 
       if(subgraphSettingStore.settings.statusFilter == 'non-deterministic'){
         allocations = allocations.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.subgraphDeployment.ipfsHash];
           if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == false)
             return true
           return false;
@@ -105,7 +105,7 @@ export const useAllocationStore = defineStore('allocationStore', {
 
       if(subgraphSettingStore.settings.statusFilter == 'deterministic'){
         allocations = allocations.filter((i) => {
-          const status = deploymentStatusStore.getDeploymentStatusDict[i.subgraphDeployment.ipfsHash];
+          const status = deploymentStatusStore.getDeploymentStatuses[i.subgraphDeployment.ipfsHash];
           if(status != undefined && status.health == 'failed' && status.fatalError != undefined && status.fatalError.deterministic == true)
             return true
           return false;
@@ -208,7 +208,7 @@ export const useAllocationStore = defineStore('allocationStore', {
     getStatusChecks: (state) => {
       let statusChecksData = [];
       for(let i = 0; i < state.allocations.length; i++){
-        const deploymentStatus = deploymentStatusStore.getDeploymentStatusDict[state.allocations[i].subgraphDeployment.ipfsHash];
+        const deploymentStatus = deploymentStatusStore.getDeploymentStatuses[state.allocations[i].subgraphDeployment.ipfsHash];
 
         const validChain = accountStore.getPOIQueryStatus ? chainValidation.getChainStatus[state.allocations[i].subgraphDeployment.manifest.network] : null;
         const synced = epochStore.getBlockNumbers[state.allocations[i].subgraphDeployment.manifest.network] <= deploymentStatus?.chains?.[0]?.latestBlock?.number;
@@ -325,7 +325,7 @@ export const useAllocationStore = defineStore('allocationStore', {
     getDeploymentStatuses: (state) => {
       let deploymentStatuses = [];
       for(let i = 0; i < state.allocations.length; i++){
-        deploymentStatuses[i] = { deploymentStatus: deploymentStatusStore.getDeploymentStatusDict[state.allocations[i].subgraphDeployment.ipfsHash] || deploymentStatusStore.getBlankStatus }
+        deploymentStatuses[i] = { deploymentStatus: deploymentStatusStore.getDeploymentStatuses[state.allocations[i].subgraphDeployment.ipfsHash] || deploymentStatusStore.getBlankStatus }
       }
       return deploymentStatuses;
     },
