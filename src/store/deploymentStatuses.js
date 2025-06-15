@@ -52,14 +52,15 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
   actions: {
     async init(){
       if(!this.loading && !this.loaded){
-        let userStatus = this.fetchUserStatuses();
+        this.loading = true;
+        let userStatus = this.fetchUserStatuses().then(() => {
+           this.loading = false;
+           this.loaded = true;
+        });
         let indexerStatuses = this.fetchIndexerData.then(() => {
           return this.fetchIndexerStatuses();
         });
-        return Promise.all([userStatus, indexerStatuses]).then(() => {
-           this.loading = false;
-           this.loaded = true;
-        })
+        return Promise.all([userStatus, indexerStatuses]);
       }
     },
     async fetchIndexerData(){
@@ -80,25 +81,35 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
       });
     },
     async fetchUserStatuses(){
-      return this.fetchIndexerStatuses(indexers[i])
+      return this.fetchStatus(accountStore.getActiveUrl)
       .then((json) => {
-        this.status = new Map(json.data.indexingStatuses.map((e) => [e.subgraph, e]));
+        this.status = json.data.indexingStatuses.reduce((obj, status) => {
+          return {
+            ...obj,
+            [status.subgraph]: status
+          };
+        }, {});
       })
     },
     async fetchIndexerStatuses(){
       let promises = [];
       for(let indexer in this.indexerUrls){
         promises.push(
-          this.fetchIndexerStatuses(this.indexerUrls[i])
+          this.fetchStatus(this.indexerUrls[i])
           .then((json) => {
-            this.indexerStatuses[indexer] = new Map(json.data.indexingStatuses.map((e) => [e.subgraph, e]));
+            this.indexerStatuses[indexer] = json.data.indexingStatuses.reduce((obj, status) => {
+              return {
+                ...obj,
+                [status.subgraph]: status
+              };
+            }, {});
           })
         );
       }
       return Promise.all(promises);
     },
-    async fetchIndexerStatus(url){
-      const url = new URL('/status', url);
+    async fetchStatus(indexerUrl){
+      const url = new URL('/status', indexerUrl);
       return fetch(url.href,  {
         method: "POST",
         headers: {"Content-type": "application/json"},

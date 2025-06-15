@@ -216,17 +216,17 @@ export const useAllocationStore = defineStore('allocationStore', {
 
         let deterministicSameBlock = null;
         if(deterministicFailure && !synced){
-          const upgradeIndexerFailedStatus = deploymentStatusStore.getUpgradeIndexerFailedStatus[state.allocations[i].subgraphDeployment.ipfsHash];
-          deterministicSameBlock = 
-            upgradeIndexerFailedStatus?.health == 'failed'
-            && upgradeIndexerFailedStatus?.fatalError
-            && upgradeIndexerFailedStatus?.fatalError?.deterministic == true
-            && upgradeIndexerFailedStatus?.fatalError?.block?.hash == deploymentStatus?.fatalError?.block?.hash;
+          // const upgradeIndexerFailedStatus = deploymentStatusStore.getUpgradeIndexerFailedStatus[state.allocations[i].subgraphDeployment.ipfsHash];
+          // deterministicSameBlock = 
+          //   upgradeIndexerFailedStatus?.health == 'failed'
+          //   && upgradeIndexerFailedStatus?.fatalError
+          //   && upgradeIndexerFailedStatus?.fatalError?.deterministic == true
+          //   && upgradeIndexerFailedStatus?.fatalError?.block?.hash == deploymentStatus?.fatalError?.block?.hash;
         }
         let statusChecks = {
           synced: synced,
           deterministicFailure: deterministicFailure,
-          deterministicSameBlock: deterministicSameBlock,
+          deterministicSameBlock: false,
           validChain: validChain,
         };
         statusChecksData[i] = { statusChecks: statusChecks };
