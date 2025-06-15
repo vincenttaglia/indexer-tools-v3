@@ -64,6 +64,18 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
       }
       return deploymentFailures;
     },
+    getDeploymentEntities: (state) => {
+      let deploymentEntities = {};
+      for(let i in state.indexerStatuses){
+        for(let d in state.indexerStatuses[i]){
+          if(deploymentEntities[d] == null)
+            deploymentEntities[d] = 0
+          if(state.indexerStatuses[i][d].entityCount > deploymentEntities[d])
+            deploymentEntities[d] = state.indexerStatuses[i][d].entityCount
+        }
+      }
+      return deploymentEntities;
+    },
   },
   actions: {
     async init(){
@@ -129,7 +141,7 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
       return fetch(url.href,  {
         method: "POST",
         headers: {"Content-type": "application/json"},
-        body: JSON.stringify({query: "{ indexingStatuses { subgraph synced health fatalError{ message deterministic block{ hash number } } node chains{ latestBlock{number} chainHeadBlock{number} earliestBlock{number} } } }"}),
+        body: JSON.stringify({query: "{ indexingStatuses { subgraph synced health entityCount fatalError{ message deterministic block{ hash number } } node chains{ latestBlock{number} chainHeadBlock{number} earliestBlock{number} } } }"}),
       })
       .then((res) => res.json())
       .catch((error) => {

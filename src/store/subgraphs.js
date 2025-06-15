@@ -238,6 +238,7 @@ export const useSubgraphsStore = defineStore({
           ...state.getDeploymentStatuses[i],
           ...state.getUpgradeIndexer[i],
           ...state.getQueryFeeDatas[i],
+          ...state.getNumEntities[i],
         };
       }
       return subgraphs;
@@ -413,6 +414,17 @@ export const useSubgraphsStore = defineStore({
         upgradeIndexer[i] = { upgradeIndexer: state.upgradeIndexer[i] }
       }
       return upgradeIndexer;
+    },
+    getNumEntities: (state) => {
+      let numEntities = [];
+      for(let i = 0; i < state.subgraphs.length; i++){
+        if(deploymentStatusStore.getDeploymentEntities[state.subgraphs[i].deployment.ipfsHash]){
+          numEntities[i] = { numEntities: deploymentStatusStore.getDeploymentEntities[state.subgraphs[i].deployment.ipfsHash] };
+        } else{
+          numEntities[i] = { numEntities: null };
+        }
+      }
+      return numEntities;
     },
   },
   actions: {
