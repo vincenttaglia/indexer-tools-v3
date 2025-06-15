@@ -21,17 +21,9 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
   getters: {
     getIndexerUrl: () => accountStore.getActiveUrl,
     getData: (state) => state.status,
-    getUpgradeIndexerFailedStatus: (state) => state.upgradeIndexerFailedStatus,
-    getDeploymentStatusDict: (state) => {
-      let dict = {};
-      state.getDeploymentStatuses.forEach(
-        (el) => (dict[el.subgraph] = el )
-      );
-      return dict;
-    },
     getDeploymentStatuses: (state) => {
-      let deploymentStatuses = [];
-      for(let i = 0; i < state.status.length; i++){
+      let deploymentStatuses = {};
+      for(let i in state.status){
         deploymentStatuses[i] = state.status[i];
         if(deploymentStatuses[i].health == 'failed' && deploymentStatuses[i].fatalError && deploymentStatuses[i].fatalError.deterministic == false){
           deploymentStatuses[i].icon = 'mdi-refresh';
