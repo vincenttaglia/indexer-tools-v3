@@ -14,6 +14,9 @@ COPY . .
 # Build the application
 RUN yarn build
 
+# Create dist directory if it doesn't exist (safety check)
+RUN mkdir -p /app/dist
+
 # Entrypoint for runtime env vars
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
 
