@@ -13,8 +13,7 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
+    permissions: write-all
 
     steps:
       - name: Checkout
