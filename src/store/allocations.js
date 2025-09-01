@@ -21,10 +21,7 @@ const qosStore = useQosStore();
 const queryFeeStore = useQueryFeesStore();
 
 networkStore.init();
-accountStore.fetchData()
-.then(() => {
-  deploymentStatusStore.init();
-});
+await accountStore.fetchData();
 
 export const useAllocationStore = defineStore('allocationStore', {
   state: () => ({
@@ -356,6 +353,8 @@ export const useAllocationStore = defineStore('allocationStore', {
         }
       });
 
+      let callbackPromises = [];
+
       // Process in batches
       for (let i = 0; i < allocations.length; i += batchSize) {
         const batch = allocations.slice(i, i + batchSize);
@@ -363,13 +362,18 @@ export const useAllocationStore = defineStore('allocationStore', {
 
         batch.forEach(allocation => {
           if (allocation.pendingRewards.loading && !allocation.pendingRewards.loaded) {
-            batchRequest.add(chainStore.getRewardsContract.methods.getRewards(allocation.id).call.request((error, value) => {
-              if (value !== undefined) {
-                allocation.pendingRewards.value = BigNumber(value);
-                allocation.pendingRewards.loaded = true;
-              }
-              allocation.pendingRewards.loading = false;
-            }));
+            let promise = new Promise((resolve) => {
+              batchRequest.add(chainStore.getRewardsContract.methods.getRewards(allocation.id).call.request((error, value) => {
+                if (value !== undefined) {
+                  allocation.pendingRewards.value = BigNumber(value);
+                  allocation.pendingRewards.loaded = true;
+                }
+                allocation.pendingRewards.loading = false;
+                resolve();
+              }));
+            });
+            callbackPromises.push(promise);
+            
           }
         });
 
@@ -382,6 +386,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
 
       // Clear cache after updating pending rewards
+      await Promise.all(callbackPromises);
       this.clearCache();
     },
 
@@ -401,7 +406,7 @@ export const useAllocationStore = defineStore('allocationStore', {
         console.error('Error fetching pending rewards:', error);
       } finally {
         allocation.pendingRewards.loading = false;
-        this.clearCache();
+       this.clearCache();
       }
     },
 
@@ -414,13 +419,13 @@ export const useAllocationStore = defineStore('allocationStore', {
     async fetchData(){
       this.error = false;
       this.loading = true;
-      this.clearCache();
 
       try {
-        const [fetchResult, qosResult, queryFeesResult] = await Promise.all([
+        const [fetchResult, qosResult, queryFeesResult, deploymentStatusResult] = await Promise.all([
           networkStore.init().then(() => this.fetch(0)),
           qosStore.fetchData(),
-          queryFeeStore.fetchData()
+          queryFeeStore.fetchData(),
+          deploymentStatusStore.init(),
         ]);
 
         if (fetchResult) {
@@ -439,6 +444,7 @@ export const useAllocationStore = defineStore('allocationStore', {
         this.loading = false;
         this.error = true;
       }
+      this.clearCache();
     },
 
     async fetch(skip){
