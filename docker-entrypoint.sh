@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Create necessary directories if they don't exist
+mkdir -p /app/public
+mkdir -p /app/dist
+
 JSON_STRING="{
   \"DEFAULT_ACCOUNTS\": ${DEFAULT_ACCOUNTS:-\"\"},
   \"DEFAULT_RPC_MAINNET\": \"${DEFAULT_RPC_MAINNET}\",

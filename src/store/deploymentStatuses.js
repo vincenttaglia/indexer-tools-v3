@@ -50,13 +50,13 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
   actions: {
     async init(){
       if(!this.loading && !this.loaded)
-        this.fetchData();
+        return this.fetchData();
     },
     async fetchData(){
       console.log("UPDATE STATUS");
       const url = new URL('/status', this.getIndexerUrl);
       console.log(url.href);
-      fetch(url.href,  {
+      return fetch(url.href,  {
         method: "POST",
         headers: {"Content-type": "application/json"},
         body: JSON.stringify({query: "{ indexingStatuses { subgraph synced health fatalError{ message deterministic block{ hash number } } node chains{ latestBlock{number} chainHeadBlock{number} earliestBlock{number} } } }"}),
@@ -75,7 +75,7 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
     },
     async update(){
       if(!this.loading){
-        this.fetchData();
+        return this.fetchData();
       }
     },
   },
