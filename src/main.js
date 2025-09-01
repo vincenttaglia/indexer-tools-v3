@@ -22,10 +22,10 @@ import { PerformanceMonitor } from '@/plugins/performanceOptimizations';
 window.performanceMonitor = new PerformanceMonitor();
 
 // Performance optimization: Set Vue production mode in production
-if (process.env.NODE_ENV === 'production') {
-  // Disable Vue devtools in production
-  window.__VUE_DEVTOOLS_GLOBAL_HOOK__ = undefined;
-}
+// if (process.env.NODE_ENV === 'production') {
+//   // Disable Vue devtools in production
+//   window.__VUE_DEVTOOLS_GLOBAL_HOOK__ = undefined;
+// }
 
 // Performance optimization: Set memory limits for large datasets
 if (window.performance && window.performance.memory) {

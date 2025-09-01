@@ -60,7 +60,7 @@ export const useAllocationStore = defineStore('allocationStore', {
       }
 
       // Apply filters efficiently
-      let allocations = state.allocations;
+      let allocations = state.getAllocations;
 
       // Apply status filters
       if (subgraphSettingStore.settings.statusFilter !== 'none') {
@@ -136,7 +136,7 @@ export const useAllocationStore = defineStore('allocationStore', {
 
       // Compute enriched data efficiently
       const enrichedAllocations = state.allocations.map((allocation, index) => {
-        const activeDuration = now - allocation.createdAt;
+        const activeDuration = (now / 1000) - allocation.createdAt;
         const epochDuration = networkStore.getCurrentEpoch - allocation.createdAtEpoch;
 
         // Calculate proportion and APR only if needed
@@ -177,8 +177,8 @@ export const useAllocationStore = defineStore('allocationStore', {
           pendingRewards: pendingReward,
           pendingRewardsCut: pendingReward.value > 0 ? indexerCut(pendingReward.value, accountStore.cut) : BigNumber(0),
           deploymentStatus,
-          qos: qos ? { qos } : {},
-          queryFees: queryFeeData ? { queryFees: queryFeeData } : {},
+          qos: qos ? qos : {},
+          queryFees: queryFeeData ? queryFeeData : {},
         };
       });
 
