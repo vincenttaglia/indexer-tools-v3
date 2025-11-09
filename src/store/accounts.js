@@ -28,6 +28,24 @@ export const useAccountStore = defineStore('accountStore', {
     },
     getPOIQueryStatus: (state) => state.getActiveAccount.poiQuery,
     getPOIQueryEndpoint: (state) => state.getActiveAccount.poiQueryEndpoint,
+    getPOIQueryClient: (state) => {
+      // HTTP connection to the API
+      const httpLink = createHttpLink({
+        uri: state.getPOIQueryEndpoint,
+        headers: {
+          "Access-Control-Request-Private-Network": "true",
+        },
+      });
+
+      // Cache implementation
+      const cache = new InMemoryCache();
+
+      // Create the apollo client
+      return new ApolloClient({
+        link: httpLink,
+        cache,
+      });
+    },
     getAgentConnectStatus: (state) => state.getActiveAccount.agentConnect,
     getAgentConnectEndpoint: (state) => state.getActiveAccount.agentEndpoint,
     getAgentConnectClient: (state) => {

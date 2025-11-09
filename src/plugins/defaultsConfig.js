@@ -33,7 +33,7 @@ export const loadDefaultsConfig = async () => {
 
     return {
       variables: {
-        accounts: value.DEFAULT_ACCOUNTS || json || [ { "address": "0x1b92e4cba0f82c85c1298af861247849988c788c", "name": "vincenttaglia-indexer.eth", "active": true, "chain": "arbitrum-one", "agentConnect": false, "agentEndpoint": "", "poiQuery": false, "poiQueryEndpoint": "" } ],
+        accounts: value.DEFAULT_ACCOUNTS || json || [ { "address": "0x1b92e4cba0f82c85c1298af861247849988c788c", "name": "vincenttaglia-indexer.eth", "active": true, "chain": "arbitrum-one", "agentConnect": false, "agentEndpoint": "", "poiQuery": false, "poiQueryEndpoint": "", "chainValidation": false, "chainValidationEndpoint": "" } ],
         rpcMainnet: value.DEFAULT_RPC_MAINNET || import.meta.env.VITE_DEFAULT_RPC_MAINNET || "https://mainnet.infura.io/v3/659344f230804542a4e653f875172105",
         rpcArbitrum: value.DEFAULT_RPC_ARBITRUM || import.meta.env.VITE_DEFAULT_RPC_ARBITRUM || "https://arb-mainnet.g.alchemy.com/v2/er8LBcXpoFwlV8xJee-WXFbFG_M8L4JK",
         rpcSepolia: value.DEFAULT_RPC_SEPOLIA || import.meta.env.VITE_DEFAULT_RPC_SEPOLIA || "https://eth-sepolia.g.alchemy.com/v2/eKJ8_13LMaVi2bSITYWTMqskgsGiey8K",
@@ -42,6 +42,10 @@ export const loadDefaultsConfig = async () => {
         subgraphArbitrum: value.DEFAULT_SUBGRAPH_ARBITRUM || import.meta.env.VITE_DEFAULT_SUBGRAPH_ARBITRUM || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/DZz4kDTdmzWLWsV373w2bSmoar3umKKH9y82SUKr5qmp",
         subgraphSepolia: value.DEFAULT_SUBGRAPH_SEPOLIA || import.meta.env.VITE_DEFAULT_SUBGRAPH_SEPOLIA || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/8pVKDwHniAz87CHEQsiz2wgFXGZXrbMDkrxgauVVfMJC",
         subgraphArbitrumSepolia: value.DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA || import.meta.env.VITE_DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/3xQHhMudr1oh69ut36G2mbzpYmYxwqCeU6wwqyCDCnqV",
+        eboMainnet: value.DEFAULT_EBO_MAINNET || import.meta.env.VITE_DEFAULT_EBO_MAINNET || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/Fg36gCZE7pXEuZ3p8sxYzFE5UbgHtk7kcJiC5HBbfgmY",
+        eboArbitrum: value.DEFAULT_EBO_ARBITRUM || import.meta.env.VITE_DEFAULT_EBO_ARBITRUM || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/4KFYqUWRTZQ9gn7GPHC6YQ2q15chJfVrX43ezYcwkgxB",
+        eboSepolia: value.DEFAULT_EBO_SEPOLIA || import.meta.env.VITE_DEFAULT_EBO_SEPOLIA || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/3nEnuQEQd1aP6wksKvRUnuwLQcQy1zD3HPFaHZ8cMVqM",
+        eboArbitrumSepolia: value.DEFAULT_SUBGRAPH_ARBITRUM_SEPOLIA || import.meta.env.VITE_DEFAULT_SUBGRAPH_EBO_ARBITRUM_SEPOLIA || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/BhnsdeZihU4SuokxZMLF4FQBVJ3jgtZf6v51gHvz3bSS",
         qosSubgraph: value.DEFAULT_QOS_SUBGRAPH || import.meta.env.VITE_DEFAULT_QOS_SUBGRAPH || "https://gateway.thegraph.com/api/[api-key]/subgraphs/id/Dtr9rETvwokot4BSXaD5tECanXfqfJKcvHuaaEgPDD2D",
         apiKey: value.GRAPH_API_KEY || import.meta.env.VITE_GRAPH_API_KEY || "3bab348a7c385b1870039eb890fd0a5f",
       }

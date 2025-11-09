@@ -217,24 +217,20 @@
       {{ item.deployment.manifest.network ? item.deployment.manifest.network : "null" }}
     </template> 
     <template v-slot:item.upgradeIndexer="{ item }">
-      <span
-        v-if="!item.upgradeIndexer.loading && !item.upgradeIndexer.loaded"
-        >
-        <v-icon left @click="subgraphStore.fetchNumEntities(item.deployment.ipfsHash);">
-          mdi-account-arrow-down
-        </v-icon>
-      </span>
-      <v-progress-circular
-          indeterminate
-          color="purple"
-          v-if="item.upgradeIndexer.loading && !item.upgradeIndexer.loaded"
-      ></v-progress-circular>
       <div 
-       v-if="!item.upgradeIndexer.loading && item.upgradeIndexer.loaded"
+       v-if="item.numEntities"
        class="d-flex"
       >
         <span>
-          {{ numeral(item.upgradeIndexer.value).format('0,0') }} Entities
+          {{ numeral(item.numEntities).format('0,0') }} Entities
+        </span>
+      </div>
+      <div 
+       v-if="!item.numEntities"
+       class="d-flex"
+      >
+        <span>
+          ?
         </span>
       </div>
       
