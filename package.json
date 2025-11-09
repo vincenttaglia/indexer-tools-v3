@@ -1,9 +1,6 @@
 {
   "name": "indexer-tools-v3",
   "version": "3.4.0",
-  "engines": {
-    "node": "16.x"
-  },
   "private": true,
   "scripts": {
     "dev": "vite",
