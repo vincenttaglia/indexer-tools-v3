@@ -253,6 +253,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
               source: 'Indexer Tools - Agent Connect',
               reason: 'Allocation Wizard',
               priority: 1,
+              isLegacy: false,
             };
           } else{
             allo = {
@@ -265,6 +266,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
               source: 'Indexer Tools - Agent Connect',
               reason: 'Allocation Wizard',
               priority: 2,
+              isLegacy: false,
             };
           }
           if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
@@ -283,6 +285,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
             source: 'Indexer Tools - Agent Connect',
             reason: 'Allocation Wizard',
             priority: 1,
+            isLegacy: false,
           };
           if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
             if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash] == "0x0"){
@@ -306,6 +309,7 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
             source: 'Indexer Tools - Agent Connect',
             reason: 'Allocation Wizard',
             priority: 2,
+            isLegacy: false,
           });
         }
           

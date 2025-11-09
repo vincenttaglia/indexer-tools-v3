@@ -396,6 +396,7 @@ async function approveActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { actionIDs: selected.value.map(String) },
@@ -444,6 +445,7 @@ async function deleteActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { actionIDs: selected.value.map(String) }
@@ -491,6 +493,7 @@ async function cancelActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { actionIDs: selected.value.map(String) }
@@ -539,6 +542,7 @@ async function queryActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { filter: {  } },
@@ -570,6 +574,7 @@ async function executeApprovedActions(){
         priority
         protocolNetwork
         status
+        isLegacy
       }
     }`,
   }).catch((errors) => {
@@ -614,6 +619,7 @@ const headers = ref([
         { title: 'Source', key: 'source'},
         { title: 'Deployment ID', key: 'deploymentID', sortable: false },
         { title: 'Allocation ID', key: 'allocationID', sortable: false },
+        { title: 'Legacy', key: 'isLegacy', sortable: false },
       ]);
 
 </script>
