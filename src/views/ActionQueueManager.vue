@@ -347,6 +347,7 @@ async function batchSendActions(actions){
             createdAt
             updatedAt
             protocolNetwork
+            isLegacy
           }
         }
       }`,
@@ -396,6 +397,7 @@ async function approveActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { actionIDs: selected.value.map(String) },
@@ -444,6 +446,7 @@ async function deleteActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { actionIDs: selected.value.map(String) }
@@ -491,6 +494,7 @@ async function cancelActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { actionIDs: selected.value.map(String) }
@@ -539,6 +543,7 @@ async function queryActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { filter: {  } },
@@ -570,6 +575,7 @@ async function executeApprovedActions(){
         priority
         protocolNetwork
         status
+        isLegacy
       }
     }`,
   }).catch((errors) => {
