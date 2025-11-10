@@ -20,6 +20,8 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
     minAllocation: 0,
     minAllocation0Signal: 0,
     customPOIs: {},
+    customBlockHeights: {},
+    customPublicPOIs: {},
   }),
   getters: {
     getSelected: () => subgraphStore.selected,
@@ -209,9 +211,9 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
         let customPOI = "";
         if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
           if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash] == "0x0"){
-            customPOI = "0x0000000000000000000000000000000000000000 true ";
+            customPOI = "0x0000000000000000000000000000000000000000000000000000000000000000 true 0 0x0000000000000000000000000000000000000000000000000000000000000000 ";
           } else{
-            customPOI = `${state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} true `;
+            customPOI = `${state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} true ${state.customBlockHeights[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} ${state.customPublicPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]} `;
           }
         }
         if(subgraphStore.selected.includes(allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash)){
@@ -271,6 +273,8 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
           }
           if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
             allo.poi = state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]
+            allo.poiBlockNumber = parseInt(state.customBlockHeights[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash])
+            allo.publicPOI = state.customPublicPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]
             allo.force = true;
           }
           reallocate.push(allo);
@@ -290,8 +294,12 @@ export const useNewAllocationSetterStore = defineStore('allocationSetter', {
           if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]){
             if(state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash] == "0x0"){
               allo.poi = "0x0000000000000000000000000000000000000000000000000000000000000000";
+              allo.poiBlockNumber = 0 ;
+              allo.publicPOI = "0x0000000000000000000000000000000000000000000000000000000000000000";
             } else{
               allo.poi = state.customPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]
+              allo.poiBlockNumber = parseInt(state.customBlockHeights[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash])
+              allo.publicPOI = state.customPublicPOIs[allocationStore.getSelectedAllocations[i].subgraphDeployment.ipfsHash]
             }
             allo.force = true;
           }

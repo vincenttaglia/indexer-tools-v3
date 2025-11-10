@@ -55,7 +55,7 @@ export const useNetworkStore = defineStore('network', {
     getIssuancePerBlock: (state) => state.networks[chainStore.getChainID].issuancePerBlock,
     getIssuancePerYear: (state) => state.networks[chainStore.getChainID].issuancePerYear,
     getTotalTokensAllocated: (state) => state.networks[chainStore.getChainID].totalTokensAllocated,
-    isNetworkHorizon: (state) => state.networks[chainStore.getChainID].maxThawingPeriod > 0,
+    isNetworkHorizon: (state) => parseInt(state.networks[chainStore.getChainID].maxThawingPeriod) > 0,
   },
   actions: {
     async init(){

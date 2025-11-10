@@ -338,6 +338,8 @@ async function batchSendActions(actions){
             allocationID
             amount
             poi
+            publicPOI
+            poiBlockNumber
             force
             priority
             source
@@ -388,6 +390,8 @@ async function approveActions(){
         allocationID
         amount
         poi
+        publicPOI
+        poiBlockNumber
         force
         priority
         source
@@ -437,6 +441,8 @@ async function deleteActions(){
         allocationID
         amount
         poi
+        publicPOI
+        poiBlockNumber
         force
         priority
         source
@@ -485,6 +491,8 @@ async function cancelActions(){
         allocationID
         amount
         poi
+        publicPOI
+        poiBlockNumber
         force
         priority
         source
@@ -534,6 +542,8 @@ async function queryActions(){
         allocationID
         amount
         poi
+        publicPOI
+        poiBlockNumber
         force
         priority
         source
@@ -567,6 +577,8 @@ async function executeApprovedActions(){
         allocationID
         amount
         poi
+        publicPOI
+        poiBlockNumber
         force
         source
         reason
@@ -620,6 +632,8 @@ const headers = ref([
         { title: 'Source', key: 'source'},
         { title: 'Deployment ID', key: 'deploymentID', sortable: false },
         { title: 'Allocation ID', key: 'allocationID', sortable: false },
+        { title: 'POI Block Number', key: 'poiBlockNumber' },
+        { title: 'Public POI', key: 'publicPOI' },
       ]);
 
 </script>
