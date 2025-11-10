@@ -470,7 +470,6 @@ export const useAllocationStore = defineStore('allocationStore', {
         this.fetch(0)
         .then((data) => {
           console.log(data);
-          console.log("ALLOCATIONs")
           this.allocations = data.allocations;
           this.pendingRewards = Array(data.allocations.length).fill();
           for(let i = 0; i < this.pendingRewards.length; i++){
