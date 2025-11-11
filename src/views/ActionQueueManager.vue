@@ -338,6 +338,8 @@ async function batchSendActions(actions){
             allocationID
             amount
             poi
+            publicPOI
+            poiBlockNumber
             force
             priority
             source
@@ -347,6 +349,7 @@ async function batchSendActions(actions){
             createdAt
             updatedAt
             protocolNetwork
+            isLegacy
           }
         }
       }`,
@@ -387,6 +390,8 @@ async function approveActions(){
         allocationID
         amount
         poi
+        publicPOI
+        poiBlockNumber
         force
         priority
         source
@@ -396,6 +401,7 @@ async function approveActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { actionIDs: selected.value.map(String) },
@@ -435,6 +441,8 @@ async function deleteActions(){
         allocationID
         amount
         poi
+        publicPOI
+        poiBlockNumber
         force
         priority
         source
@@ -444,6 +452,7 @@ async function deleteActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { actionIDs: selected.value.map(String) }
@@ -482,6 +491,8 @@ async function cancelActions(){
         allocationID
         amount
         poi
+        publicPOI
+        poiBlockNumber
         force
         priority
         source
@@ -491,6 +502,7 @@ async function cancelActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { actionIDs: selected.value.map(String) }
@@ -530,6 +542,8 @@ async function queryActions(){
         allocationID
         amount
         poi
+        publicPOI
+        poiBlockNumber
         force
         priority
         source
@@ -539,6 +553,7 @@ async function queryActions(){
         createdAt
         updatedAt
         protocolNetwork
+        isLegacy
       }
     }`,
     variables: { filter: {  } },
@@ -562,6 +577,8 @@ async function executeApprovedActions(){
         allocationID
         amount
         poi
+        publicPOI
+        poiBlockNumber
         force
         source
         reason
@@ -570,6 +587,7 @@ async function executeApprovedActions(){
         priority
         protocolNetwork
         status
+        isLegacy
       }
     }`,
   }).catch((errors) => {
@@ -614,6 +632,8 @@ const headers = ref([
         { title: 'Source', key: 'source'},
         { title: 'Deployment ID', key: 'deploymentID', sortable: false },
         { title: 'Allocation ID', key: 'allocationID', sortable: false },
+        { title: 'POI Block Number', key: 'poiBlockNumber' },
+        { title: 'Public POI', key: 'publicPOI' },
       ]);
 
 </script>

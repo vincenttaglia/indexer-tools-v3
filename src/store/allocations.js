@@ -526,6 +526,7 @@ export const useAllocationStore = defineStore('allocationStore', {
             indexingRewards
             indexingIndexerRewards
             indexingDelegatorRewards
+            isLegacy
           }
   
         }`,
