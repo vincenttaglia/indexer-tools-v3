@@ -6,16 +6,19 @@ on:
       - master
     tags:
       - '*'
-  pull_request:
+  pull_request_target:
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     permissions: write-all
+    environment: docker-publish  # Requires manual approval for forks
 
     steps:
-    - name: Checkout
+    - name: Checkout PR code
       uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha || github.ref }}
     - name: Docker meta
       id: docker_meta
       uses: docker/metadata-action@v5
