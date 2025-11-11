@@ -6,13 +6,8 @@ on:
       - master
     tags:
       - '*'
-  workflow_dispatch:
-    inputs:
-      run_for_pr:
-        description: 'Manually approve PR build'
-        required: true
-        type: boolean
-        default: false
+  pull_request:
+    branches: [master]
 
 jobs:
   build-and-publish:
