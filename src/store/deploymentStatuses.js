@@ -111,12 +111,16 @@ export const useDeploymentStatusStore = defineStore('deploymentStatusStore', {
     async fetchUserStatuses(){
       return this.fetchStatus(accountStore.getActiveUrl)
       .then((json) => {
-        this.status = json.data.indexingStatuses.reduce((obj, status) => {
-          return {
-            ...obj,
-            [status.subgraph]: status
-          };
-        }, {});
+        try{
+          this.status = json.data.indexingStatuses.reduce((obj, status) => {
+            return {
+              ...obj,
+              [status.subgraph]: status
+            };
+          }, {});
+        }catch(e){
+          console.error(e);
+        }
       })
     },
     async fetchIndexerStatuses(){
