@@ -290,6 +290,38 @@
             Query POI
           </v-btn>
         </td>
+        <td>
+          <v-text-field 
+              class="mt-4 pt-0"
+              style="width: 200px"
+              v-model="customBlockHeights[item.subgraphDeployment.ipfsHash]"
+              hint="Manual POI Block Height"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-btn 
+           v-if="accountStore.getActiveAccount.poiQuery && item.deploymentStatus?.fatalError" 
+           @click="queryPOIBlockHeight(item.subgraphDeployment.ipfsHash, item.deploymentStatus?.fatalError?.block?.number, item.deploymentStatus?.fatalError?.block?.hash)"
+          >
+            Query POI Block Height
+          </v-btn>
+        </td>
+        <td>
+          <v-text-field 
+              class="mt-4 pt-0"
+              style="width: 250px"
+              v-model="customPublicPOIs[item.subgraphDeployment.ipfsHash]"
+              hint="Manual Public POI"
+          ></v-text-field>
+        </td>
+        <td>
+          <v-btn 
+           v-if="accountStore.getActiveAccount.poiQuery && item.deploymentStatus?.fatalError" 
+           @click="queryPublicPOI(item.subgraphDeployment.ipfsHash, item.deploymentStatus?.fatalError?.block?.number, item.deploymentStatus?.fatalError?.block?.hash)"
+          >
+            Query Public POI
+          </v-btn>
+        </td>
       </tr>
       
     </template>
@@ -319,7 +351,7 @@ const { getActiveAccount } = storeToRefs(accountStore);
 
 const { selected, loaded } = storeToRefs(allocationStore);
 
-const { customPOIs } = storeToRefs(newAllocationSetterStore);
+const { customPOIs, customPublicPOIs, customBlockHeights } = storeToRefs(newAllocationSetterStore);
 
 defineProps({
   selectable: {
@@ -366,5 +398,21 @@ async function queryPOI(QmHash, block, blockHash){
     .then((json) => {
       newAllocationSetterStore.customPOIs[QmHash] = json.data.proofOfIndexing;
     });
+}
+
+async function queryPublicPOI(QmHash, block, blockHash){
+  fetch(accountStore.getActiveAccount.poiQueryEndpoint,  {
+      method: "POST",
+      headers: {"Content-type": "application/json"},
+      body: JSON.stringify({query: `{ proofOfIndexing(blockNumber: ${block}, blockHash: "${blockHash}", subgraph: "${QmHash}", indexer: "0x0000000000000000000000000000000000000000") }`}),
+    })
+    .then((res) => res.json())
+    .then((json) => {
+      newAllocationSetterStore.customPublicPOIs[QmHash] = json.data.proofOfIndexing;
+    });
+}
+
+async function queryPOIBlockHeight(QmHash, block, blockHash){
+  newAllocationSetterStore.customBlockHeights[QmHash] = block;
 }
 </script>
