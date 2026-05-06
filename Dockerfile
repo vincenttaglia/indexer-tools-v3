@@ -1,5 +1,5 @@
-# Use Node 16
-FROM node:16
+# Use Node 22
+FROM node:22
 
 # Working directory
 WORKDIR /app
