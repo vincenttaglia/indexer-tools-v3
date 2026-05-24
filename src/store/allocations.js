@@ -67,6 +67,19 @@ export const useAllocationStore = defineStore('allocationStore', {
         });
       }
 
+      if(subgraphSettingStore.settings.statusFilter == 'closable-synced-current-epoch'){
+        allocations = allocations.filter((i) => {
+          const status = deploymentStatusStore.getDeploymentStatuses[i.subgraphDeployment.ipfsHash];
+          if(status == undefined) return false;
+          if(status.fatalError != undefined && status.fatalError.deterministic != true) return false;
+          const chainAlias = i.subgraphDeployment.manifest?.network;
+          const epochStartBlock = chainAlias ? epochStore.getBlockNumbers[chainAlias] : undefined;
+          const latestBlock = status.chains?.[0]?.latestBlock?.number;
+          if(epochStartBlock == undefined || latestBlock == undefined) return false;
+          return parseInt(latestBlock) >= parseInt(epochStartBlock);
+        });
+      }
+
       if(subgraphSettingStore.settings.statusFilter == 'healthy-synced'){
         allocations = allocations.filter((i) => {
           const status = deploymentStatusStore.getDeploymentStatuses[i.subgraphDeployment.ipfsHash];

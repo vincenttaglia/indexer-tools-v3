@@ -32,7 +32,7 @@
       <div class="d-block">
         <v-select
             v-model="subgraphSettingsStore.settings.statusFilter"
-            :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"
+            :items="[{title:'No Filter', value:'none'},{title:'All Reported Status', value:'all'},{title:'Closable', value:'closable'},{title:'Closable (synced to current epoch)', value:'closable-synced-current-epoch'},{title: 'Healthy/Synced', value:'healthy-synced'},{title:'Syncing', value:'syncing'},{title:'Failed', value:'failed'},{title:'Non-Deterministic', value:'non-deterministic'},{title:'Deterministic', value:'deterministic'}]"
             label="Status Filter"
             class="d-inline-block mx-4 mt-5"
             style="min-width:13rem;max-width: 15rem;"
